@@ -12,7 +12,7 @@ function App() {
       
         <Routes>
 
-          <Route path='/dev' exact element={<Dev></Dev>} />
+          <Route path='/dev' exact element={<Dev/>} />
 
         </Routes>
       

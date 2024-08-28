@@ -3,16 +3,15 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from "firebase/auth"
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
-import env from "react-dotenv";
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_ID,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_API_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_REACT_APP_FIREBASE_API_ID,
+  measurementId: import.meta.env.VITE_REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
@@ -44,7 +43,74 @@ function removeAppointment2(){}
 function addDay(date,profile){}
 
 // used to create db document for a profile
-function addProfile(data){}
+export function addProfile(data){
+  try{
+      
+    // check if document already existst:
+
+    const myDocument = await getDocumentById('profiles',rdv_date);
+    
+    let number_of_existing_appointments = 0
+
+    // if it doesn't exists, create document 
+    if(myDocument === null){
+      setDoc(doc(firestore_db,'appointments',rdv_date),{
+        all_appointments : [],
+        locked : false
+      })
+    }
+
+    // document exists
+    else{
+      // check if hour of appointment has been taken :
+      let appointment_hour_taken = false;
+      myDocument.all_appointments.forEach((rezervation) => {
+        if(rezervation.data.rdv_time === rdv_time){
+          appointment_hour_taken = true
+          return  // stop loop
+        }
+      })
+
+      // if appointment hour is taken then don't continue
+      if(appointment_hour_taken){
+        console.log(`Appointment hour(${rdv_time}) is taken on ${rdv_date}.`);
+        return(false);
+      }
+      // appointment hour is available
+      else{
+        //get # of existing appointments 
+        number_of_existing_appointments = myDocument.all_appointments.length
+        // get last appointment number
+        if(number_of_existing_appointments > 0 ) {
+          const last_appoint = myDocument.all_appointments[number_of_existing_appointments-1].data.appointment_number
+          const last_appoint_number =  parseInt(last_appoint.split("_")[1])
+          data.appointment_number = `appointment_${last_appoint_number+1}`
+        }
+
+        // add new appointment to array after the document has been fetched/created & data object has been filled.
+        // all verifications has been done before (locked in UI & line 198)
+        const appointmentRef = doc(firestore_db, "appointments", rdv_date);
+        updateDoc(appointmentRef, {
+        all_appointments: arrayUnion({ data })
+        });
+        return(true)
+
+      }
+
+    }
+
+    
+
+  }catch(e){
+    addError({
+      e_message: "Failed to add appointment to << appointments >> firestore table.",
+      program_execution: "Failed to execute firebase.addAppointment(...)",
+      program_function_error: `addAppointment(${user_name},${user_emai},${user_phone},${rdv_date},${rdv_time})`,
+      program_page: "/rendez-vous",
+    })
+    return(e)
+  }
+}
 
 function getAppointments(day){}
 
@@ -57,11 +123,13 @@ function getScheduleFull(){}
 
 // <dev_tools> 
 
-function createTable(table_name){}
+function createTable(table_name){
+
+}
 
 // creates empty days for the given profile
 export async function populateProfile(barber_name,fromDate,toDate){
-    return(">Executed populateProfile")
+    return("> Executed populateProfile")
 }
 
 
