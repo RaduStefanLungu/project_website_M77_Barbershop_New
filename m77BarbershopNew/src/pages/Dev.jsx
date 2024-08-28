@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { populateProfile } from '../api/firebase'
+import React, { useEffect, useState } from 'react'
+import { addProfile, getProfiles, populateProfile, removeProfile } from '../api/firebase'
 import { useRef } from 'react'
 
 export default function Dev() {
@@ -19,7 +19,7 @@ export default function Dev() {
         
         <div className='grid lg:grid-cols-2'>
 
-            <div className='bg-orange-200 pt-5 px-20 grid'>
+            <div className='bg-orange-200 pt-5 pb-20 px-20 mb-auto grid'>
                 <h2 className='font-bold text-3xl py-3'> Dev Page </h2>
 
                 <div className='grid gap-5'>
@@ -35,18 +35,22 @@ export default function Dev() {
             
             </div>
 
-            <div className='bg-emerald-200 pt-5 px-20 flex flex-col'>
-                <h2 className='font-bold text-3xl py-3'> LOG </h2>
-                <div className='flex flex-col border-[0.15] border-blue-500 min-h-[200px] max-h-[300px] lg:max-h-[350px] overflow-y-scroll'>
-                    {
-                        messages.map((value,key) => {
-                            return(
-                               value
-                            )                            
-                        })
-                    }
+            <div className='bg-emerald-200 pt-5 px-10 flex flex-col gap-10'> 
+                <div id='log' className='flex flex-col p-3 bg-slate-100'>
+                    <h2 className='font-bold text-3xl py-3'> LOG </h2>
+                    <div className='flex flex-col border-[0.15] border-blue-500 min-h-[200px] max-h-[300px] lg:max-h-[350px] overflow-y-scroll'>
+                        {
+                            messages.map((value) => {
+                                return(
+                                value
+                                )         
+                            })
+                        }
+                    </div>
+                    <button onClick={handleClearLog} className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Clear Log</button>
                 </div>
-                <button onClick={handleClearLog} className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Clear Log</button>
+
+                <CreatedProfilesList messagesLog={[messages,setMessages]} />
             </div>
         </div>
 
@@ -62,14 +66,18 @@ const AddBarber = ({messagesLog}) => {
     const [isCDI,setIsCDI] = useState(false)
     const [endingContract,setEndingContract] = useState('/')
 
-    const [today,setToday] = useState(new Date().toISOString().split('T')[0])
+    const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
+        timeZone: 'Europe/Brussels', 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit'
+      }).split('/').reverse().join('-'))
 
-    function handleCreateTable(e){
+    async function handleCreateTable(e){
         e.preventDefault();
-        console.log(`Adding barber ${barberName}`);
 
         const data = {
-            barber_name: lastName + " " + firstName,
+            barber_name: lastName + "_" + firstName,
             first_name : firstName,
             last_name : lastName,
             starting_contract : startingContract,
@@ -77,10 +85,17 @@ const AddBarber = ({messagesLog}) => {
             is_cdi : isCDI
         }
 
-        addProfile
-
-
-        messagesLog[1]([messagesLog,<Message message={`Created new table ${'table_name'}`}/>])
+        console.log(`Adding barber ${data.barber_name}`);
+        await addProfile(data).then(
+            (response) => {
+                if(response){
+                    messagesLog[1]([messagesLog,<Message key={messagesLog[0].length-1} message={`Created new profile ${data.barber_name}`}/>])
+                }
+                else{
+                    messagesLog[1]([messagesLog,<Message key={messagesLog[0].length-1} error={true} message={`Failed to create new profile ${data.barber_name}`}/>])
+                }
+            }
+        )
     }
 
     return(
@@ -126,6 +141,72 @@ const PopulateProfile = ({messagesLog}) => {
                 <input type='text' placeholder='to date' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' ></input>
             </div>
             <button onClick={handlePopulateProfile} className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Populate</button>
+        </div>
+    )
+}
+
+const CreatedProfilesList = ({messagesLog}) => {
+
+    const [profiles,setProfiles] = useState([])
+
+    useEffect(()=>{
+        async function fetchProfiles(){
+            await getProfiles().then(
+                (response) => {
+                    setProfiles(response)
+                }
+            )
+        } 
+
+        fetchProfiles()
+    },[profiles])
+
+    const ProfileTab = ({data,Key,messagesLog}) => {
+        // TODO : you should remove the deletion button if not accessed by admin
+
+        const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
+            timeZone: 'Europe/Brussels', 
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit'
+          }).split('/').reverse().join('-'))
+
+        async function handleRemove(e){
+            e.preventDefault()
+            await removeProfile(data.barber_name).then(
+                (response) => {
+                    messagesLog[1]([messagesLog,<Message key={messagesLog[0].length-1} message={`Removed profile ${data.barber_name}`}/>])                    
+                }
+            )
+        }
+
+        return(
+            <div className={` ${(Key % 2 ===0) ? 'bg-slate-200' : 'bg-slate-100' } flex`}>
+                <div className="flex flex-col">
+                    <div className='grid grid-cols-2'>
+                        <label className='font-medium text-xl'>{data.last_name} {data.first_name}</label>
+                    </div>
+                    <div className='grid grid-cols-2 gap-5'>
+                        <label>Starting Contract : {data.starting_contract}</label>
+                        <label className={`${'2024-08-29' >= data.ending_contract && !['/','cdi'].includes(data.ending_contract)? "underline font-medium text-red-500" : " " }`}>Ending Contract : {data.ending_contract}</label>
+                    </div>
+                </div>
+                <button onClick={handleRemove} className='bg-red-500 text-white font-semibold py-2 px-10 rounded-xl m-auto'>Remove</button>
+            </div>
+        )
+    }
+
+    return(
+        <div id='profiles' className='flex flex-col p-3 bg-slate-100'>
+            <h2 className='font-bold text-3xl py-3'> Existing Profiles </h2>
+            <div className='flex flex-col border-[0.15] border-blue-500 min-h-[200px] max-h-[300px] lg:max-h-[350px] overflow-y-scroll'>
+                {
+                    profiles.map((value,key) => {
+                        return(<ProfileTab key={key} Key={key} data={value} messagesLog={messagesLog} />)    
+                    })
+                }
+            </div>
+            <button className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Clear Log</button>
         </div>
     )
 }
