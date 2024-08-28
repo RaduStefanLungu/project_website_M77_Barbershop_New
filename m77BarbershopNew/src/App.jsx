@@ -1,17 +1,18 @@
-
 import {Route, BrowserRouter, Routes} from 'react-router-dom'
+import Dev from './pages/Dev'
+
+import './index.css'
 
 function App() {
 
   return (
     <div>
-      M77 Barbershop New
 
       <BrowserRouter>
       
         <Routes>
 
-          <Route path='/test' exact element={<div>Hello</div>} ></Route>
+          <Route path='/dev' exact element={<Dev></Dev>} />
 
         </Routes>
       

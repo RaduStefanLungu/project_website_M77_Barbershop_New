@@ -3,8 +3,10 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from "firebase/auth"
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
+import env from "react-dotenv";
+
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  apiKey: process.env.REACT_APP_FIREBASE_API_ID,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
@@ -22,6 +24,56 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app)
 
 export const firestore_db = getFirestore(app)
+
+
+// DB Structure : 
+
+// appointments -> barber_name_1 -> day(YYYY,MM,DD) -> locked?,appointments
+// profiles -> barber_name_1 -> barber_data
+// admin -> barber_name
+// schedule -> monday -> actual_schedule,new_schedule
+// errors -> yyyy,mm,dd -> data + date & time
+
+// data = {"day" : "2024-10-21", ...}
+function addAppointment2(data){}
+
+function removeAppointment2(){}
+
+// date = date of the day (used as id in db)
+// creates the day inside a given profile to add appointments
+function addDay(date,profile){}
+
+// used to create db document for a profile
+function addProfile(data){}
+
+function getAppointments(day){}
+
+function getProfiles(){}
+
+// gets hours for the given day (ex : day_name = "monday")
+function getScheduleHours(day_name){}
+
+function getScheduleFull(){}
+
+// <dev_tools> 
+
+function createTable(table_name){}
+
+// creates empty days for the given profile
+export async function populateProfile(barber_name,fromDate,toDate){
+    return(">Executed populateProfile")
+}
+
+
+// Situational :
+
+function uploadImage(){}
+
+function removeImage(){}
+
+function uploadVideo(){}
+
+function removeVideo(){}
 
 
 export async function getUserDocument(userEmail){
@@ -346,7 +398,6 @@ async function unlockDay(documentID) {
       console.error('Error locking day: ', error);
   }
 }
-
 
 export async function addError(data){
     const error_data = {
