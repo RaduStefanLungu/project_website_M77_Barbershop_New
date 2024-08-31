@@ -3,6 +3,8 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from "firebase/auth"
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
+import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage'
+
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
@@ -24,6 +26,18 @@ export const auth = getAuth(app)
 
 export const firestore_db = getFirestore(app)
 
+const firestore = getStorage(app)
+
+export async function uploadImage(image,imageName){
+  const imgRef = ref(firestore,`photos/${imageName}`)
+  return uploadBytes(imgRef,image)
+}
+
+export async function getImageByPath(path){
+  const imgRef = ref(firestore,`photos/${path}`)
+  return(await getDownloadURL(imgRef))
+  
+}
 
 // DB Structure : 
 
@@ -42,20 +56,44 @@ function removeAppointment2(){}
 // creates the day inside a given profile to add appointments
 function addDay(date,profile){}
 
-// used to create db document for a profile
-export async function addProfile(data){
+
+export async function registerUser(data){
+  const updated_data = {
+    ...data,
+    "uid" : "generated_uid_from_firebase_auth"
+  }
+
+  console.log(updated_data);
+  
+  // addProfile(data)
+  return(false)
+
+
+}
+
+export async function removeUser(){
+  return(false)
+}
+
+/*
+  Checks if profile already exists,
+    if not : it adds it to db and returns the given profile data,
+    else : returns null
+*/
+export async function addProfile(profileData){
+
   try{
-    const myDocument = await getDocumentById('profiles',data.barber_name);
+    const myDocument = await getDocumentById('profiles',profileData.profile_id);
 
     // if profile doesn't exists, create it 
     if(myDocument === null){
-      setDoc(doc(firestore_db,'profiles',data.barber_name),data)
-      return(true)
+      setDoc(doc(firestore_db,'profiles',profileData.profile_id),profileData)
+      return(profileData)
     }
 
     // profile exists
     else{
-      return(false)
+      return(null)
     }
 
   }catch(e){
@@ -66,6 +104,22 @@ export async function addProfile(data){
       program_page: "/rendez-vous",
     })
     return(e)
+  }
+}
+
+export async function addProfileAndUploadImage(profileData,imageFile){
+  const uploadImageResponse = await uploadImage(imageFile,profileData.image)
+
+  if(uploadImageResponse){
+    const imageUrl = await getImageByPath(profileData.image)
+    profileData.image_url = imageUrl
+    const addProfileRespose = await addProfile(profileData);
+    if(addProfileRespose !== null){
+      return(true)
+    }
+    else{
+      return(false)
+    }
   }
 }
 
@@ -114,8 +168,6 @@ export async function populateProfile(barber_name,fromDate,toDate){
 
 
 // Situational :
-
-function uploadImage(){}
 
 function removeImage(){}
 

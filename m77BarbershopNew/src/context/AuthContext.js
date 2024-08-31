@@ -13,7 +13,6 @@ export function AuthProvider({children}) {
     const [currentUser,setCurrentUser] = useState()
     const [loading,setLoading] = useState(true)
 
-
     function login(email,password){
         return signInWithEmailAndPassword(auth,email,password)
     }
@@ -29,7 +28,6 @@ export function AuthProvider({children}) {
         })
         return unsubscribe  // this will unsubscribe the current user whenever we unmount the component.
     },[])
-    
 
     const value = {
         currentUser,
