@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { addProfile, addProfileAndUploadImage, getImageByPath, getProfiles, populateProfile, removeProfile, uploadImage } from '../api/firebase'
-import { useRef } from 'react'
-
-import MIRCO_PHOTO from '../assets/mirco-photo-full-body.png'
+import { useEffect, useState } from 'react'
+import { addNewDocument, addProfileAndUploadImage, getProfiles, populateProfile, removeProfile } from '../api/firebase'
 import { v4 } from 'uuid'
 
 export default function Dev() {
@@ -20,7 +17,7 @@ export default function Dev() {
         
         <h1 className='font-bold text-4xl py-5'> Appointment System </h1>
         
-        <div className='grid lg:grid-cols-2'>
+        <div className='grid' >
 
             <div className='bg-orange-200 pt-5 pb-20 px-20 mb-auto grid'>
                 <h2 className='font-bold text-3xl py-3'> Dev Page </h2>
@@ -29,7 +26,9 @@ export default function Dev() {
 
                     <AddBarber messagesLog={[messages,setMessages]}></AddBarber>
 
-                    {/* <AppointmentForm messagesLog={[messages,setMessages]} ></AppointmentForm> */}
+                    <AddDaysToSchedule/>
+
+                    <AppointmentForm messagesLog={[messages,setMessages]} ></AppointmentForm>
 
                     {/* <PopulateProfile messagesLog={[messages,setMessages]} ></PopulateProfile> */}
 
@@ -68,7 +67,84 @@ export default function Dev() {
   )
 }
 
+
+const AddDaysToSchedule = () => {
+    const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
+        timeZone: 'Europe/Brussels', 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit'
+      }).split('/').reverse().join('-'))
+    
+    const [dayName,setDayName] = useState("")
+    const [aso,setAso] = useState("")
+    const [asc,setAsc] = useState("")
+    const [nso,setNso] = useState("")
+    const [nsc,setNsc] = useState("")
+    const [nssd,setNssd] = useState("")
+
+
+    async function handleSubmit(e){
+        e.preventDefault();
+        const data = {
+            doc_id : dayName,
+            actual_schedule: {
+                opening_hour: aso,
+                closing_hour: asc,
+            },
+            new_schedule : {
+                opening_hour: nso,
+                closing_hour: nsc,
+                starting_date: nssd
+            },
+            locked: false
+        }
+
+        await addNewDocument('schedule',data).then(
+            (response) => {
+                if(response !== null){
+                    console.log("Sucessfully added new document to 'schedule' collection.");
+                    
+                }
+            }
+        )
+        
+    }
+
+    return(
+        <div>
+            <h2 className='font-bold text-3xl py-3'> AddDaysToSchedule</h2>
+
+            <form onSubmit={handleSubmit} className='grid gap-2'>
+                <input onChange={(e)=>{setDayName(e.target.value)}} required type='text' placeholder='day name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>actual schedule opening </label>
+                    <input onChange={(e)=>{setAso(e.target.value)}} required type='time' placeholder='actual schedule opening' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>actual schedule closing</label>
+                    <input onChange={(e)=>{setAsc(e.target.value)}} required type='time' placeholder='actual schedule closing' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>new schedule opening</label>
+                    <input onChange={(e)=>{setNso(e.target.value)}} required type='time' placeholder='new schedule opening' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>new schedule closing</label>
+                    <input onChange={(e)=>{setNsc(e.target.value)}} required type='time' placeholder='' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />                
+                </div>
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>new schedule starting date :</label>
+                    <input onChange={(e)=>{setNssd(e.target.value)}} required type='date' min={today} placeholder='' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+                <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Submit</button>
+            </form>
+        </div>
+    )
+}
+
 const AddBarber = ({messagesLog}) => {
+    const [message,setMessage] = useState(null)
 
     const [firstName,setFirstName] = useState('')
     const [lastName,setLastName] = useState('')
@@ -100,26 +176,21 @@ const AddBarber = ({messagesLog}) => {
             is_cdi : isCDI,
             visible: false,
             image : imageName,
-            image_url : ""
+            image_url : "",
+            profile_description : "NaN"
         }
 
         if(img !== null){
             await addProfileAndUploadImage(data,img).then(
                 (response) =>{
                     if(response){
-                        console.log('Successfully uploaded profile & image');                        
+                        setMessage({message: "Sucessfully uploaded profile & image !",isError: false});                    
                     }
                 }
             )
         }
         else{
-            await addProfile(data).then(
-                (response) =>{
-                    if(response){
-                        console.log('Successfully uploaded profile');                        
-                    }
-                }
-            )
+            setMessage({message: "Failed to upload profile & image ! No image chosen",isError: true});
         }
     }
 
@@ -145,8 +216,17 @@ const AddBarber = ({messagesLog}) => {
             </div>
 
             <div className='flex flex-col'>
-                <label>Upload Profile Image (250x450)</label>
+                <label className='pb-1'>Upload Profile Image <span className='text-xs'>(250x450px)</span></label>
                 <input type='file' onChange={(e)=>{setImg(e.target.files[0])}}></input>
+            </div>
+
+            <div className=''>
+                {
+                    message!==null? 
+                    <p className={`${message.isError? "text-red-500" : "text-green-500"}`}>
+                        {message.message}
+                    </p> : <></>
+                }
             </div>
 
             <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Add</button>
@@ -259,10 +339,23 @@ const CreatedProfilesList = ({messagesLog}) => {
 }
 
 const AppointmentForm = ({messagesLog}) => {
+    const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
+        timeZone: 'Europe/Brussels', 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit'
+      }).split('/').reverse().join('-'))
 
     const [profiles,setProfiles] = useState([])
-    const [profileImages,setProfileImages] = useState([])
 
+    const [chosenProfile,setChosenProfile] = useState(null)
+
+    const [clientFirstName,setClientFirstName] = useState('')
+    const [clientLastName,setClientLastName] = useState('')
+    const [clientEmail,setClientEmail] = useState('')
+    const [clientPhone,setClientPhone] = useState('')
+    const [clientAppointmentDate,setClientAppointmentDate] = useState('')
+    
     useEffect(()=>{
         async function fetchProfiles(){
             await getProfiles().then(
@@ -275,38 +368,82 @@ const AppointmentForm = ({messagesLog}) => {
         fetchProfiles()
     },[])
 
-    useEffect(()=>{
-        profiles.forEach( async (profile)=>{
-            const profile_image_url = await getImageByPath(profile.image)
-            profileImages.push(profile_image_url)
-        })
-    })
-
     
     async function handleSubmit(e){
         e.preventDefault();
     }
+
+    const ProfileCard = ({ profile,setter, clickable=false }) => {
+
+        function handleClickedProfile(e) {
+            e.preventDefault();         
+            if(clickable){
+                setter(profile)
+                console.log(profile);
+            }
+            
+        }
+        
+        return (
+            <button onClick={handleClickedProfile}>
+                <div className="relative container m-auto w-[250px] h-[450px] overflow-hidden">
+                    <div className="absolute overflow-hidden bottom-0 backdrop-grayscale bg-black/35 hover:bg-transparent hover:backdrop-grayscale-0 transition-all duration-500 z-20 w-[250px] h-[550px] flex">
+                        <div className='text-white text-start flex flex-col w-full h-full px-5 pt-[425px] transform translate-y-0 hover:translate-y-[100px] transition-transform duration-500 ease-in-out'>
+                            <label className="font-bold text-xl pb-2">
+                                {profile.last_name + " " + profile.first_name}
+                            </label>
+                            <p className='text-sm italic'>
+                                {profile.profile_description}
+                            </p>
+                        </div>
+                        
+                    </div>
+                    <img src={profile.image_url} className="w-[250px] h-[450px] absolute top-0 z-0" alt="Profile"/>
+                </div>
+            </button>
+        );
+    };
+    
     
     return(
         <div>
             <h2 className='font-bold text-3xl py-3'> Appointment Form </h2>
             <form onSubmit={handleSubmit}>
 
-                <div id='chose user' className='flex flex-col lg:flex-row gap-10'>
-                    {
-                        profiles.map((profile,key) => {                            
-                            return(
-                                <div key={key} className='relative container m-auto w-[250px] h-[450px]'>
-                                    <div className='absolute top-0 bg-black/60 hover:bg-transparent transition-all duration-500 z-20 w-[250px] h-[450px] flex'>
-                                        <label className='font-bold mt-auto pb-20 pt-5 px-5 text-xl text-white'>{ profile.last_name + " " + profile.first_name}</label>
-                                    </div>
-                                    {/* <div id='image' className='bg-pink-300 w-[250px] h-[450px] absolute top-0 z-0'></div> */}
-                                    <img src={profileImages[key]} className='w-[250px] h-[450px] absolute top-0 z-0 '></img>
+                {
+                    chosenProfile === null? 
+                    <div id='chose_user' className='flex flex-col lg:flex-row gap-10'>
+                        {
+                            profiles.map((profile,key) => {                            
+                                return(
+                                    <ProfileCard key={key} profile={profile} setter={setChosenProfile} clickable={true} ></ProfileCard>
+                                )
+                            })
+                        }
+                    </div> :
+                    <div className='flex flex-col justify-center'>
+                        <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
+                        <div className='pt-10 pb-5 grid gap-2'>
+                            <div className='grid grid-cols-2 gap-2'>
+                                <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='first name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                                <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='last name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                            </div>
+                            <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='email' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                            <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='phone' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+
+                            <div className='flex flex-col gap-5'>
+                                <div className='flex gap-10'>
+                                    <label>Chose a date : </label>
+                                    <input type='date' min={today} onChange={(e)=>{setClientAppointmentDate(e.target.value)}} ></input>
                                 </div>
-                            )
-                        })
-                    }
-                </div>
+                                <div id='list of hours and appointments of that day'>
+                                    ...list of available hours
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                }
 
                 <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Add Apointment</button>
             </form>

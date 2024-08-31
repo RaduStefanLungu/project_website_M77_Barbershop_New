@@ -158,7 +158,33 @@ function getScheduleFull(){}
 // <dev_tools> 
 
 function createTable(table_name){
+}
 
+
+export async function addNewDocument(collection_name,data){
+  try{
+    const myDocument = await getDocumentById(collection_name,data.doc_id);
+
+    // if profile doesn't exists, create it 
+    if(myDocument === null){
+      setDoc(doc(firestore_db,collection_name,data.doc_id),data)
+      return(data)
+    }
+
+    // profile exists
+    else{
+      return(null)
+    }
+
+  }catch(e){
+    addError({
+      e_message: "Failed to add appointment to << appointments >> firestore table.",
+      program_execution: "Failed to execute firebase.addAppointment(...)",
+      program_function_error: `addAppointment(${user_name},${user_emai},${user_phone},${rdv_date},${rdv_time})`,
+      program_page: "/rendez-vous",
+    })
+    return(e)
+  }
 }
 
 // creates empty days for the given profile

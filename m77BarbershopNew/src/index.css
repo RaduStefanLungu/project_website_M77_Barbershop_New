@@ -3,3 +3,12 @@
 @tailwind utilities;
 
 
+.label-text {
+    position: relative;
+    top: 100px; /* Start position (bottom) */
+    transition: top 0.5s ease;
+}
+
+.hover-overlay:hover .label-text {
+    top: 0; /* End position (top) */
+}
