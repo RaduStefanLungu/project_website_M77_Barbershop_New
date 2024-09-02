@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { addNewDocument, addProfileAndUploadImage, getProfiles, populateProfile, removeProfile } from '../api/firebase'
+import { addAppointment, addAppointment2, addNewDocument, addProfileAndUploadImage, getProfiles, getScheduleHours, populateProfile, removeProfile } from '../api/firebase'
 import { v4 } from 'uuid'
+import { PhoneAuthCredential } from 'firebase/auth'
 
 export default function Dev() {
 
@@ -355,6 +356,8 @@ const AppointmentForm = ({messagesLog}) => {
     const [clientEmail,setClientEmail] = useState('')
     const [clientPhone,setClientPhone] = useState('')
     const [clientAppointmentDate,setClientAppointmentDate] = useState('')
+    const [clientAppointmentTime,setClientAppointmentTime] = useState('hh:mm')
+    const [clientAppointmentService,setClientAppointmentService] = useState('test service')
     
     useEffect(()=>{
         async function fetchProfiles(){
@@ -371,6 +374,20 @@ const AppointmentForm = ({messagesLog}) => {
     
     async function handleSubmit(e){
         e.preventDefault();
+
+        const response = await addAppointment2({
+            barber_id : chosenProfile.profile_id,
+            appointment_id : v4(),
+            appointment_hour : "10:30",
+            appointment_date : clientAppointmentDate,
+            appointment_service : "modern haircut",
+            appointment_user : {
+              email : clientEmail,
+              name : `${clientLastName} ${clientFirstName}`,
+              phone : clientPhone
+            },
+            registered_time : new Date().toLocaleString()
+          })
     }
 
     const ProfileCard = ({ profile,setter, clickable=false }) => {
@@ -379,7 +396,6 @@ const AppointmentForm = ({messagesLog}) => {
             e.preventDefault();         
             if(clickable){
                 setter(profile)
-                console.log(profile);
             }
             
         }
@@ -404,6 +420,14 @@ const AppointmentForm = ({messagesLog}) => {
         );
     };
     
+
+    async function handleDateChosen(e){
+        e.preventDefault();
+
+        setClientAppointmentDate(e.target.value);
+        await getScheduleHours(e.target.value)
+
+    }
     
     return(
         <div>
@@ -434,7 +458,7 @@ const AppointmentForm = ({messagesLog}) => {
                             <div className='flex flex-col gap-5'>
                                 <div className='flex gap-10'>
                                     <label>Chose a date : </label>
-                                    <input type='date' min={today} onChange={(e)=>{setClientAppointmentDate(e.target.value)}} ></input>
+                                    <input type='date' min={today} onChange={handleDateChosen} ></input>
                                 </div>
                                 <div id='list of hours and appointments of that day'>
                                     ...list of available hours

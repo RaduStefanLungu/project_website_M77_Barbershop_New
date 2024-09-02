@@ -41,14 +41,172 @@ export async function getImageByPath(path){
 
 // DB Structure : 
 
-// appointments -> barber_name_1 -> day(YYYY,MM,DD) -> locked?,appointments
+// appointments -> day(YYYY,MM,DD) -> barber_name_1,locked? ->  appointments -> 
 // profiles -> barber_name_1 -> barber_data
 // admin -> barber_name
 // schedule -> monday -> actual_schedule,new_schedule
 // errors -> yyyy,mm,dd -> data + date & time
 
+const appointments_collection_structure = [
+  {
+    "2024-10-24" : {
+      locked : false,
+      barbers : [
+        {
+          barber_id : 'PerrottaMirco',
+          barber_locked : false,
+          appointments : [
+            {
+              barber_id : "PerrottaMirco",
+              appointment_id : "xyz",
+              appointment_hour : "10:00",
+              appointment_date : "2024-10-24",
+              appointment_service : "modern haircut",
+              appointment_user : {
+                email : "bob_gigi@test.com",
+                name : "Bob Gigi",
+                phone : "0123456789"
+              },
+              registered_time : "yyyy-mm-dd at hh:mm:ss"
+            }
+          ] 
+        }
+      ]
+    }
+  }
+]
+
+const appointment_structure = {
+  appointment : {
+    barber_id : "GigelFrone",
+    appointment_id : "xyz",
+    appointment_hour : "10:00",
+    appointment_date : "2024-10-24",
+    appointment_service : "modern haircut",
+    appointment_user : {
+      email : "bob_gigi@test.com",
+      name : "Bob Gigi",
+      phone : "0123456789"
+    },
+    registered_time : "yyyy-mm-dd at hh:mm:ss"
+  }
+}
+
+
+/*
+  Input : barbar_id & appointments list
+  Output : list of appointments for the given barber_id
+*/
+function getAppointmentsOfBarber(barber_id,appointments_list){  
+  let response = []
+  for (let index = 0; index < appointments_list.length; index++) {
+    const element = appointments_list[index];
+    if(element.barber_id == barber_id){
+      response.push(element)
+    }
+  }  
+  return(response)
+} 
+
+/*
+  Input : wanted hour and a list appointments
+  Output : true if given hour is taken in the list, else false
+*/
+function isHourTaken(hour,appointments_list){
+  for (let index = 0; index < appointments_list.length; index++) {
+    const element = appointments_list[index];
+    if(element.appointment_hour === hour){
+      return(true);
+    }
+  }
+
+  return(false)
+}
+
+/*
+  Input : a list appointments
+  Output : list of hour of each appointment
+*/
+function getHours(appointments_list){
+  let response = []
+  for (let index = 0; index < appointments_list.length; index++) {
+    const element = appointments_list[index];
+    response.push(element.appointment_hour)
+  }
+
+  return(response)
+}
+
 // data = {"day" : "2024-10-21", ...}
-function addAppointment2(data){}
+/*
+  Input : appointment data (json format)
+  Output : true if appointment has been successfully registered, else false
+*/
+export async function addAppointment2(data){
+  
+  // check if day-document already exists in the database
+  const day_document = await getDocumentById('appointments',data.appointment_date)
+
+  if(day_document !== null){
+    console.log(`Document ${data.appointment_date} already exists.`);
+    if(day_document.locked){
+      console.log(`Given day is locked !`);
+      return(false)
+    }
+    else{
+      // TODO : check if there are any active locked days in profiles.barber_name.locked_days
+      const profile_doc = await getDocumentById('profiles',data.barber_id)
+      
+      if(profile_doc.locked_days.includes(data.appointment_date)){
+        console.log(`Profile ${profile_doc.profile_id} includes ${data.appointment_date} as LOCKED DAY.`);
+        return(false)
+      }
+      else{
+        console.log(`> Value of IsHourTaken : ${isHourTaken(data.appointment_hour,getAppointmentsOfBarber(data.barber_id,day_document.appointments))}
+                    > variable_hour : ${data.appointment_hour}
+                    > variable_appointment_list : ${getAppointmentsOfBarber(data.barber_id,day_document.appointments)}`);
+        
+        if(isHourTaken(data.appointment_hour,getAppointmentsOfBarber(data.barber_id,day_document.appointments))){
+          console.log(`Wanted hour ${data.appointment_hour} is already taken for ${data.barber_id}.`);
+          return(false)
+        }
+        else{
+          const day_document_ref = doc(firestore_db, "appointments", data.appointment_date);
+          await updateDoc(day_document_ref, {
+            appointments: arrayUnion({ data })
+            })
+            console.log(`Array ${data.appointment_date}.appointments has been updated by adding new appointment.`);
+            return(true)
+        }
+      }
+    }
+  }
+  else{
+    console.log('Document doesnt exist.');
+    await setDoc(doc(firestore_db,'appointments',data.appointment_date),{
+      locked: false,
+      appointments: [data]
+    })
+    console.log(`New document ${data.appointment_date} has been created. Array ${data.appointment_date}.appointments has been created by adding new appointment.`);
+    return(true)
+    
+  }
+
+  //  if it does :
+  //    check if day is locked
+  //        if it is: return false
+  //        else : 
+  //            get the barber_name, verify if its locked,
+  //            if it is : return false
+  //            else : 
+  //                 check if there is another appointment the same appointment_hour
+  //                     if it is : return false
+  //                     else : 
+  //                        append new appointment & return true
+
+}
+
+
 
 function removeAppointment2(){}
 
@@ -148,10 +306,38 @@ export async function getProfiles(){
 
 function getAppointments(day){}
 
+/*
+  Input : day (yyyy-mm-dd)
+  Output : list of available hours for the given day with a distance of HOURS_DISTANCE
+*/
+export async function getScheduleHours(day){
+  const day_name = getDayOfWeek(day);
+  const schedule_doc = await getDocumentById('schedule', day_name)
+  const HOURS_DISTANCE = 30   // in minutes
+  
+  let response = [];
 
+  const is_day_locked = schedule_doc.locked
 
-// gets hours for the given day (ex : day_name = "monday")
-function getScheduleHours(day_name){}
+  if(schedule_doc.new_schedule.starting_date <= day){
+    const intervals =  generateTimeIntervals(schedule_doc.new_schedule.opening_hour,schedule_doc.new_schedule.closing_hour,HOURS_DISTANCE)
+    intervals.forEach((hour) => {
+      response.push([hour,is_day_locked])
+    })
+  }
+  else{
+    const intervals =  generateTimeIntervals(schedule_doc.actual_schedule.opening_hour,schedule_doc.actual_schedule.closing_hour,HOURS_DISTANCE)
+    intervals.forEach((hour) => {
+      response.push([hour,is_day_locked])
+    })
+  }
+
+  return(response)
+}
+
+export async function getHoursWithAvailability(day,barber_name){
+
+}
 
 function getScheduleFull(){}
 
@@ -532,3 +718,34 @@ export async function addError(data){
     }
     addDoc(collection(firestore_db,"error_table"),error_data)
   }
+
+  /*
+    Input : date (yyyy-mm-dd);
+    Return : name of the day (monday,sunday etc);
+  */
+  function getDayOfWeek(dateString) {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const date = new Date(dateString);
+    const dayIndex = date.getDay();
+    return days[dayIndex];
+}
+
+function generateTimeIntervals(hour1, hour2, step) {
+  const times = [];
+  const [hour1H, hour1M] = hour1.split(':').map(Number);
+  const [hour2H, hour2M] = hour2.split(':').map(Number);
+
+  // Convert start and end time to minutes
+  let startTime = hour1H * 60 + hour1M;
+  const endTime = hour2H * 60 + hour2M;
+
+  while (startTime <= endTime) {
+      const hours = Math.floor(startTime / 60);
+      const minutes = startTime % 60;
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+      times.push(formattedTime);
+      startTime += step;
+  }
+
+  return times;
+}

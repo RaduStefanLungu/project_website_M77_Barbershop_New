@@ -2,6 +2,12 @@
 
 Project : Appointment System
 
+
+TODO : Work on the appointment system
+    -> update profile creatinon to add field : locked_days = []
+    -> work on addAppointment2  DONE (it works)
+    -> test addAppointment2
+
 Planning : 
     Users : 
         - Users can chose a barber, a date & hour and a service. 
