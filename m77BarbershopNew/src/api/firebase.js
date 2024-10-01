@@ -28,6 +28,8 @@ export const firestore_db = getFirestore(app)
 
 const firestore = getStorage(app)
 
+// IMAGE CONFIG
+
 export async function uploadImage(image,imageName){
   const imgRef = ref(firestore,`photos/${imageName}`)
   return uploadBytes(imgRef,image)
@@ -93,6 +95,8 @@ const appointment_structure = {
 }
 
 
+// APPOINTMENTS CONFIG
+
 /*
   Input : barbar_id & appointments list
   Output : list of appointments for the given barber_id
@@ -123,19 +127,6 @@ function isHourTaken(hour,appointments_list){
   return(false)
 }
 
-/*
-  Input : a list appointments
-  Output : list of hour of each appointment
-*/
-function getHours(appointments_list){
-  let response = []
-  for (let index = 0; index < appointments_list.length; index++) {
-    const element = appointments_list[index];
-    response.push(element.appointment_hour)
-  }
-
-  return(response)
-}
 
 // data = {"day" : "2024-10-21", ...}
 /*
@@ -206,14 +197,88 @@ export async function addAppointment2(data){
 
 }
 
+export async function removeAppointment2(){}
+
+/*
+  Input : day and profile
+  Output : list of appointments for the given day of the given profile
+*/
+export async function getAppointments(day,profile){
+  //TODO
+}
+
+/*
+  Input : day (yyyy-mm-dd)
+  Output : list of available hours for the given day with a distance of HOURS_DISTANCE
+*/
+async function generateScheduleHours(day){
+  const day_name = getDayOfWeek(day);
+  const schedule_doc = await getDocumentById('schedule', day_name)
+  const HOURS_DISTANCE = 30   // in minutes
+  
+  let response = [];
+
+  const is_day_locked = schedule_doc.locked
+
+  if(schedule_doc.new_schedule.starting_date <= day){
+    const intervals =  generateTimeIntervals(schedule_doc.new_schedule.opening_hour,schedule_doc.new_schedule.closing_hour,HOURS_DISTANCE)
+    intervals.forEach((hour) => {
+      response.push([hour,is_day_locked])
+    })
+  }
+  else{
+    const intervals =  generateTimeIntervals(schedule_doc.actual_schedule.opening_hour,schedule_doc.actual_schedule.closing_hour,HOURS_DISTANCE)
+    intervals.forEach((hour) => {
+      response.push([hour,is_day_locked])
+    })
+  }
+
+  return(response)
+}
+
+/*
+  Input : day 
+  Output : schedule for the given day (hours and their availability)
+*/
+export async function getSchedule(day){
+  const generatedHoursFromDb = await generateScheduleHours(day)
+
+  var response = []
+
+  const dayDocument = await getDocumentById('appointments',day)
+
+  if(dayDocument === null){
+    return(generatedHoursFromDb)
+  }
+  else{
+    generatedHoursFromDb.forEach(
+      (element) => {
+        if(isHourTaken(element[0], dayDocument.appointments)){
+          response.push([element[0],true])
+        }
+        else{
+          response.push(element)
+        }
+      }
+    )
+    return(response)
+    
+    
+  }
 
 
-function removeAppointment2(){}
+  // console.log(switchListTo(generatedHoursFromDb,true));
 
-// date = date of the day (used as id in db)
-// creates the day inside a given profile to add appointments
-function addDay(date,profile){}
+  // console.log(dayDocument.appointments);
+  
+  
+  
+  
+}
 
+
+
+// USER CONFIG
 
 export async function registerUser(data){
   const updated_data = {
@@ -238,7 +303,7 @@ export async function removeUser(){
     if not : it adds it to db and returns the given profile data,
     else : returns null
 */
-export async function addProfile(profileData){
+async function addProfile(profileData){
 
   try{
     const myDocument = await getDocumentById('profiles',profileData.profile_id);
@@ -304,47 +369,8 @@ export async function getProfiles(){
   return profiles;
 }
 
-function getAppointments(day){}
-
-/*
-  Input : day (yyyy-mm-dd)
-  Output : list of available hours for the given day with a distance of HOURS_DISTANCE
-*/
-export async function getScheduleHours(day){
-  const day_name = getDayOfWeek(day);
-  const schedule_doc = await getDocumentById('schedule', day_name)
-  const HOURS_DISTANCE = 30   // in minutes
-  
-  let response = [];
-
-  const is_day_locked = schedule_doc.locked
-
-  if(schedule_doc.new_schedule.starting_date <= day){
-    const intervals =  generateTimeIntervals(schedule_doc.new_schedule.opening_hour,schedule_doc.new_schedule.closing_hour,HOURS_DISTANCE)
-    intervals.forEach((hour) => {
-      response.push([hour,is_day_locked])
-    })
-  }
-  else{
-    const intervals =  generateTimeIntervals(schedule_doc.actual_schedule.opening_hour,schedule_doc.actual_schedule.closing_hour,HOURS_DISTANCE)
-    intervals.forEach((hour) => {
-      response.push([hour,is_day_locked])
-    })
-  }
-
-  return(response)
-}
-
-export async function getHoursWithAvailability(day,barber_name){
-
-}
-
-function getScheduleFull(){}
 
 // <dev_tools> 
-
-function createTable(table_name){
-}
 
 
 export async function addNewDocument(collection_name,data){
@@ -372,12 +398,6 @@ export async function addNewDocument(collection_name,data){
     return(e)
   }
 }
-
-// creates empty days for the given profile
-export async function populateProfile(barber_name,fromDate,toDate){
-    return("> Executed populateProfile")
-}
-
 
 // Situational :
 
@@ -435,169 +455,6 @@ async function removeDocumentByID(docID) {
   }
 }
 
-export async function getTakenHoursOfDay(day){
-  let result = []
-
-  // check if document exists : 
-
-  let document_from_db = await getDocumentById('appointments',day)
-
-  if(document_from_db === null){
-    return result
-  }
-  else{
-    const given_day_appointments = await getAppointmentDate(day)
-    given_day_appointments.all_appointments.forEach(
-      (element) => {
-        const appointmentKeys = Object.keys(element)
-
-        appointmentKeys.forEach(key => {
-          const appointmentData = element[key];
-          result.push(appointmentData['rdv_time'])
-      });
-    })
-    return result
-  }
-
-  
-}
-
-export async function getAppointmentDate(documentID) {
-    try{
-        return getDocumentById("appointments",documentID)
-    }catch(e){
-        addError({
-            e_message: "Failed to get appointment from << appointments >> firestore table.",
-            program_execution: "Failed to execute firebase.getAppointmentDate(...)",
-            program_function_error: `addAppointment(${documentID})`,
-            program_page: "/rendez-vous",
-          })
-          return(e)
-    }
-}
-
-export async function getAllAppointments(setter) {
-  const collectionRef = collection(firestore_db, 'appointments');
-  const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-      const newData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      // Sort newData by ID
-      newData.sort((a, b) => {
-          const [dayA, monthA, yearA] = a.id.split('_').map(Number);
-          const [dayB, monthB, yearB] = b.id.split('_').map(Number);
-          
-          // Compare years
-          if (yearA !== yearB) {
-              return yearA - yearB;
-          }
-          
-          // Compare months if years are equal
-          if (monthA !== monthB) {
-              return monthA - monthB;
-          }
-          
-          // Compare days if months are equal
-          return dayA - dayB;
-      });
-
-      setter(newData);
-  });
-  return () => unsubscribe();
-}
-
-export async function getAllAppointmentsMonotone() {
-  const myCollection = await collection(firestore_db,"appointments")
-  const querySnapshot = await getDocs(myCollection)
-  
-  const appointmentsByDay = []
-  querySnapshot.forEach((doc) => {
-    appointmentsByDay.push({id: doc.id, ...doc.data()})
-  })  
-
-  return appointmentsByDay;
-}
-
-// TODO : when adding a new appointment to document, check if it exists already !!!  
-export async function addAppointment(user_name,user_emai,user_phone,rdv_date,rdv_time,service_type){
-    const data = {
-        appointment_number : "appointment_0",
-        user_name: user_name,
-        user_email: user_emai,
-        user_phone: user_phone,
-        rdv_date: rdv_date,
-        rdv_time: rdv_time,
-        service_type: service_type,
-        rdv_taken_time : Timestamp.now()
-    }
-
-    try{
-      
-      // check if document already existst:
-
-      const myDocument = await getDocumentById('appointments',rdv_date);
-      
-      let number_of_existing_appointments = 0
-
-      // if it doesn't exists, create document 
-      if(myDocument === null){
-        setDoc(doc(firestore_db,'appointments',rdv_date),{
-          all_appointments : [],
-          locked : false
-        })
-      }
-
-      // document exists
-      else{
-        // check if hour of appointment has been taken :
-        let appointment_hour_taken = false;
-        myDocument.all_appointments.forEach((rezervation) => {
-          if(rezervation.data.rdv_time === rdv_time){
-            appointment_hour_taken = true
-            return  // stop loop
-          }
-        })
-
-        // if appointment hour is taken then don't continue
-        if(appointment_hour_taken){
-          console.log(`Appointment hour(${rdv_time}) is taken on ${rdv_date}.`);
-          return(false);
-        }
-        // appointment hour is available
-        else{
-          //get # of existing appointments 
-          number_of_existing_appointments = myDocument.all_appointments.length
-          // get last appointment number
-          if(number_of_existing_appointments > 0 ) {
-            const last_appoint = myDocument.all_appointments[number_of_existing_appointments-1].data.appointment_number
-            const last_appoint_number =  parseInt(last_appoint.split("_")[1])
-            data.appointment_number = `appointment_${last_appoint_number+1}`
-          }
-
-          // add new appointment to array after the document has been fetched/created & data object has been filled.
-          // all verifications has been done before (locked in UI & line 198)
-          const appointmentRef = doc(firestore_db, "appointments", rdv_date);
-          updateDoc(appointmentRef, {
-          all_appointments: arrayUnion({ data })
-          });
-          return(true)
-
-        }
-
-      }
-
-      
-
-    }catch(e){
-      addError({
-        e_message: "Failed to add appointment to << appointments >> firestore table.",
-        program_execution: "Failed to execute firebase.addAppointment(...)",
-        program_function_error: `addAppointment(${user_name},${user_emai},${user_phone},${rdv_date},${rdv_time})`,
-        program_page: "/rendez-vous",
-      })
-      return(e)
-    }
-  
-}
 
 export async function removeAppointment(appointment_date,appointment_number){
   console.log(`Removing ${appointment_date},${appointment_number}`);
@@ -633,18 +490,6 @@ export async function removeAppointment(appointment_date,appointment_number){
 } catch (error) {
     console.error('Error removing appointment: ', error);
 }
-}
-
-export async function isDayLocked(day){
-  const myDocument = await getDocumentById('appointments',day)
-
-  if(myDocument === null){
-    return(false)
-  }
-  else{
-    return(myDocument.locked)
-  }
-
 }
 
 export async function lockDays(days_list){
@@ -684,7 +529,6 @@ async function lockDay(documentID) {
       console.error('Error locking day: ', error);
   }
 }
-
 async function unlockDay(documentID) {
   try {
       const appointmentsRef = doc(firestore_db, 'appointments', documentID);
@@ -718,6 +562,11 @@ export async function addError(data){
     }
     addDoc(collection(firestore_db,"error_table"),error_data)
   }
+
+
+
+// OTHER
+
 
   /*
     Input : date (yyyy-mm-dd);

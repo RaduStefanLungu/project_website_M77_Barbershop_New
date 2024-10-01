@@ -1,5 +1,8 @@
-import React, { useState,useEffect } from 'react'
-import { addAppointment2, getProfiles, getScheduleHours } from '../api/firebase'
+import { useState,useEffect } from 'react'
+import { addAppointment2, getProfiles, getSchedule } from '../api/firebase'
+import { v4 } from 'uuid'
+
+import SERVICES from '../data/services.json'
 
 export default function AppointmentForm(){
     const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
@@ -20,7 +23,11 @@ export default function AppointmentForm(){
     const [clientAppointmentDate,setClientAppointmentDate] = useState('')
     const [clientAppointmentTime,setClientAppointmentTime] = useState('hh:mm')
     const [clientAppointmentService,setClientAppointmentService] = useState('test service')
-    
+
+    const [hoursOfDay,setHoursOfDay] = useState([])
+    const [chosenHour,setChosenHour] = useState('')
+
+
     useEffect(()=>{
         async function fetchProfiles(){
             await getProfiles().then(
@@ -37,10 +44,24 @@ export default function AppointmentForm(){
     async function handleSubmit(e){
         e.preventDefault();
 
-        const response = await addAppointment2({
+        // const response = await addAppointment2({
+        //     barber_id : chosenProfile.profile_id,
+        //     appointment_id : v4(),
+        //     appointment_hour : chosenHour,
+        //     appointment_date : clientAppointmentDate,
+        //     appointment_service : "modern haircut",
+        //     appointment_user : {
+        //       email : clientEmail,
+        //       name : `${clientLastName} ${clientFirstName}`,
+        //       phone : clientPhone
+        //     },
+        //     registered_time : new Date().toLocaleString()
+        //   })
+
+        console.log({
             barber_id : chosenProfile.profile_id,
             appointment_id : v4(),
-            appointment_hour : "10:30",
+            appointment_hour : chosenHour,
             appointment_date : clientAppointmentDate,
             appointment_service : "modern haircut",
             appointment_user : {
@@ -49,7 +70,9 @@ export default function AppointmentForm(){
               phone : clientPhone
             },
             registered_time : new Date().toLocaleString()
-          })
+          });
+        
+
     }
 
     const ProfileCard = ({ profile,setter, clickable=false }) => {
@@ -87,9 +110,9 @@ export default function AppointmentForm(){
         e.preventDefault();
 
         setClientAppointmentDate(e.target.value);
-        await getScheduleHours(e.target.value)
-
+        setHoursOfDay(await getSchedule(e.target.value))
     }
+
     
     return(
         <div>
@@ -108,8 +131,10 @@ export default function AppointmentForm(){
                         }
                     </div> :
                     <div className='flex flex-col justify-center'>
-                        <div className='flex flex-col'>
-                            <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
+                        <div className='flex flex-col justify-starts'>
+                            <div className='mr-auto'>
+                                <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
+                            </div>
                             <button className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2' onClick={(e)=>{setChosenProfile(null)}}>Back</button>
                         </div>
                         <div className='pt-10 pb-5 grid gap-2'>
@@ -126,7 +151,7 @@ export default function AppointmentForm(){
                                     <input type='date' min={today} onChange={handleDateChosen} ></input>
                                 </div>
                                 <div id='list of hours and appointments of that day'>
-                                    ...list of available hours
+                                    <HoursGrid hours={hoursOfDay} chosenHourSetter={[chosenHour,setChosenHour]} />
                                 </div>
                             </div>
                         
@@ -138,4 +163,37 @@ export default function AppointmentForm(){
             </form>
         </div>
     )
+}
+
+
+const HourTab = ({setter,hour,taken, selected}) => {
+
+    return(
+        <button onClick={()=>{setter[1](hour)}}
+            disabled={taken} className={`${taken? "bg-red-500" : "bg-green-500"} text-white px-5 py-2 rounded-lg border-[0.15rem] ${selected? " border-black" : " border-transparent"} hover:border-black`}>
+            {hour}
+        </button>
+    )
+}
+
+const HoursGrid = ({hours,chosenHourSetter}) => {
+
+    if(hours.length >= 1){
+        return(
+            <div className='grid grid-cols-3 lg:grid-cols-7 gap-2'>
+                {
+                    hours.map(
+                        (value,key)=>{
+                            return(
+                                <HourTab key={key} setter={chosenHourSetter} hour={value[0]} taken={value[1]} selected={chosenHourSetter[0]===value[0]} ></HourTab>
+                            )
+                        }
+                    )
+                }
+            </div>
+        )
+    }
+    else{
+        return(<></>)
+    }
 }

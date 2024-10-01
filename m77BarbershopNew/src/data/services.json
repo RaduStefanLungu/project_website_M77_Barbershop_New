@@ -1,0 +1,76 @@
+{
+    "services_by_group" : [
+        {
+            "group" : "Cheveux",
+            "services" : [
+                {
+                    "name" : "Coupe Classique",
+                    "price" : 18,
+                    "description" : "Ciseaux"
+                },
+                {
+                    "name" : "Coupe Moderne",
+                    "price" : 20,
+                    "description" : "Fade,Taper,..."
+                },
+                {
+                    "name" : "Coupe Tondeuse",
+                    "price" : 15,
+                    "description" : "Même mm partout"
+                },
+                {
+                    "name" : "Contours Taper",
+                    "price" : 15,
+                    "description" : "Que les tempes et la nuque"
+                },
+                {
+                    "name" : "Kid's Price",
+                    "price" : 15,
+                    "description" : "-12Ans"
+                }
+            ]
+        },
+        {
+            "group" : "Barbe",
+            "services" : [
+                {
+                    "name" : "Traçage contours de barbe",
+                    "price" : 10,
+                    "description" : "Avec serviette chaude"
+                },
+                {
+                    "name" : "Taille + Traçage de barbe",
+                    "price" : 15,
+                    "description" : "Avec serviette chaude"
+                },
+                {
+                    "name" : "Rasage Express",
+                    "price" : 15,
+                    "description" : "à la lame et avec serviette chaude"
+                },
+                {
+                    "name" : "Rasage Traditionnel",
+                    "price" : 20,
+                    "description" : "Serviette chaude avant et après"
+                },
+                {
+                    "name" : "Rasage Shaver",
+                    "price" : 5,
+                    "description" : ""
+                }
+            ]
+        }
+    ],
+    "packages" : [
+        {
+            "name" : "cheveux + traçage",
+            "price" : 25,
+            "description" : ""
+        },
+        {
+            "name" : "cheveux + taille et traçage",
+            "price" : 27,
+            "description" : ""
+        }
+    ]
+}

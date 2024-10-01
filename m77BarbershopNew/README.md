@@ -6,6 +6,7 @@ Project : Appointment System
 TODO : Work on the appointment system
     -> update profile creatinon to add field : locked_days = []
     -> work on addAppointment2  DONE (it works)
+    -> AppointmentForm : show available hours for chosen day
     -> test addAppointment2
 
 Planning : 

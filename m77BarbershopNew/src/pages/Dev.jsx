@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { addAppointment, addAppointment2, addNewDocument, addProfileAndUploadImage, getProfiles, getScheduleHours, populateProfile, removeProfile } from '../api/firebase'
+import { addAppointment2, addNewDocument, addProfileAndUploadImage, getProfiles, removeProfile } from '../api/firebase'
 import { v4 } from 'uuid'
 import { PhoneAuthCredential } from 'firebase/auth'
 import AppointmentForm from '../components/AppointmentForm'
@@ -28,11 +28,9 @@ export default function Dev() {
 
                     <AddBarber messagesLog={[messages,setMessages]}></AddBarber>
 
-                    <AddDaysToSchedule/>
+                    {/* <AddDaysToSchedule/> */}
 
                     <AppointmentForm/>
-
-                    {/* <PopulateProfile messagesLog={[messages,setMessages]} ></PopulateProfile> */}
 
                     <div>
                         ...
@@ -233,35 +231,6 @@ const AddBarber = ({messagesLog}) => {
 
             <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Add</button>
         </form>
-    )
-}
-
-const PopulateProfile = ({messagesLog}) => {
-
-    function handlePopulateProfile(e){
-        e.preventDefault();
-        console.log('Populating profile ...');
-        populateProfile('profile_id','fromDate','toDate').then(
-            (response) => {
-                console.log(response);
-            }
-        )
-
-        messagesLog[1]([messagesLog,<Message key={messagesLog[0].length-1} message={`Populated profile ${'profile_name'}`}/>])
-    }
-    
-    
-
-    return(
-        <div className='flex flex-col max-w-[350px]'>
-            <label className='text-md'>Populate Profile</label>
-            <div className='grid gap-2'>
-                <input type='text' placeholder='profile name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' ></input>
-                <input type='text' placeholder='from date' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' ></input>
-                <input type='text' placeholder='to date' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' ></input>
-            </div>
-            <button onClick={handlePopulateProfile} className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Populate</button>
-        </div>
     )
 }
 

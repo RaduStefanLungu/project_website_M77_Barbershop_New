@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+.card {
+    @apply
+    w-[150px] h-[200px]
+    lg:w-[250px] lg:h-[350px]
+    rounded-xl
+    shadow-md shadow-gray-400
+}
+
+.cardBorder {
+    @apply
+    border-[0.15rem] border-gray-400
+}
+
+.cardAnimation {
+    @apply
+    bg-gray-200 hover:bg-gray-400
+    transition-all duration-200
+}
