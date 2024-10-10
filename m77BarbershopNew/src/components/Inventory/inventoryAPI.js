@@ -130,15 +130,26 @@ export async function getItems(){
   return(items)
 }
 
-export function updateQuantity(itemID,newQuantity){
-    addLog('updateQuantity',[itemID,newQuantity])
-    // update quantity to 'newQuantity' of item 'itemID'
+export async function updateQuantity(itemID, newQuantity) {
+  addLog('updateQuantity', [itemID, newQuantity]);
+  
+  // Get a reference to the document in Firestore based on itemID
+  const itemRef = doc(firestore_db, INVENTORY_COLLECTION, itemID);
+
+  try {
+      // Update the item_quantity field with the new value
+      await updateDoc(itemRef, {
+          item_quantity: newQuantity
+      });
+      console.log(`Document ${itemID} successfully updated!`);
+  } catch (error) {
+      console.error('Error updating document: ', error);
+  }
 }
 
-export function removeItem(itemID){
-  removeDocumentByID(itemID,INVENTORY_COLLECTION)
-    addLog('removeItem',[itemID])
-    // remove item from collection 'items'
+export async function removeItem(itemID){
+  await removeDocumentByID(itemID,INVENTORY_COLLECTION)
+  addLog('removeItem',[itemID])
 }
 
 function addLog(functionName,params){
