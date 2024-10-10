@@ -40,7 +40,8 @@ export default function Dev() {
             
             </div>
 
-            <div className='bg-emerald-200 pt-5 px-10 flex flex-col gap-10'> 
+            <div className='bg-emerald-200 pt-5 px-10 flex flex-col gap-10'>
+
                 <div id='log' className='flex flex-col p-3 bg-slate-100'>
                     <h2 className='font-bold text-3xl py-3'> LOG </h2>
                     <div className='flex flex-col border-[0.15] border-blue-500 min-h-[200px] max-h-[300px] lg:max-h-[350px] overflow-y-scroll'>
@@ -239,15 +240,15 @@ const CreatedProfilesList = ({messagesLog}) => {
 
     const [profiles,setProfiles] = useState([])
 
-    useEffect(()=>{
-        async function fetchProfiles(){
-            await getProfiles().then(
-                (response) => {
-                    setProfiles(response)
-                }
-            )
-        } 
+    async function fetchProfiles(){
+        await getProfiles().then(
+            (response) => {
+                setProfiles(response)
+            }
+        )
+    }
 
+    useEffect(()=>{
         fetchProfiles()
     },[])
 
