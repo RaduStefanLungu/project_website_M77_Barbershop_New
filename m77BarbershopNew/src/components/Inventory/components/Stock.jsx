@@ -109,7 +109,7 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
 
         const [message,setMessage] = useState(["",false])
         
-        const [stockValue,setStockValue] = useState(Number(itemData.item_quantity))
+        const [stockValue,setStockValue] = useState(Number(itemData.data.item_quantity))
 
         const [deleteConfirmation,setDeleteConfirmation] = useState(false)
 
@@ -130,7 +130,7 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
         async function handleSave(e){
             e.preventDefault();
             try {
-                await updateQuantity(itemData.item_id,stockValue).then(
+                await updateQuantity(itemData.data.item_id,stockValue).then(
                     (resp) => {
                         setMessage(["Nouvelle quantité sauvegardée",true])
                         UpdateItemsList[1](true)
@@ -146,7 +146,7 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
             e.preventDefault();
             
             try {
-                await removeItem(itemData.item_id).then(
+                await removeItem(itemData.data.item_id).then(
                     (resp) => {
                         UpdateItemsList[1](true)
                         setDeleteConfirmation(false);
@@ -177,9 +177,9 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
 
                 <div id='holder' className='flex flex-col'>
                     
-                    <h3 className='font-bold text-3xl pb-3'>{itemData.item_name}</h3>
+                    <h3 className='font-bold text-3xl pb-3'>{itemData.data.item_name}</h3>
 
-                    <img src={itemData.item_image_url} className='max-w-[500px] max-h-[500px]'></img>
+                    <img src={itemData.data.item_image_url} className='max-w-[500px] max-h-[500px]'></img>
 
                     <div id='details tab' className='grid '>
                         <button onClick={()=>{setShowDetails(!showDetails)}} className='bg-gray-200 p-2'>
@@ -193,19 +193,19 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
                             <div id='details' className='grid'>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item ID : </label>
-                                    <label>{itemData.item_id}</label>
+                                    <label>{itemData.data.item_id}</label>
                                 </div>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item Quantity : </label>
-                                    <label>{itemData.item_quantity}</label>
+                                    <label>{itemData.data.item_quantity}</label>
                                 </div>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item Added Time : </label>
-                                    <label>{itemData.item_added_time}</label>
+                                    <label>{itemData.data.item_added_time}</label>
                                 </div>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item Image URL : </label>
-                                    <label className='overflow-auto max-h-14'>{itemData.item_image_url}</label>
+                                    <label className='overflow-auto max-h-14'>{itemData.data.item_image_url}</label>
                                 </div>
                             </div> : <></>
                         }
@@ -244,12 +244,12 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
     }
 
     return(
-        <div onClick={handleClicked} className={`card flex flex-col overflow-hidden ${itemData.item_quantity<=0 ? "border-red-500 border-[0.25rem]" : "cardBorder"}`}>
+        <div onClick={handleClicked} className={`card flex flex-col overflow-hidden ${itemData.data.item_quantity<=0 ? "border-red-500 border-[0.25rem]" : "cardBorder"}`}>
             {/* <div id='image' className='bg-pink-300 w-full h-[150px] xl:h-[250px]'></div> */}
-            <img src={itemData.item_image_url} className='w-full h-[100px] lg:h-[225px] xl:h-[250px]' ></img>
-            <label className='text-center font-bold pt-1 lg:text-2xl'>{itemData.item_name}</label>
-            <label className='text-center italic py-2 text-xs'>{itemData.item_id}</label>
-            <label className='text-center lg:text-xl'>Stock : <span className='font-medium'>{itemData.item_quantity}</span></label>
+            <img src={itemData.data.item_image_url} className='w-full h-[100px] lg:h-[225px] xl:h-[250px]' ></img>
+            <label className='text-center font-bold pt-1 lg:text-2xl'>{itemData.data.item_name}</label>
+            <label className='text-center italic py-2 text-xs'>{itemData.data.item_id}</label>
+            <label className='text-center lg:text-xl'>Stock : <span className='font-medium'>{itemData.data.item_quantity}</span></label>
         </div>
     )
 }
