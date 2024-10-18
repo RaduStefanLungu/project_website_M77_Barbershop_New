@@ -175,11 +175,11 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
                     </div> : <></>
                 }
 
-                <div id='holder' className='flex flex-col'>
+                <div id='holder' className='flex flex-col overflow-hidden'>
                     
-                    <h3 className='font-bold text-3xl pb-3'>{itemData.data.item_name}</h3>
+                    <h3 className='font-bold text-3xl pb-3 max-h-[100px] overflow-auto'>{itemData.data.item_name}</h3>
 
-                    <img src={itemData.data.item_image_url} className='max-w-[500px] max-h-[500px]'></img>
+                    <img src={itemData.data.item_image_url} className='max-w-[350px] max-h-[350px] md:mx-auto'></img>
 
                     <div id='details tab' className='grid '>
                         <button onClick={()=>{setShowDetails(!showDetails)}} className='bg-gray-200 p-2'>
@@ -193,11 +193,19 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
                             <div id='details' className='grid'>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item ID : </label>
-                                    <label>{itemData.data.item_id}</label>
+                                    <label className='overflow-auto'>{itemData.data.item_id}</label>
                                 </div>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item Quantity : </label>
                                     <label>{itemData.data.item_quantity}</label>
+                                </div>
+                                <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
+                                    <label>Item Buy Price : </label>
+                                    <label>{itemData.data.item_buy_price}€</label>
+                                </div>
+                                <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
+                                    <label>Item Sell Price : </label>
+                                    <label>{itemData.data.item_sell_price}€</label>
                                 </div>
                                 <div className='grid grid-cols-2 border-b-[0.05rem] border-gray-400'>
                                     <label>Item Added Time : </label>
@@ -222,6 +230,16 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
                             <CiCirclePlus/>
                         </button>
                     </div>
+                    <div className='flex justify-center items-center gap-5 pb-5'>
+                        <div className='grid'>
+                            <label className='text-xl p-2'>Prix Achat :</label>
+                            <label className='font-medium px-1 text-center'>{itemData.data.item_buy_price}€</label>
+                        </div>
+                        <div className='grid'>
+                            <label className='text-xl p-2'>Prix Vente :</label>
+                            <label className='font-medium px-1 text-center'>{itemData.data.item_sell_price}€</label>
+                        </div>
+                    </div>
                     
                     <p className={`${message[1]? "text-green-500" : "text-red-500"} px-2 text-center`}>{message}</p>
 
@@ -244,12 +262,14 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
     }
 
     return(
-        <div onClick={handleClicked} className={`card flex flex-col overflow-hidden ${itemData.data.item_quantity<=0 ? "border-red-500 border-[0.25rem]" : "cardBorder"}`}>
+        <div onClick={handleClicked} className={`card grid overflow-hidden ${itemData.data.item_quantity<=0 ? "border-red-500 border-[0.25rem]" : "cardBorder"}`}>
             {/* <div id='image' className='bg-pink-300 w-full h-[150px] xl:h-[250px]'></div> */}
-            <img src={itemData.data.item_image_url} className='w-full h-[100px] lg:h-[225px] xl:h-[250px]' ></img>
-            <label className='text-center font-bold pt-1 lg:text-2xl'>{itemData.data.item_name}</label>
-            <label className='text-center italic py-2 text-xs'>{itemData.data.item_id}</label>
-            <label className='text-center lg:text-xl'>Stock : <span className='font-medium'>{itemData.data.item_quantity}</span></label>
+            <img src={itemData.data.item_image_url} className='mx-auto w-[100px] h-[100px] lg:w-[225px] lg:h-[225px] xl:w-[250px] xl:h-[250px]' ></img>
+            <div className='grid'>
+                <label className='max-h-[50px] overflow-auto text-center font-bold pt-1 lg:text-2xl'>{itemData.data.item_name}</label>
+                {/* <label className='text-center italic py-2 text-xs'>{itemData.data.item_id}</label> */}
+                <label className='border-t-[0.05rem] border-blue-500 text-center lg:text-xl'>Stock : <span className='font-medium'>{itemData.data.item_quantity}</span></label>
+            </div>
         </div>
     )
 }
@@ -260,6 +280,8 @@ const AddItemInterface = ({UpdateItemsList,PopupSetters,PopupHolder,ClickedAddIt
 
     const [itemName,setItemName] = useState("")
     const [itemQuantity,setItemQuantity] = useState(0)
+    const [itemBuyPrice,setItemBuyPrice] = useState(0)
+    const [itemSellPrice,setItemSellPrice] = useState(0)
 
     const [message,setMessage] = useState([])
 
@@ -270,6 +292,8 @@ const AddItemInterface = ({UpdateItemsList,PopupSetters,PopupHolder,ClickedAddIt
             item_id : itemName.split(" ").join("_"),
             item_name : itemName,
             item_quantity : itemQuantity,
+            item_buy_price : itemBuyPrice,
+            item_sell_price : itemSellPrice,
             item_image_url : '',
             item_added_time : new Date().toLocaleString('en-GB',{timeZone:'UTC'})
         }
@@ -309,6 +333,16 @@ const AddItemInterface = ({UpdateItemsList,PopupSetters,PopupHolder,ClickedAddIt
                     <div className='grid grid-cols-2 text-end'>
                         <label className='px-2'>Quantité de départ : </label>
                         <input type='number' placeholder={itemQuantity} onChange={(e)=>{setItemQuantity(e.target.value)}} className='border-blue-500 border-[0.15rem] rounded-lg px-1'></input>
+                    </div>
+
+                    <div className='grid grid-cols-2 text-end'>
+                        <label className='px-2'>Prix d'<span className='font-bold'>achat</span> par unité (€) : </label>
+                        <input type='decimal' placeholder={`${itemBuyPrice}€`} onChange={(e)=>{setItemBuyPrice(e.target.value)}} className='border-blue-500 border-[0.15rem] rounded-lg px-1'></input>
+                    </div>
+
+                    <div className='grid grid-cols-2 text-end'>
+                        <label className='px-2'>Prix de <span className="font-bold">vente</span> par unité (€) : </label>
+                        <input type='decimal' placeholder={`${itemSellPrice}€`} onChange={(e)=>{setItemSellPrice(e.target.value)}} className='border-blue-500 border-[0.15rem] rounded-lg px-1'></input>
                     </div>
 
                     <div className='grid grid-cols-2 text-end'>

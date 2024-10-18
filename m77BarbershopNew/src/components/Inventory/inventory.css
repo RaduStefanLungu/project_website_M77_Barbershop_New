@@ -29,3 +29,9 @@
     @apply
     grid justify-center items-center p-3
 }
+
+.special-vente-shadow-1 {
+    -webkit-box-shadow: 15px 15px 50px -25px rgba(0,0,0,0.75);
+    -moz-box-shadow: 15px 15px 50px -25px rgba(0,0,0,0.75);
+    box-shadow: 15px 15px 50px -25px rgba(0,0,0,0.75);
+}
