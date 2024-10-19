@@ -21,8 +21,8 @@ export default function AppointmentForm(){
     const [clientEmail,setClientEmail] = useState('')
     const [clientPhone,setClientPhone] = useState('')
     const [clientAppointmentDate,setClientAppointmentDate] = useState('')
-    const [clientAppointmentTime,setClientAppointmentTime] = useState('hh:mm')
-    const [clientAppointmentService,setClientAppointmentService] = useState('test service')
+
+    const [clientAppointmentService,setClientAppointmentService] = useState('test_service')
 
     const [hoursOfDay,setHoursOfDay] = useState([])
     const [chosenHour,setChosenHour] = useState('')
@@ -63,7 +63,7 @@ export default function AppointmentForm(){
             appointment_id : v4(),
             appointment_hour : chosenHour,
             appointment_date : clientAppointmentDate,
-            appointment_service : "modern haircut",
+            appointment_service : "modern haircut",         //TODO : let user chose this !!
             appointment_user : {
               email : clientEmail,
               name : `${clientLastName} ${clientFirstName}`,
@@ -88,8 +88,8 @@ export default function AppointmentForm(){
         return (
             <button onClick={handleClickedProfile}>
                 <div className="relative container m-auto w-[250px] h-[450px] overflow-hidden">
-                    <div className="absolute overflow-hidden bottom-0 backdrop-grayscale bg-black/35 hover:bg-transparent hover:backdrop-grayscale-0 transition-all duration-500 z-20 w-[250px] h-[550px] flex">
-                        <div className='text-white text-start flex flex-col w-full h-full px-5 pt-[425px] transform translate-y-0 hover:translate-y-[100px] transition-transform duration-500 ease-in-out'>
+                    <div className={`absolute overflow-hidden bottom-0 ${clickable? "backdrop-grayscale bg-black/35 hover:bg-transparent hover:backdrop-grayscale-0 transition-all duration-500" : ""} z-20 w-[250px] h-[550px] flex`}>
+                        <div className={`text-white text-start flex flex-col w-full h-full px-5 pt-[425px] transform ${clickable? "translate-y-0 hover:translate-y-[100px]" : "translate-y-[100px]"}  transition-transform duration-500 ease-in-out`}>
                             <label className="font-bold text-xl pb-2">
                                 {profile.last_name + " " + profile.first_name}
                             </label>
@@ -108,20 +108,31 @@ export default function AppointmentForm(){
 
     async function handleDateChosen(e){
         e.preventDefault();
+        setChosenHour('')
 
         setClientAppointmentDate(e.target.value);
-        setHoursOfDay(await getSchedule(e.target.value))
+        setHoursOfDay(await getSchedule(e.target.value,chosenProfile))
     }
 
+    function handleBack(e){
+        e.preventDefault()
+
+        setChosenProfile(null)
+        setClientAppointmentDate('')
+        setHoursOfDay([])
+
+        setClientAppointmentService('test_service')
+
+    }
     
     return(
         <div>
-            <h2 className='font-bold text-3xl py-3'> Appointment Form </h2>
+            <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2>
             <form onSubmit={handleSubmit}>
 
                 {
                     chosenProfile === null? 
-                    <div id='chose_user' className='flex flex-col lg:flex-row gap-10'>
+                    <div id='chose_user' className='grid md:grid-cols-2 lg:grid-cols-3 gap-10'>
                         {
                             profiles.map((profile,key) => {                            
                                 return(
@@ -131,23 +142,25 @@ export default function AppointmentForm(){
                         }
                     </div> :
                     <div className='flex flex-col justify-center'>
+
                         <div className='flex flex-col justify-starts'>
                             <div className='mr-auto'>
                                 <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
                             </div>
-                            <button className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2' onClick={(e)=>{setChosenProfile(null)}}>Back</button>
+                            <button className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2' onClick={handleBack}>Retour</button>
                         </div>
+
                         <div className='pt-10 pb-5 grid gap-2'>
                             <div className='grid grid-cols-2 gap-2'>
-                                <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='first name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-                                <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='last name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                                <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                                <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
                             </div>
-                            <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='email' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-                            <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='phone' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                            <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='Email' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                            <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='GSM' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
 
                             <div className='flex flex-col gap-5'>
                                 <div className='flex gap-10'>
-                                    <label>Chose a date : </label>
+                                    <label>Choisisez une date : </label>
                                     <input type='date' min={today} onChange={handleDateChosen} ></input>
                                 </div>
                                 <div id='list of hours and appointments of that day'>
@@ -156,10 +169,11 @@ export default function AppointmentForm(){
                             </div>
                         
                         </div>
+                        <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Rezerver</button>
                     </div>
                 }
 
-                <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Add Apointment</button>
+                
             </form>
         </div>
     )
@@ -170,7 +184,7 @@ const HourTab = ({setter,hour,taken, selected}) => {
 
     return(
         <button onClick={()=>{setter[1](hour)}}
-            disabled={taken} className={`${taken? "bg-red-500" : "bg-green-500"} text-white px-5 py-2 rounded-lg border-[0.15rem] ${selected? " border-black" : " border-transparent"} hover:border-black`}>
+            disabled={taken} className={`${taken? "bg-red-500" : "bg-green-500 hover:border-black"} text-white px-5 py-2 rounded-lg border-[0.15rem] ${selected? " border-black" : " border-transparent"} `}>
             {hour}
         </button>
     )
@@ -180,17 +194,34 @@ const HoursGrid = ({hours,chosenHourSetter}) => {
 
     if(hours.length >= 1){
         return(
-            <div className='grid grid-cols-3 lg:grid-cols-7 gap-2'>
-                {
-                    hours.map(
-                        (value,key)=>{
-                            return(
-                                <HourTab key={key} setter={chosenHourSetter} hour={value[0]} taken={value[1]} selected={chosenHourSetter[0]===value[0]} ></HourTab>
-                            )
-                        }
-                    )
-                }
+            <div className='flex flex-col'>
+
+                <div className='flex pb-3 gap-5'>
+                    <div className='flex gap-2'>
+                        <div className='w-[25px] h-[25px] bg-green-500 rounded-full'/>
+                        <label>disponible</label>
+                    </div>
+                    
+                    <div className='flex gap-2'>
+                        <div className='w-[25px] h-[25px] bg-red-500 rounded-full'/>
+                        <label>indisponible</label>
+                    </div>
+                </div>
+
+                <div className='grid grid-cols-3 lg:grid-cols-7 gap-2'>
+                    {
+                        hours.map(
+                            (value,key)=>{
+                                return(
+                                    <HourTab key={key} setter={chosenHourSetter} hour={value[0]} taken={value[1]} selected={chosenHourSetter[0]===value[0]} ></HourTab>
+                                )
+                            }
+                        )
+                    }
+                </div>  
+
             </div>
+            
         )
     }
     else{

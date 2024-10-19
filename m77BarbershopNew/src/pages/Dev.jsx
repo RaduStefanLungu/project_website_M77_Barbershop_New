@@ -3,6 +3,7 @@ import { addAppointment2, addNewDocument, addProfileAndUploadImage, getProfiles,
 import { v4 } from 'uuid'
 import { PhoneAuthCredential } from 'firebase/auth'
 import AppointmentForm from '../components/AppointmentForm'
+import AddBarberForm from '../components/AddBarberForm'
 
 export default function Dev() {
 
@@ -19,14 +20,20 @@ export default function Dev() {
         
         <h1 className='font-bold text-4xl py-5'> Appointment System </h1>
         
+        <div className='grid justify-center items-center bg-gray-200 py-10'>
+            <AddBarberForm messagesLog={[messages,setMessages]}></AddBarberForm>
+        </div>
+
+        <div className='grid justify-center items-center bg-pink-100 py-10'>
+            <AppointmentForm/>
+        </div>
+
         <div className='grid' >
 
             <div className='bg-orange-200 pt-5 pb-20 px-20 mb-auto grid'>
                 <h2 className='font-bold text-3xl py-3'> Dev Page </h2>
 
                 <div className='grid gap-5'>
-
-                    <AddBarber messagesLog={[messages,setMessages]}></AddBarber>
 
                     {/* <AddDaysToSchedule/> */}
 
@@ -62,6 +69,7 @@ export default function Dev() {
 
 
             </div>
+
         </div>
 
     </div>
@@ -141,97 +149,6 @@ const AddDaysToSchedule = () => {
                 <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Submit</button>
             </form>
         </div>
-    )
-}
-
-const AddBarber = ({messagesLog}) => {
-    const [message,setMessage] = useState(null)
-
-    const [firstName,setFirstName] = useState('')
-    const [lastName,setLastName] = useState('')
-    const [email,setEmail] = useState('') 
-    const [startingContract,setStartingContract] = useState('')
-    const [isCDI,setIsCDI] = useState(false)
-    const [endingContract,setEndingContract] = useState('CDI')
-    const [imageName,setImageName] = useState(v4())
-
-    const [img,setImg] = useState(null)
-
-    const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
-        timeZone: 'Europe/Brussels', 
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit'
-      }).split('/').reverse().join('-'))
-
-    async function handleCreateTable(e){
-        e.preventDefault();
-
-        const data = {
-            profile_id: lastName + firstName,
-            first_name : firstName,
-            last_name : lastName,
-            email: email,
-            starting_contract : startingContract,
-            ending_contract : endingContract,
-            is_cdi : isCDI,
-            visible: false,
-            image : imageName,
-            image_url : "",
-            profile_description : "NaN"
-        }
-
-        if(img !== null){
-            await addProfileAndUploadImage(data,img).then(
-                (response) =>{
-                    if(response){
-                        setMessage({message: "Sucessfully uploaded profile & image !",isError: false});                    
-                    }
-                }
-            )
-        }
-        else{
-            setMessage({message: "Failed to upload profile & image ! No image chosen",isError: true});
-        }
-    }
-
-    return(
-        <form className='flex flex-col gap-1 max-w-[350px]' onSubmit={handleCreateTable}>
-            <label className='text-md'>Add Barber</label>
-            <div className='grid grid-cols-2'>
-                <input onChange={(e)=>{setFirstName(e.target.value)}} required type='text' placeholder='first name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-                <input onChange={(e)=>{setLastName(e.target.value)}} required type='text' placeholder='last name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-            </div>
-            <input onChange={(e)=>{setEmail(e.target.value)}} required type='email' placeholder='email' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-            <div className='flex flex-col'>
-                <label>Starting Contract Date</label>
-                <input onChange={(e)=>{setStartingContract(e.target.value)}} required type='date' min={today} placeholder='starting contract' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-            </div>
-            <div className='flex gap-5'>
-                <label className='text-lg'>CDI</label>
-                <input onClick={()=>{setIsCDI(!isCDI)}} type='checkbox' className='w-4' />
-            </div>
-            <div className={`flex-col ${isCDI? "hidden" : "flex" }`}>
-                <label>Ending Contract Date</label>
-                <input onChange={(e)=>{setEndingContract(e.target.value)}} type='date' min={today} placeholder='ending contract' disabled={isCDI} required={isCDI} className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-            </div>
-
-            <div className='flex flex-col'>
-                <label className='pb-1'>Upload Profile Image <span className='text-xs'>(250x450px)</span></label>
-                <input type='file' onChange={(e)=>{setImg(e.target.files[0])}}></input>
-            </div>
-
-            <div className=''>
-                {
-                    message!==null? 
-                    <p className={`${message.isError? "text-red-500" : "text-green-500"}`}>
-                        {message.message}
-                    </p> : <></>
-                }
-            </div>
-
-            <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Add</button>
-        </form>
     )
 }
 

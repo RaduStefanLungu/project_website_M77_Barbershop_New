@@ -240,20 +240,40 @@ async function generateScheduleHours(day){
   Input : day 
   Output : schedule for the given day (hours and their availability)
 */
-export async function getSchedule(day){
+export async function getSchedule(day,profile){
   const generatedHoursFromDb = await generateScheduleHours(day)
 
+  console.log(day);
+  
+  console.log(profile);
+  
   var response = []
 
   const dayDocument = await getDocumentById('appointments',day)
 
   if(dayDocument === null){
-    return(generatedHoursFromDb)
+
+    if(profile.locked_days.includes(day)){
+      generatedHoursFromDb.forEach(
+        (element)=>{
+          response.push([element[0],true])
+        }
+      )
+      return(response)
+    }
+    else{
+      return(generatedHoursFromDb)
+    }
+    
   }
   else{
     generatedHoursFromDb.forEach(
       (element) => {
-        if(isHourTaken(element[0], dayDocument.appointments)){
+        
+        if(profile.locked_days.includes(String(day))){
+          response.push([element[0],true])
+        }
+        else if(isHourTaken(element[0], dayDocument.appointments)){
           response.push([element[0],true])
         }
         else{
