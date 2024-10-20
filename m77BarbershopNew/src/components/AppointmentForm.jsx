@@ -22,7 +22,7 @@ export default function AppointmentForm(){
     const [clientPhone,setClientPhone] = useState('')
     const [clientAppointmentDate,setClientAppointmentDate] = useState('')
 
-    const [clientAppointmentService,setClientAppointmentService] = useState('test_service')
+    const [clientAppointmentService,setClientAppointmentService] = useState('test_service')     //TODO
 
     const [hoursOfDay,setHoursOfDay] = useState([])
     const [chosenHour,setChosenHour] = useState('')

@@ -34,12 +34,12 @@
             "group" : "Barbe",
             "services" : [
                 {
-                    "name" : "Traçage contours de barbe",
+                    "name" : "Traçage contours",
                     "price" : 10,
                     "description" : "Avec serviette chaude"
                 },
                 {
-                    "name" : "Taille + Traçage de barbe",
+                    "name" : "Taille + Traçage",
                     "price" : 15,
                     "description" : "Avec serviette chaude"
                 },
@@ -56,7 +56,7 @@
                 {
                     "name" : "Rasage Shaver",
                     "price" : 5,
-                    "description" : ""
+                    "description" : "Meilleur moment traditionnel"
                 }
             ]
         }

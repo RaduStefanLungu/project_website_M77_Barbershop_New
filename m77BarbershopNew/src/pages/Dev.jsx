@@ -24,7 +24,7 @@ export default function Dev() {
             <AddBarberForm messagesLog={[messages,setMessages]}></AddBarberForm>
         </div>
 
-        <div className='grid justify-center items-center bg-pink-100 py-10'>
+        <div className='grid justify-center items-center py-10'>
             <AppointmentForm/>
         </div>
 
@@ -37,7 +37,7 @@ export default function Dev() {
 
                     {/* <AddDaysToSchedule/> */}
 
-                    <AppointmentForm/>
+                    {/* <AppointmentForm/> */}
 
                     <div>
                         ...

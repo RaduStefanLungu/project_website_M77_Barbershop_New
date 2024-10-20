@@ -10,7 +10,7 @@ TODOs:
             - admin(owner) can lock days for anyone
 
     AppointmentForm :
-        - make good visuals
+        - Add Services Selection
 
     AddBarberForm : 
         - refresh form after adding new person

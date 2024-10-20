@@ -3,6 +3,8 @@ import Dev from './pages/Dev'
 
 import './index.css'
 import Inventory from './components/Inventory/Inventory'
+import Home from './pages/Home'
+import RendezVous from './pages/RendezVous'
 
 function App() {
 
@@ -13,7 +15,8 @@ function App() {
       
         <Routes>
 
-          <Route path='/' exact element={<Dev/>} />
+          <Route path='/' exact element={<Home/>} />
+          <Route path='/rendez-vous' exact element={<RendezVous/>} />
           <Route path='/dev' exact element={<Dev/>} />
           <Route path='/inventory' exact element={<Inventory/>} />
 
