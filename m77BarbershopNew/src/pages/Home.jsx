@@ -84,7 +84,7 @@ const ImageBelt = () => {
       <div className='font-custom_1 z-20 text-center text-[var(--brand-white)] grid justify-center items-center'>
 
         <h4 className='uppercase tracking-wider text-xs lg:text-sm xl:text-base py-1'>Pourquoi Nous?</h4>
-        <h2 className='uppercase tracking-wider lg:tracking-widest text-xl lg:text-2xl xl:text-3xl font-bold pt-1 pb-3'>Car nous sommes les meilleurs</h2>
+        <h2 className='uppercase tracking-wider lg:tracking-widest text-xl lg:text-2xl xl:text-3xl font-bold pt-1 pb-3'>Car vous méritez le meilleur</h2>
 
       </div>
 
