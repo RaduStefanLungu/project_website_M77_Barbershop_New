@@ -12,3 +12,44 @@
 .hover-overlay:hover .label-text {
     top: 0; /* End position (top) */
 }
+
+
+.input-designed-1{
+    @apply
+
+    px-1 py-2
+    border-[0.15rem] border-slate-900
+
+    font-custom_1 font-semibold
+}
+
+.button-1 {
+    @apply
+
+    bg-slate-900
+    border-[0.15rem] border-slate-900
+    rounded-none 
+    font-custom_1 text-white  
+    uppercase tracking-widest
+    py-2 px-10 
+}
+
+.button-2 {
+    @apply
+
+    border-slate-900 border-[0.15rem]
+    rounded-none 
+    font-custom_1 text-slate-900  
+    uppercase tracking-normal font-bold
+    py-2 px-10 
+}
+
+.-button-2 {
+    @apply
+
+    border-white border-[0.15rem]
+    rounded-none 
+    font-custom_1 text-white
+    uppercase tracking-normal font-bold
+    py-2 px-10 
+}

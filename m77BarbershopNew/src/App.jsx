@@ -13,6 +13,7 @@ function App() {
       
         <Routes>
 
+          <Route path='/' exact element={<Dev/>} />
           <Route path='/dev' exact element={<Dev/>} />
           <Route path='/inventory' exact element={<Inventory/>} />
 

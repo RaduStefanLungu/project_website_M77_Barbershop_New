@@ -4,20 +4,20 @@ Project : Appointment System
 
 
 TODO : Work on the appointment system
-    -> update profile creatinon to add field : locked_days = []
-    -> work on addAppointment2  DONE (it works)
-    -> AppointmentForm : show available hours for chosen day
-    -> test addAppointment2
+    -> update profile creatinon to add field : locked_days = []             DONE
+    -> work on addAppointment2                                              DONE (it works)
+    -> AppointmentForm : show available hours for chosen day                DONE
+    -> test addAppointment2 DONE (it works)                                 DONE
 
 Planning : 
     Users : 
         - Users can chose a barber, a date & hour and a service. 
             TODO : 
-                - list available hours
-                - list available services
+                - list available hours /barber/date                         DONE
+                - list available services                                   TODO
         - They'll receive a confirmation email if the appointment has been successully saved.
             TODO : 
-                - send confirmation email
+                - send confirmation email                                   TODO     
 
     - Barbers can do:  
         - connect with own account, choose the day (>= today) and list their appointments.

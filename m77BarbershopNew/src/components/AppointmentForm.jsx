@@ -90,10 +90,10 @@ export default function AppointmentForm(){
                 <div className="relative container m-auto w-[250px] h-[450px] overflow-hidden">
                     <div className={`absolute overflow-hidden bottom-0 ${clickable? "backdrop-grayscale bg-black/35 hover:bg-transparent hover:backdrop-grayscale-0 transition-all duration-500" : ""} z-20 w-[250px] h-[550px] flex`}>
                         <div className={`text-white text-start flex flex-col w-full h-full px-5 pt-[425px] transform ${clickable? "translate-y-0 hover:translate-y-[100px]" : "translate-y-[100px]"}  transition-transform duration-500 ease-in-out`}>
-                            <label className="font-bold text-xl pb-2">
+                            <label className="font-custom_1 font-bold text-xl pb-2">
                                 {profile.last_name + " " + profile.first_name}
                             </label>
-                            <p className='text-sm italic'>
+                            <p className='font-custom_1 text-sm italic'>
                                 {profile.profile_description}
                             </p>
                         </div>
@@ -126,50 +126,64 @@ export default function AppointmentForm(){
     }
     
     return(
-        <div>
-            <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2>
-            <form onSubmit={handleSubmit}>
+        <div className=''>
+            {/* <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2> */}
+            <form onSubmit={handleSubmit} className=''>
 
                 {
                     chosenProfile === null? 
-                    <div id='chose_user' className='grid md:grid-cols-2 lg:grid-cols-3 gap-10'>
-                        {
-                            profiles.map((profile,key) => {                            
-                                return(
-                                    <ProfileCard key={key} profile={profile} setter={setChosenProfile} clickable={true} ></ProfileCard>
-                                )
-                            })
-                        }
+                    <div className='grid'>
+                        <h2 className='font-custom_1 text-3xl py-3'> Choisisez le barber</h2>
+                        <div id='chose_user' className='grid md:grid-cols-2 gap-10'>
+                            {
+                                profiles.map((profile,key) => {                            
+                                    return(
+                                        <ProfileCard key={key} profile={profile} setter={setChosenProfile} clickable={true} ></ProfileCard>
+                                    )
+                                })
+                            }
+                        </div>
                     </div> :
-                    <div className='flex flex-col justify-center'>
+                    <div className='flex flex-col justify-center md:flex-row gap-5'>
 
-                        <div className='flex flex-col justify-starts'>
-                            <div className='mr-auto'>
+                        <div className='flex flex-col justify-center items-center'>
+                            <div className=''>
                                 <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
                             </div>
-                            <button className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2' onClick={handleBack}>Retour</button>
+                            {/* <div className='grid pt-0'>
+                                <button className='button-1' onClick={handleBack}>Retour</button>
+                            </div> */}
                         </div>
 
-                        <div className='pt-10 pb-5 grid gap-2'>
-                            <div className='grid grid-cols-2 gap-2'>
-                                <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-                                <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                        <div className='flex flex-col px-5'>
+                            <div>
+                                <h4 className='font-custom_1 text-3xl font-bold pb-5'>Completez le formulaire</h4>
                             </div>
-                            <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='Email' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-                            <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='GSM' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                            <div className='grid gap-2'>
+                                <div className='grid grid-cols-2 gap-2'>
+                                    <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='input-designed-1' />
+                                    <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='input-designed-1' />
+                                </div>
+                                <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='Email' className='input-designed-1' />
+                                <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='GSM' className='input-designed-1' />
 
-                            <div className='flex flex-col gap-5'>
-                                <div className='flex gap-10'>
-                                    <label>Choisisez une date : </label>
-                                    <input type='date' min={today} onChange={handleDateChosen} ></input>
+                                <div className='flex flex-col gap-5'>
+                                    <div className='flex justify-between'>
+                                        <label className='text-xl my-auto'>Séléctionez la date : </label>
+                                        <input type='date' min={today} onChange={handleDateChosen} className='input-designed-1 w-[200px]' ></input>
+                                    </div>
+                                    <div id='list of hours and appointments of that day'>
+                                        <HoursGrid hours={hoursOfDay} chosenHourSetter={[chosenHour,setChosenHour]} />
+                                    </div>
                                 </div>
-                                <div id='list of hours and appointments of that day'>
-                                    <HoursGrid hours={hoursOfDay} chosenHourSetter={[chosenHour,setChosenHour]} />
-                                </div>
+                            
                             </div>
-                        
+                            <div className='grid grid-flow-col gap-5 py-5'>
+                                <button className='button-1' onClick={handleBack}>Retour</button>
+                                <button type='submit' className='button-2'>Rezerver</button>
+                            </div>
+                            
                         </div>
-                        <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Rezerver</button>
                     </div>
                 }
 

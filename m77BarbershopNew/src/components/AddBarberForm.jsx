@@ -22,6 +22,18 @@ export default function AddBarberForm() {
         day: '2-digit'
       }).split('/').reverse().join('-'))
 
+      function handleIsCDI(e){
+        e.preventDefault();
+        
+        let new_cdi_value = !isCDI;
+        setIsCDI(new_cdi_value);
+
+        if(new_cdi_value === true){
+            setEndingContract('CDI')
+        }
+
+      }
+
     async function handleCreateTable(e){
         e.preventDefault();
 
@@ -45,6 +57,7 @@ export default function AddBarberForm() {
                 (response) =>{
                     if(response){
                         setMessage({message: "Nouveau barbier introduit avec success !",isError: false});
+                        // TODO: refresh form here 
                         setFirstName('')
                         setLastName('')
                         setEmail('')
@@ -76,7 +89,7 @@ export default function AddBarberForm() {
             </div>
             <div className='flex gap-5'>
                 <label className='text-lg'>CDI</label>
-                <input onClick={()=>{setIsCDI(!isCDI)}} type='checkbox' className='w-4' />
+                <input onClick={handleIsCDI} type='checkbox' className='w-4' />
             </div>
             <div className={`flex-col ${isCDI? "hidden" : "flex" }`}>
                 <label className='pb-1'>Date de fin de contrat</label>
