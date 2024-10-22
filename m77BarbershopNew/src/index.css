@@ -30,9 +30,16 @@
     font-custom_1 font-semibold
 }
 
+.button-sizer {
+    @apply
+
+    2xl:text-xl
+}
+
 .button-1 {
     @apply
 
+    button-sizer
     bg-[var(--brand-black)]
     border-[0.15rem] border-[var(--brand-black)]
     rounded-none 
@@ -46,10 +53,12 @@
 .button-2 {
     @apply
 
+    button-sizer
     bg-[var(--brand-white)]
     border-[var(--brand-black)] border-[0.15rem]
     rounded-none 
-    font-custom_1 text-[var(--brand-black)]  
+    font-custom_1 text-[var(--brand-black)]
+
     uppercase tracking-normal font-bold
     py-2 px-10 
 
@@ -59,6 +68,7 @@
 .-button-2 {
     @apply
 
+    button-sizer
     border-[var(--brand-white)] border-[0.15rem]
     rounded-none 
     font-custom_1 text-[var(--brand-white)]
@@ -79,4 +89,13 @@
     background-repeat: no-repeat;
     /* background-position: center; */
     /* filter: saturate(0%) brightness(50%) contrast(100%) blur(0.10rem); */
+}
+
+.section-title {
+    @apply
+
+    font-custom_1
+    tracking-widest
+    text-4xl 
+    lg:text-5xl
 }

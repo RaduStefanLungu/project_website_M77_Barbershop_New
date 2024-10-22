@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
 import SERVICES from '../data/services.json'
+
+import { FaPhoneAlt } from "react-icons/fa";
+import { TfiEmail } from "react-icons/tfi";
+
 
 export default function Home() {
   return (
@@ -20,6 +24,10 @@ export default function Home() {
         <div className='container mx-auto'>
           <ServicesSection/>
         </div>
+      </div>
+
+      <div className='container mx-auto'>
+        <ContactSection/>
       </div>
 
     </div>
@@ -45,7 +53,7 @@ const HERO = () => {
           </h1>
 
           <div className='grid py-2 lg:py-5 justify-center items-center'>
-            <Link to={'/rendez-vous'} className='button-1 2xl:text-xl'>Réserver Maintenant</Link>
+            <Link to={'/rendez-vous'} className='button-1'>Réserver Maintenant</Link>
           </div>
         </div>
       
@@ -65,7 +73,7 @@ const TextBelt = () => {
 
       <h2 className='text-slate-950 uppercase tracking-wider text-2xl xl:text-3xl font-bold pt-1 pb-3'>Dévoument au style</h2>
 
-      <p className='text-pretty text-md xl:text-lg text-slate-600/75 px-5 md:px-14 lg:px-32'>
+      <p className='text-pretty text-lg lg:text-2xl text-slate-600/75 px-5 md:px-14 lg:px-32'>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin maximus pulvinar. Duis nec sem commodo, scelerisque justo nec, eleifend quam. 
       Curabitur dictum ante ullamcorper mauris suscipit, semper condimentum nulla suscipit. 
       Interdum et malesuada fames ac ante ipsum primis in faucibus. 
@@ -143,7 +151,7 @@ const ServicesSection = () => {
   return(
     <div className='bg-[var(--brand-black)] text-[var(--brand-white)] px-10'>
 
-      <h3 className='font-custom_1 text-4xl tracking-widest pt-10'>
+      <h3 className='section-title pt-10'>
         Services
       </h3>
 
@@ -151,6 +159,78 @@ const ServicesSection = () => {
         <ServicesCard Services={SERVICES.services_by_group[0]} />
         <ServicesCard Services={SERVICES.services_by_group[1]} />
       </div>
+      <div className='grid md:justify-center pt-5 pb-10'>
+        <ServicesCard Services={SERVICES.packages[0]} />
+      </div>
+    </div>
+  )
+}
+
+const ContactSection = () => {
+
+  const [fullName,setFullName] = useState('')
+  const [email,setEmail] = useState('')
+  const [phone,setPhone] = useState('')
+  const [message,setMessage] = useState('')
+
+  function handleSubmit(e){
+    e.preventDefault();
+
+    //TODO : call email API 
+
+  }
+
+  const ContactCard = ({Icon,Text_1,Text_2}) => {
+    return(
+      <div className='flex justify-start border-[0.15rem] border-[var(--brand-black)] bg-[var(--brand-black)] '>
+
+        <div className='text-3xl xl:text-5xl p-5 mr-auto text-[var(--brand-white)] bg-[var(--brand-black)] '>
+          {Icon}
+        </div>
+
+        <div className='w-full grid'>
+          <label className='pl-1 text-xl xl:text-3xl text-start my-auto bg-[var(--brand-white)]'>{Text_1}</label>
+          <label className='pl-1 text-base xl:text-xl tracking-wider text-[var(--brand-white)]'>{Text_2}</label>
+        </div>
+
+      </div>
+    )
+  }
+
+  return(
+    <div className='font-custom_1 grid pt-10 pb-5 px-10'>
+
+      <h3 className='section-title pb-5'>
+        Contactez Nous
+      </h3>
+
+      <p className='pb-5 text-lg lg:text-2xl xl:w-[1000px]'>
+      Nous sommes là pour répondre à toutes vos questions dans le but de vous offrir la meilleure expérience.
+      Vous pouvez remplir le formulaire, nous appeler ou nous envoyer un e-mail.
+      <br/><br/>À très bientôt,<br/>
+      M77
+      </p>
+
+      <div className='flex flex-col items-start gap-5 lg:flex-row'>
+        <div className='grid gap-5'>
+          <ContactCard Icon={<FaPhoneAlt/>} Text_1={'Contactez-nous par téléphone'} Text_2={'0472/24.75.15'} />
+          <ContactCard Icon={<TfiEmail/>} Text_1={'Envoyez-nous un email'} Text_2={'mircoperrotta2000@icloud.com'} />
+        </div>
+
+        <form onSubmit={handleSubmit} className='grid gap-3 w-[350px] md:w-[450x] lg:w-[550px] xl:text-xl'>
+
+          <input onChange={(e)=>{setFullName(e.target.value)}} type='text' placeholder='Nom et Prénom' className='input-designed-1 '/>
+          <input onChange={(e)=>{setEmail(e.target.value)}} type='email' placeholder='example@email.com' className='input-designed-1 ' />
+          <input onChange={(e)=>{setPhone(e.target.value)}} type='tel' placeholder='Numéro Téléphone' className='input-designed-1' />
+          <textarea onChange={(e)=>{setMessage(e.target.value)}} type='text' placeholder='Votre message ici...' className='input-designed-1 lg:h-[100px]' />
+
+          <div className='grid'>
+            <button type='submit' className='button-1'>Envoyer</button>
+          </div>
+
+        </form>
+      </div>
+
     </div>
   )
 }

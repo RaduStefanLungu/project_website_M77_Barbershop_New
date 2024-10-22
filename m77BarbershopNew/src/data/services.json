@@ -63,9 +63,14 @@
     ],
     "packages" : [
         {
-            "name" : "Cheveux + Barbe",
-            "price" : 20,
-            "description" : ""
+            "group" : "Offres",
+            "services" : [
+                {
+                    "name" : "Cheveux + Barbe",
+                    "price" : 20,
+                    "description" : "description du service"
+                }
+            ]
         }
     ]
 }

@@ -14,3 +14,7 @@ TODOs:
 
     AddBarberForm : 
         - refresh form after adding new person
+
+    
+    Pages/Home:
+        - link ContactSection to EmailJS API
