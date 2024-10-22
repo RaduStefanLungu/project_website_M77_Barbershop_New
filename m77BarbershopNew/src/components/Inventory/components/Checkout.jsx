@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { getItems, updateQuantity } from "../inventoryAPI";
 
+import { FaTrash } from "react-icons/fa";
+
+
 export default function Checkout(){
     const [itemsFromDB, setItemsFromDB] = useState([]);
 

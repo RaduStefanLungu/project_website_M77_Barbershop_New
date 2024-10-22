@@ -29,24 +29,28 @@ export default function Home() {
 
 const HERO = () => {
   return(
-    <div className='grid relative h-[500px]'>
+    <div className='grid relative h-[500px] md:h-[700px] hero-image'>
 
-      <div id='image + filter' className='absolute top-0 z-10 grid w-screen h-full'>
-        {/* <img src={IMG_HERO} className='h-full w-full' /> */}
+
+
+      {/* <div id='image + filter' className='absolute top-0 z-10 grid w-screen h-full'>
         <div className='hero-image w-full h-full'/>
-        {/* <div className='w-full h-full absolute top-0 bg-black/35' /> */}
-      </div>
+      </div> */}
 
-      <div id='text + cta' className='z-20 my-auto pb-10 lg:pb-5 flex flex-col'>
+      <div id='text + cta' className='flex justify-center items-center bg-black/40'>
 
-        <h1 className='font-custom_1 text-[var(--brand-white)] tracking-wide  uppercase text-center text-4xl lg:text-5xl 2xl:text-6xl md:mx-auto md:w-[450px] lg:w-[750px]'>
-          Nouveau concept, plus qu'un barbier
-        </h1>
+        <div className='flex flex-col'>
+          <h1 className=' font-custom_1 text-[var(--brand-white)] tracking-wide uppercase text-center text-4xl lg:text-5xl 2xl:text-6xl md:mx-auto md:w-[450px] lg:w-[750px]'>
+            Nouveau concept, plus qu'un barbier
+          </h1>
 
-        <div className='grid py-2 lg:py-5 justify-center items-center'>
-          <Link to={'/rendez-vous'} className='button-1 2xl:text-xl'>Réserver Maintenant</Link>
+          <div className='grid py-2 lg:py-5 justify-center items-center'>
+            <Link to={'/rendez-vous'} className='button-1 2xl:text-xl'>Réserver Maintenant</Link>
+          </div>
         </div>
+      
       </div>
+
 
     </div>
   )
@@ -55,7 +59,7 @@ const HERO = () => {
 
 const TextBelt = () => {
   return(
-    <div className='grid justify-center font-custom_1 text-center py-10'>
+    <div className='grid justify-center font-custom_1 text-center pt-5 pb-10'>
 
       <h4 className='text-slate-600/75 uppercase tracking-wider text-sm xl:text-base'>Expérience prémium</h4>
 
@@ -75,13 +79,13 @@ const TextBelt = () => {
 
 const ImageBelt = () => {
   return(
-    <div className='relative grid pt-5 pb-10'>
+    <div className='relative grid belt-image'>
 
-      <div id='image holder' className='absolute top-0 z-10 grid w-screen h-full'>
+      {/* <div id='image holder' className='absolute top-0 z-10 grid w-screen h-full'>
         <div className='belt-image w-full h-full absolute top-0 z-'/>
-      </div>
+      </div> */}
 
-      <div className='font-custom_1 z-20 text-center text-[var(--brand-white)] grid justify-center items-center'>
+      <div className='font-custom_1 text-center text-[var(--brand-white)] grid justify-center items-center pt-5 pb-10 backdrop-blur-[2px] bg-black/40'>
 
         <h4 className='uppercase tracking-wider text-xs lg:text-sm xl:text-base py-1'>Pourquoi Nous?</h4>
         <h2 className='uppercase tracking-wider lg:tracking-widest text-xl lg:text-2xl xl:text-3xl font-bold pt-1 pb-3'>Car vous méritez le meilleur</h2>

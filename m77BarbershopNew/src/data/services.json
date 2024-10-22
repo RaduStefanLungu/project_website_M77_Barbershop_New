@@ -5,23 +5,23 @@
             "services" : [
                 {
                     "name" : "Coupe Classique",
-                    "price" : 18,
+                    "price" : 22,
                     "description" : "Ciseaux"
                 },
                 {
                     "name" : "Coupe Moderne",
-                    "price" : 20,
+                    "price" : 25,
                     "description" : "Fade,Taper,..."
                 },
                 {
-                    "name" : "Coupe Tondeuse",
-                    "price" : 15,
-                    "description" : "Même mm partout"
+                    "name" : "Coupe Etudiant",
+                    "price" : 22,
+                    "description" : "-18 ans"
                 },
                 {
-                    "name" : "Contours Taper",
-                    "price" : 15,
-                    "description" : "Que les tempes et la nuque"
+                    "name" : "Coupe Enfant",
+                    "price" : 20,
+                    "description" : "-12 ans"
                 },
                 {
                     "name" : "Kid's Price",
@@ -34,8 +34,8 @@
             "group" : "Barbe",
             "services" : [
                 {
-                    "name" : "Traçage contours",
-                    "price" : 10,
+                    "name" : "Taille de barbe",
+                    "price" : 20,
                     "description" : "Avec serviette chaude"
                 },
                 {
@@ -63,13 +63,8 @@
     ],
     "packages" : [
         {
-            "name" : "cheveux + traçage",
-            "price" : 25,
-            "description" : ""
-        },
-        {
-            "name" : "cheveux + taille et traçage",
-            "price" : 27,
+            "name" : "Cheveux + Barbe",
+            "price" : 20,
             "description" : ""
         }
     ]

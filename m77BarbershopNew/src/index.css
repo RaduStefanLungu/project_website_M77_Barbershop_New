@@ -70,7 +70,7 @@
     background-image: url('../src/assets/unlicensed/barber-salon-white-1-unlicensed.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    filter: saturate(0%) brightness(50%) contrast(100%)
+    /* filter: saturate(0%) brightness(50%) contrast(100%) */
 }
 
 .belt-image {
@@ -78,5 +78,5 @@
     background-size: cover;
     background-repeat: no-repeat;
     /* background-position: center; */
-    filter: saturate(0%) brightness(50%) contrast(100%) blur(0.10rem);
+    /* filter: saturate(0%) brightness(50%) contrast(100%) blur(0.10rem); */
 }
