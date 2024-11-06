@@ -24,6 +24,10 @@ export default function Dev() {
             <AddBarberForm messagesLog={[messages,setMessages]}></AddBarberForm>
         </div>
 
+        {/* <div className='grid justify-center items-center bg-gray-200 py-10'>
+            <AddDaysToSchedule/>
+        </div> */}
+
         <div className='grid justify-center items-center py-10'>
             <AppointmentForm/>
         </div>
@@ -88,10 +92,16 @@ const AddDaysToSchedule = () => {
     const [dayName,setDayName] = useState("")
     const [aso,setAso] = useState("")
     const [asc,setAsc] = useState("")
+    const [asbs,setAsbs] = useState("") // break start
+    const [asbe,setAsbe] = useState("") // break end
+
     const [nso,setNso] = useState("")
     const [nsc,setNsc] = useState("")
     const [nssd,setNssd] = useState("")
+    const [nsbs,setNsbs] = useState("") // break start
+    const [nsbe,setNsbe] = useState("") // break end
 
+    const [closed,setClosed] = useState(false)
 
     async function handleSubmit(e){
         e.preventDefault();
@@ -100,13 +110,17 @@ const AddDaysToSchedule = () => {
             actual_schedule: {
                 opening_hour: aso,
                 closing_hour: asc,
+                break_start: asbs,
+                break_end: asbe
             },
             new_schedule : {
                 opening_hour: nso,
                 closing_hour: nsc,
+                break_start: nsbs,
+                break_end: nsbe,
                 starting_date: nssd
             },
-            locked: false
+            closed: closed
         }
 
         await addNewDocument('schedule',data).then(
@@ -126,25 +140,51 @@ const AddDaysToSchedule = () => {
 
             <form onSubmit={handleSubmit} className='grid gap-2'>
                 <input onChange={(e)=>{setDayName(e.target.value)}} required type='text' placeholder='day name' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                
+                <div className='flex'>
+                    <label>Closed?</label>
+                    <input type='checkbox' checked={closed} onClick={()=>{setClosed(!closed)}} />
+                </div>
+                
                 <div className='flex'>
                     <label className='text-center my-auto pr-2'>actual schedule opening </label>
-                    <input onChange={(e)=>{setAso(e.target.value)}} required type='time' placeholder='actual schedule opening' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                    <input onChange={(e)=>{setAso(e.target.value)}} type='time' placeholder='actual schedule opening' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
                 </div>
                 <div className='flex'>
                     <label className='text-center my-auto pr-2'>actual schedule closing</label>
-                    <input onChange={(e)=>{setAsc(e.target.value)}} required type='time' placeholder='actual schedule closing' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                    <input onChange={(e)=>{setAsc(e.target.value)}} type='time' placeholder='actual schedule closing' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>actual schedule break start </label>
+                    <input onChange={(e)=>{setAsbs(e.target.value)}} type='time' placeholder='actual schedule break start' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
                 </div>
                 <div className='flex'>
+                    <label className='text-center my-auto pr-2'>actual schedule break end</label>
+                    <input onChange={(e)=>{setAsbe(e.target.value)}} type='time' placeholder='actual schedule break end' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+
+                <div className='flex'>
                     <label className='text-center my-auto pr-2'>new schedule opening</label>
-                    <input onChange={(e)=>{setNso(e.target.value)}} required type='time' placeholder='new schedule opening' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                    <input onChange={(e)=>{setNso(e.target.value)}} type='time' placeholder='new schedule opening' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
                 </div>
                 <div className='flex'>
                     <label className='text-center my-auto pr-2'>new schedule closing</label>
-                    <input onChange={(e)=>{setNsc(e.target.value)}} required type='time' placeholder='' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />                
+                    <input onChange={(e)=>{setNsc(e.target.value)}} type='time' placeholder='' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />                
+                </div>
+
+                <div className='flex'>
+                    <label className='text-center my-auto pr-2'>new schedule break start </label>
+                    <input onChange={(e)=>{setNsbs(e.target.value)}} type='time' placeholder='new schedule break start' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
                 </div>
                 <div className='flex'>
+                    <label className='text-center my-auto pr-2'>new schedule break end</label>
+                    <input onChange={(e)=>{setNsbe(e.target.value)}} type='time' placeholder='new schedule break end' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                </div>
+
+                <div className='flex'>
                     <label className='text-center my-auto pr-2'>new schedule starting date :</label>
-                    <input onChange={(e)=>{setNssd(e.target.value)}} required type='date' min={today} placeholder='' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                    <input onChange={(e)=>{setNssd(e.target.value)}} type='date' min={today} placeholder='' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
                 </div>
                 <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Submit</button>
             </form>
