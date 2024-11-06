@@ -27,8 +27,19 @@ export default function Home() {
       </div>
 
       <div className='container mx-auto'>
+        <PourcentageBelt />
+      </div>
+
+      <div>
+        TODO : Gallery
+      </div>
+
+
+      <div className='container mx-auto'>
         <ContactSection/>
       </div>
+
+      
 
     </div>
   )
@@ -63,8 +74,6 @@ const HERO = () => {
     </div>
   )
 }
-
-
 const TextBelt = () => {
   return(
     <div className='grid justify-center font-custom_1 text-center pt-5 pb-10'>
@@ -93,7 +102,7 @@ const ImageBelt = () => {
         <div className='belt-image w-full h-full absolute top-0 z-'/>
       </div> */}
 
-      <div className='font-custom_1 text-center text-[var(--brand-white)] grid justify-center items-center pt-5 pb-10 backdrop-blur-[2px] bg-black/40'>
+      <div className='font-custom_1 text-center text-[var(--brand-white)] grid justify-center items-center pt-5 pb-10 backdrop-blur-[2px] backdrop-grayscale bg-black/40'>
 
         <h4 className='uppercase tracking-wider text-xs lg:text-sm xl:text-base py-1'>Pourquoi Nous?</h4>
         <h2 className='uppercase tracking-wider lg:tracking-widest text-xl lg:text-2xl xl:text-3xl font-bold pt-1 pb-3'>Car vous méritez le meilleur</h2>
@@ -111,6 +120,32 @@ const CardBelt = () => {
     <div>
       This will be a card belt.
     </div>
+  )
+}
+
+const PourcentageBelt = () => {
+  return(
+    <div className='font-custom_1 grid gap-5 justify-center items-center pt-20 pb-20'>
+
+      <div className='grid gap-5 md:grid-cols-2'>
+        <label className='text-center text-4xl lg:text-5xl 2xl:text-6xl'>
+          <span className='font-bold'>+ 300</span> Clients fidèles
+        </label>
+
+        <label className='text-center text-4xl lg:text-5xl 2xl:text-6xl'>
+          Satisfaction à <span className='font-bold'>100%</span>
+        </label>
+
+      </div>
+
+      {/* <div className='text-center border-b-[0.05rem] border-[var(--brand-black)] mx-14 mt-10 mb-5'></div> */}
+
+
+      <div className='grid md:mx-32 mt-5 md:mt-10'>
+        <Link to={'/a-propos'} className='button-1 text-center'>Savoir plus</Link>
+      </div>
+
+    </div>  
   )
 }
 

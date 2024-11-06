@@ -10,7 +10,7 @@ export default function AddBarberForm() {
     const [email,setEmail] = useState('') 
     const [startingContract,setStartingContract] = useState('')
     const [isCDI,setIsCDI] = useState(false)
-    const [endingContract,setEndingContract] = useState('')
+    const [endingContract,setEndingContract] = useState('CDI')
     const [imageName,setImageName] = useState(v4())
 
     const [img,setImg] = useState(null)
@@ -89,7 +89,7 @@ export default function AddBarberForm() {
             </div>
             <div className='flex gap-5'>
                 <label className='text-lg'>CDI</label>
-                <input onClick={handleIsCDI} type='checkbox' className='w-4' />
+                <input onClick={handleIsCDI} type='checkbox' className='w-4'/>
             </div>
             <div className={`flex-col ${isCDI? "hidden" : "flex" }`}>
                 <label className='pb-1'>Date de fin de contrat</label>

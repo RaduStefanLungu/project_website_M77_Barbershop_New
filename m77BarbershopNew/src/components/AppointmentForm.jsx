@@ -134,7 +134,7 @@ export default function AppointmentForm(){
                     chosenProfile === null? 
                     <div className='grid'>
                         <h2 className='font-custom_1 text-3xl py-3'> Choisisez le barber</h2>
-                        <div id='chose_user' className='grid md:grid-cols-2 gap-10'>
+                        <div id='chose_user' className='grid md:grid-cols-2 lg:grid-flow-col gap-10'>
                             {
                                 profiles.map((profile,key) => {                            
                                     return(

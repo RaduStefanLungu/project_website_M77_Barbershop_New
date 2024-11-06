@@ -3,6 +3,8 @@ TODOs:
 
 
     Profiles Dashboard :
+        - when admin adds new barber in system, create an Firebase AUTH account automatically   - DONE
+        - remove user && remove user from Auth
         - add customizable user_description (shown to clients on appointment list)
         - add customizable image
 
@@ -18,3 +20,12 @@ TODOs:
     
     Pages/Home:
         - link ContactSection to EmailJS API
+
+    Schedule : 
+        - fix db structure ( add break-hours and change calculing functions )
+
+
+
+NOTES : 
+    1. Lors de la creation d'un nouveau barber par l'admin, le mot de pass par defaut sera 'm77barber'
+    2. 

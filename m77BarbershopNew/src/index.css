@@ -88,8 +88,8 @@
     background-size: cover;
     background-repeat: no-repeat;
     /* background-position: center; */
-    /* filter: saturate(0%) brightness(50%) contrast(100%) blur(0.10rem); */
 }
+
 
 .section-title {
     @apply
@@ -99,3 +99,130 @@
     text-4xl 
     lg:text-5xl
 }
+
+
+
+/* Classes test pour Calvin */
+
+.background-about {
+    background-image: url('./assets/unlicensed/barber-salon-white-1-unlicensed.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* filter: saturate(0%) brightness(50%) contrast(100%); */
+
+    width: 100vw;
+    height: 100vh;
+
+    display: grid;
+}
+
+.filtre {
+    background-color: rgba(0, 0, 0, 0.45);
+}
+
+.text-grand {
+    font-size: 50px;
+}
+
+.text-moyen {
+    font-size: 25px;
+}
+
+.text-moyen-2 {
+    font-size: 18px;
+}
+
+.text-petit {
+    font-size: 15px;
+}
+
+.mes-titres {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.mes-sous-titres {
+    color: #f5af6f;
+    /* font-size: 18px; */
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.mon-paragraph {
+    color: #ffffff;
+    text-align: left;
+}
+
+.mon-button {
+    color: #ffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 22px;
+
+    border-color: #ffff;
+    border-width: 0.15rem;
+
+    padding: 5px;
+
+}
+
+.mon-button:hover{
+    color: #000000;
+    background-color: #ffff;
+
+    transition-property: all;
+    transition-duration: 500ms;
+}
+
+.mon-button-2 {
+    background-color: #ffff;
+    color: #000000;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 22px;
+
+    border-color: #ffff;
+    border-width: 0.15rem;
+
+    padding: 5px;
+}
+
+.mon-button-2:hover{
+    color: #ffff;
+    background-color: transparent;
+
+    transition-property: all;
+    transition-duration: 500ms;
+}
+
+.button-holder {
+    display: flex;
+    gap: 15px;
+    
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    
+}
+
+.box-parent {
+    display: grid;
+    justify-content: left;
+    justify-items: left;
+
+    padding: 0.75rem;
+    padding-right: 0.75rem;
+
+}
+
+.m-y-auto{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.m-y-auto{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+

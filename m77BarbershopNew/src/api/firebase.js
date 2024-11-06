@@ -1,6 +1,7 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from 'firebase/app'
-import { getAuth } from "firebase/auth"
+import { getAuth,createUserWithEmailAndPassword,deleteUser } from "firebase/auth"
+
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
 import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage'
@@ -357,7 +358,8 @@ export async function addProfileAndUploadImage(profileData,imageFile){
     const imageUrl = await getImageByPath(profileData.image)
     profileData.image_url = imageUrl
     const addProfileRespose = await addProfile(profileData);
-    if(addProfileRespose !== null){
+    const createdNewAuth =  await createUserWithEmailAndPassword(auth,profileData.email,"m77barber")
+    if(addProfileRespose !== null && createdNewAuth !== null){
       return(true)
     }
     else{
@@ -370,6 +372,7 @@ export async function removeProfile(profileID){
   try {
       const docRef = doc(firestore_db, 'profiles', profileID);
       let response = await deleteDoc(docRef)
+      //TODO await deleteUser(uid)
       console.log(response);
       
   } catch (error) {
