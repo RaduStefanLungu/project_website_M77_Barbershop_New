@@ -23,13 +23,11 @@ export default function AddBarberForm() {
       }).split('/').reverse().join('-'))
 
       function handleIsCDI(e){
-        e.preventDefault();
-        
-        let new_cdi_value = !isCDI;
-        setIsCDI(new_cdi_value);
+        const checked = e.target.checked;
+        setIsCDI(checked);
 
-        if(new_cdi_value === true){
-            setEndingContract('CDI')
+        if (checked) {
+            setEndingContract('CDI');
         }
 
       }
@@ -63,9 +61,11 @@ export default function AddBarberForm() {
                         setEmail('')
                         setStartingContract('')
                         setIsCDI(false)
-                        setEndingContract('')
+                        setEndingContract('CDI')
                         setImageName(v4())
-                        setImg(null)       
+                        setImg(null)
+
+                        e.target.reset()
                     }
                 }
             )
@@ -87,6 +87,7 @@ export default function AddBarberForm() {
                 <label className='pb-1'>Date du début de contrat</label>
                 <input onChange={(e)=>{setStartingContract(e.target.value)}} required type='date' min={today} placeholder='starting contract' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
             </div>
+            {/* <input type='checkbox' onClick={handleIsCDI} className='w-4'/> */}
             <div className='flex gap-5'>
                 <label className='text-lg'>CDI</label>
                 <input onClick={handleIsCDI} type='checkbox' className='w-4'/>

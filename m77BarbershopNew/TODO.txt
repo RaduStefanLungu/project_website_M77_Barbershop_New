@@ -15,7 +15,7 @@ TODOs:
         - Add Services Selection
 
     AddBarberForm : 
-        - refresh form after adding new person
+        - refresh form after adding new person              - DONE
 
     
     Pages/Home:
