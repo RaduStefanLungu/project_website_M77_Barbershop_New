@@ -28,9 +28,9 @@ export default function Dev() {
             <AddDaysToSchedule/>
         </div> */}
 
-        <div className='grid justify-center items-center py-10'>
+        {/* <div className='grid justify-center items-center py-10'>
             <AppointmentForm/>
-        </div>
+        </div> */}
 
         <div className='grid' >
 
@@ -38,8 +38,6 @@ export default function Dev() {
                 <h2 className='font-bold text-3xl py-3'> Dev Page </h2>
 
                 <div className='grid gap-5'>
-
-                    {/* <AddDaysToSchedule/> */}
 
                     {/* <AppointmentForm/> */}
 
