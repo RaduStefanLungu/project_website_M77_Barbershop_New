@@ -13,7 +13,7 @@ TODOs:
 
     AppointmentForm :
         - Check if services are the good ones               - DONE
-        - Add Services Selection
+        - Add Services Selection                            - DONE
 
     AddBarberForm : 
         - refresh form after adding new person              - DONE

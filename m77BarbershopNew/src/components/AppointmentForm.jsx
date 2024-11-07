@@ -3,6 +3,7 @@ import { addAppointment2, getProfiles, getSchedule } from '../api/firebase'
 import { v4 } from 'uuid'
 
 import SERVICES from '../data/services.json'
+import ServicesCard from './services/ServicesCard'
 
 export default function AppointmentForm(){
     const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
@@ -22,7 +23,7 @@ export default function AppointmentForm(){
     const [clientPhone,setClientPhone] = useState('')
     const [clientAppointmentDate,setClientAppointmentDate] = useState('')
 
-    const [clientAppointmentService,setClientAppointmentService] = useState('test_service')     //TODO
+    const [clientAppointmentService,setClientAppointmentService] = useState('')
 
     const [hoursOfDay,setHoursOfDay] = useState([])
     const [chosenHour,setChosenHour] = useState('')
@@ -114,6 +115,12 @@ export default function AppointmentForm(){
         setHoursOfDay(await getSchedule(e.target.value,chosenProfile))
     }
 
+    function handleServiceSelect(e,selected_service){
+        e.preventDefault();
+        setClientAppointmentService(selected_service)
+        
+    }
+
     function handleBack(e){
         e.preventDefault()
 
@@ -121,7 +128,7 @@ export default function AppointmentForm(){
         setClientAppointmentDate('')
         setHoursOfDay([])
 
-        setClientAppointmentService('test_service')
+        setClientAppointmentService('')
 
     }
     
@@ -147,7 +154,7 @@ export default function AppointmentForm(){
                     <div className='flex flex-col justify-center md:flex-row gap-5'>
 
                         <div className='flex flex-col justify-center items-center'>
-                            <div className=''>
+                            <div className='mb-auto'>
                                 <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
                             </div>
                             {/* <div className='grid pt-0'>
@@ -172,9 +179,70 @@ export default function AppointmentForm(){
                                         <label className='text-xl my-auto'>Séléctionez la date : </label>
                                         <input type='date' min={today} onChange={handleDateChosen} className='input-designed-1 w-[200px]' ></input>
                                     </div>
-                                    <div id='list of hours and appointments of that day'>
+                                    <div id='list of taken (or not) hours of that day'>
                                         <HoursGrid hours={hoursOfDay} chosenHourSetter={[chosenHour,setChosenHour]} />
                                     </div>
+                                </div>
+
+                                <div id='services' className='grid font-custom_1 gap-5'>
+                                    {
+                                        SERVICES.services_by_group.map(
+                                            (value,key) =>{
+                                                return(
+                                                    <div key={key}>
+                                                        <label className='text-3xl'>{value.group}</label>
+                                                        <div className='grid pt-5 gap-2'>
+                                                            {
+                                                                value.services.map(
+                                                                    (service,key2)=>{
+                                                                        return(
+                                                                            <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] ${clientAppointmentService===service.name ? "border-red-500" : "border-[var(--brand-black)]"}`}>
+                                                                                <div className='grid grid-cols-2'>
+                                                                                    <label className='text-xl'>{service.name}</label>
+                                                                                    <label className='text-xl'>{service.price}€</label>
+                                                                                </div>
+                                                                                <label>{service.description}</label>
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                )
+                                                            }
+                                                        </div>
+
+                                                    </div>
+                                                )
+                                            }
+                                        )
+                                    }
+                                    {
+                                        SERVICES.packages.map(
+                                            (value,key) =>{
+                                                return(
+                                                    <div key={key}>
+                                                        <label className='text-3xl'>{value.group}</label>
+                                                        <div className='grid pt-5 gap-2'>
+                                                            {
+                                                                value.services.map(
+                                                                    (service,key2)=>{
+                                                                        return(
+                                                                            <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] ${clientAppointmentService===service.name ? "border-red-500" : "border-[var(--brand-black)]"}`}>
+                                                                                <div className='grid grid-cols-2'>
+                                                                                    <label className='text-xl'>{service.name}</label>
+                                                                                    <label className='text-xl'>{service.price}€</label>
+                                                                                </div>
+                                                                                <label>{service.description}</label>
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                )
+                                                            }
+                                                        </div>
+
+                                                    </div>
+                                                )
+                                            }
+                                        )
+                                    }
                                 </div>
                             
                             </div>

@@ -241,10 +241,6 @@ async function generateScheduleHours(day){
       }
     })
   }
-
-  console.log(`>> These are the generated hours by generateScheduleHours(${day_name}) : ${response}`);
-  
-
   return(response)
 }
 
