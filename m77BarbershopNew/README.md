@@ -28,7 +28,7 @@ Planning :
     - Admin(owner) can do : 
         - create/delete new accounts for each employee -> creating/deleting profiles as well
             TODO : 
-                - create actual account in firebase.auth
+                - create actual account in firebase.auth                    DONE
         - list all appointments by barber
             TODO : this
         - remove any appointment from each list

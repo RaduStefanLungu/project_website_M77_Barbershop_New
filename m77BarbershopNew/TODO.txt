@@ -12,6 +12,7 @@ TODOs:
             - admin(owner) can lock days for anyone
 
     AppointmentForm :
+        - Check if services are the good ones               - DONE
         - Add Services Selection
 
     AddBarberForm : 
@@ -27,5 +28,6 @@ TODOs:
 
 
 NOTES : 
-    1. Lors de la creation d'un nouveau barber par l'admin, le mot de pass par defaut sera 'm77barber'
-    2. 
+    1. Lors de la creation d'un nouveau barber par l'admin, le mot de pass par defaut sera 'm77barber'.
+    2. Quand on veut supprimer un utilisateur, il faut demander au Web Master (Radu) pour supprimer manuelement son compte.
+    3. 

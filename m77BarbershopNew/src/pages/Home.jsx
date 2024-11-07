@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
-import SERVICES from '../data/services.json'
-
 import { FaPhoneAlt } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
+import ServicesSection from '../components/services/ServicesSection';
 
 
 export default function Home() {
@@ -149,57 +148,6 @@ const PourcentageBelt = () => {
   )
 }
 
-
-const ServicesCard = ({Services}) => {
-  return(
-    <div className='font-custom_1 border-[0.15rem] border-[var(--brand-white)] pt-10 pb-5 px-5 grid relative'>
-
-      <label className='bg-[var(--brand-white)] text-slate-950 py-3 px-5 absolute -top-10 left-10 text-2xl '>
-        {Services.group}
-      </label>
-
-      <div className='grid gap-3'>
-
-        {
-          Services.services.map(
-            (value,key) => {
-              return(
-                <div key={key} className='grid'>
-                  <div className='grid grid-flow-col justify-between border-b-[0.05rem] border-[var(--brand-white)] text-2xl '>
-                    <label className=''>{value.name}</label>
-                    <label className='text-end mt-auto px-5'>{value.price} €</label>
-                  </div>
-                  <p className='text-[var(--brand-white-80)] text-base'>{value.description}</p>
-                </div>
-              )
-            }
-          )
-        }
-
-      </div>
-
-    </div>
-  )
-}
-
-const ServicesSection = () => {
-  return(
-    <div className='bg-[var(--brand-black)] text-[var(--brand-white)] px-10'>
-
-      <h3 className='section-title pt-10'>
-        Services
-      </h3>
-
-      <div className=' grid lg:grid-cols-2 justify-center py-20 gap-20'>
-        <ServicesCard Services={SERVICES.services_by_group[0]} />
-        <ServicesCard Services={SERVICES.services_by_group[1]} />
-      </div>
-      <div className='grid md:justify-center pt-5 pb-10'>
-        <ServicesCard Services={SERVICES.packages[0]} />
-      </div>
-    </div>
-  )
-}
 
 const ContactSection = () => {
 

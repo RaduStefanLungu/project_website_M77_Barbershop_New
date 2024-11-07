@@ -22,11 +22,6 @@
                     "name" : "Coupe Enfant",
                     "price" : 20,
                     "description" : "-12 ans"
-                },
-                {
-                    "name" : "Kid's Price",
-                    "price" : 15,
-                    "description" : "-12Ans"
                 }
             ]
         },
@@ -37,26 +32,6 @@
                     "name" : "Taille de barbe",
                     "price" : 20,
                     "description" : "Avec serviette chaude"
-                },
-                {
-                    "name" : "Taille + Traçage",
-                    "price" : 15,
-                    "description" : "Avec serviette chaude"
-                },
-                {
-                    "name" : "Rasage Express",
-                    "price" : 15,
-                    "description" : "à la lame et avec serviette chaude"
-                },
-                {
-                    "name" : "Rasage Traditionnel",
-                    "price" : 20,
-                    "description" : "Serviette chaude avant et après"
-                },
-                {
-                    "name" : "Rasage Shaver",
-                    "price" : 5,
-                    "description" : "Meilleur moment traditionnel"
                 }
             ]
         }
@@ -67,7 +42,7 @@
             "services" : [
                 {
                     "name" : "Cheveux + Barbe",
-                    "price" : 20,
+                    "price" : 35,
                     "description" : "description du service"
                 }
             ]
