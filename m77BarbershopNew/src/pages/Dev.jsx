@@ -226,6 +226,8 @@ const CreatedProfilesList = ({messagesLog}) => {
             )
         }
 
+        
+
         return(
             <div className={` ${(Key % 2 ===0) ? 'bg-slate-200' : 'bg-slate-100' } flex`}>
                 <div className="flex flex-col">
@@ -249,6 +251,7 @@ const CreatedProfilesList = ({messagesLog}) => {
             </div>
         )
     }
+
 
     return(
         <div id='profiles' className='flex flex-col p-3 bg-slate-100'>

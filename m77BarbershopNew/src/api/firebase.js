@@ -211,6 +211,7 @@ export async function getAppointments(day,profile){
 /*
   Input : day (yyyy-mm-dd)
   Output : list of available hours for the given day with a distance of HOURS_DISTANCE
+  Structure of list : [ ..., [hour,is_taken] ]
 */
 async function generateScheduleHours(day){
   const day_name = getDayOfWeek(day);
@@ -219,20 +220,30 @@ async function generateScheduleHours(day){
   
   let response = [];
 
-  const is_day_locked = schedule_doc.locked
+  // if the salon is closed on one day, then no schedule needs to be generated;
+  if(schedule_doc.closed){
+    return(response)
+  }
 
-  if(schedule_doc.new_schedule.starting_date <= day){
+  if(schedule_doc.new_schedule.starting_date.length > 0 && schedule_doc.new_schedule.starting_date <= day){
     const intervals =  generateTimeIntervals(schedule_doc.new_schedule.opening_hour,schedule_doc.new_schedule.closing_hour,HOURS_DISTANCE)
     intervals.forEach((hour) => {
-      response.push([hour,is_day_locked])
+      if((hour < schedule_doc.new_schedule.break_start) || (hour >= schedule_doc.new_schedule.break_end) ){
+        response.push([hour,false])
+      }
     })
   }
   else{
     const intervals =  generateTimeIntervals(schedule_doc.actual_schedule.opening_hour,schedule_doc.actual_schedule.closing_hour,HOURS_DISTANCE)
     intervals.forEach((hour) => {
-      response.push([hour,is_day_locked])
+      if((hour < schedule_doc.actual_schedule.break_start) || (hour >= schedule_doc.actual_schedule.break_end) ){
+        response.push([hour,false])
+      }
     })
   }
+
+  console.log(`>> These are the generated hours by generateScheduleHours(${day_name}) : ${response}`);
+  
 
   return(response)
 }
@@ -240,13 +251,10 @@ async function generateScheduleHours(day){
 /*
   Input : day 
   Output : schedule for the given day (hours and their availability)
+  Structure : [...,[hour,is_taken]]
 */
-export async function getSchedule(day,profile){
+export async function getSchedule(day,profile){  
   const generatedHoursFromDb = await generateScheduleHours(day)
-
-  console.log(day);
-  
-  console.log(profile);
   
   var response = []
 
@@ -267,6 +275,7 @@ export async function getSchedule(day,profile){
     }
     
   }
+
   else{
     generatedHoursFromDb.forEach(
       (element) => {
@@ -286,15 +295,6 @@ export async function getSchedule(day,profile){
     
     
   }
-
-
-  // console.log(switchListTo(generatedHoursFromDb,true));
-
-  // console.log(dayDocument.appointments);
-  
-  
-  
-  
 }
 
 

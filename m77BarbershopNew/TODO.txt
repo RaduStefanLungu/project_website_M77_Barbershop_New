@@ -18,11 +18,11 @@ TODOs:
         - refresh form after adding new person              - DONE
 
     
-    Pages/Home:
+    Pages/Home + AppointmentForm:
         - link ContactSection to EmailJS API
 
     Schedule : 
-        - fix db structure ( add break-hours and change calculing functions )
+        - fix db structure ( add break-hours and change calculing functions )       - DONE
 
 
 
