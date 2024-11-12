@@ -5,6 +5,9 @@
 
 :root {
     --brand-black: #020617;
+    --brand-black-25: rgba(2, 6, 23,0.25);
+    --brand-black-50: rgba(2, 6, 23,0.50);
+    --brand-black-75: rgba(2, 6, 23,0.75);
     --brand-white: #ffffff;
     --brand-white-80: rgba(255, 255, 255, 0.8);
   }

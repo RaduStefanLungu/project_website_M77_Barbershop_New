@@ -21,9 +21,18 @@ TODOs:
     
     Pages/Home + AppointmentForm:
         - link ContactSection to EmailJS API
+        - EMAIL : add link to add appointment to 'Google Calendar'
 
     Schedule : 
         - fix db structure ( add break-hours and change calculing functions )       - DONE
+    
+    Header : 
+        - create interactive burger for MOBILE version
+        - add Logo
+        - (add all buttons + order)
+
+    Footer : 
+        - TODO
 
 
 

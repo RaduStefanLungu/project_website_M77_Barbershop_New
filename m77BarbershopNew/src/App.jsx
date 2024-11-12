@@ -7,16 +7,18 @@ import Home from './pages/Home'
 import RendezVous from './pages/RendezVous'
 import About from './pages/About'
 import Gallery from './pages/Gallery'
+import Header from './components/Header'
 
 function App() {
 
   return (
     <div>
 
-      <BrowserRouter>
+      <Header/>
       
+      
+      <BrowserRouter>
         <Routes>
-
           <Route path='/' exact element={<Home/>} />
           <Route path='/a-propos' exact element={<About/>} />
           <Route path='/gallerie' exact element={<Gallery/>} />
