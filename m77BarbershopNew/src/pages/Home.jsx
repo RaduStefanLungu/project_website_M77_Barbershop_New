@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 
 import { Link } from 'react-router-dom'
 
 import { FaPhoneAlt } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import ServicesSection from '../components/services/ServicesSection';
+
+
+import IMAGE_1 from '../assets/gallery/image00001.jpeg';
+import IMAGE_5 from '../assets/gallery/image00005.jpeg';
+import IMAGE_6 from '../assets/gallery/image00006.jpeg';
+import IMAGE_8 from '../assets/gallery/image00008.jpeg';
+import Carousel from '../components/Carousel';
+
 
 
 export default function Home() {
@@ -29,8 +37,8 @@ export default function Home() {
         <PourcentageBelt />
       </div>
 
-      <div>
-        TODO : Gallery
+      <div className='container mx-auto'>
+        <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
       </div>
 
 
@@ -147,6 +155,41 @@ const PourcentageBelt = () => {
   )
 }
 
+const GallerySection = ({imageList}) => {
+  return(
+    <div className='grid px-10'>
+
+        <h3 className='section-title pt-10 pb-5'>
+          Gallérie
+        </h3>
+
+      {/* <div className='grid grid-cols-2 gap-5'>
+        <div className='grid justify-center'>
+          <img src={IMAGE_1} className='max-w-[350px]'/>
+        </div>
+          
+        <div className='grid justify-center'>
+          <img src={IMAGE_5} className='max-w-[350px]'/>
+        </div>
+          
+        <div className='grid justify-center'>
+          <img src={IMAGE_6} className='max-w-[350px]'/>
+        </div>
+          
+        <div className='grid justify-center'>
+          <img src={IMAGE_8} className='max-w-[350px]'/>
+        </div>
+      </div> */}
+
+        <Carousel imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} autoPlay={10} />
+
+      <div className='grid md:mx-32 mt-5 md:mt-10'>
+        <Link to={'/gallerie'} className='button-1 text-center'>Découvrir d'avance</Link>
+      </div>
+
+    </div>
+  )
+}
 
 const ContactSection = () => {
 
@@ -216,3 +259,6 @@ const ContactSection = () => {
     </div>
   )
 }
+
+
+
