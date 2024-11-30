@@ -18,7 +18,9 @@ function App() {
       
       
       <BrowserRouter>
+
         <Routes>
+
           <Route path='/' exact element={<Home/>} />
           <Route path='/a-propos' exact element={<About/>} />
           <Route path='/gallerie' exact element={<Gallery/>} />

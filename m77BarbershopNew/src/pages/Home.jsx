@@ -44,7 +44,6 @@ export default function Home() {
   )
 }
 
-
 const HERO = () => {
   return(
     <div className='grid relative h-[500px] md:h-[700px] hero-image'>
