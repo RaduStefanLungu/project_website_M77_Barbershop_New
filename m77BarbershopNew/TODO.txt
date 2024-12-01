@@ -27,9 +27,9 @@ TODOs:
         - fix db structure ( add break-hours and change calculing functions )       - DONE
     
     Header : 
-        - create interactive burger for MOBILE version
-        - add Logo
-        - (add all buttons + order)
+        - create interactive burger for MOBILE version                              - TODO
+        - add Logo  for                                                             - TODO
+        - (add all buttons + order)                                                 - DONE
 
     Footer : 
         - TODO

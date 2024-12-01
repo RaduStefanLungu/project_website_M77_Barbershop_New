@@ -157,11 +157,11 @@ const PourcentageBelt = () => {
 
 const GallerySection = ({imageList}) => {
   return(
-    <div className='grid px-10'>
+    <div className='grid px-10 pb-20 bg-[var(--brand-black)] text-[var(--brand-white)]'>
 
-        <h3 className='section-title pt-10 pb-5'>
-          Gallérie
-        </h3>
+      <h3 className='section-title pt-10 pb-5'>
+        Gallérie
+      </h3>
 
       {/* <div className='grid grid-cols-2 gap-5'>
         <div className='grid justify-center'>
@@ -181,10 +181,12 @@ const GallerySection = ({imageList}) => {
         </div>
       </div> */}
 
+      <div className='mx-auto grid lg:w-[500px]'>
         <Carousel imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} autoPlay={10} />
+      </div>
 
       <div className='grid md:mx-32 mt-5 md:mt-10'>
-        <Link to={'/gallerie'} className='button-1 text-center'>Découvrir d'avance</Link>
+        <Link to={'/gallerie'} className='button-2 text-center'>Découvrir d'avance</Link>
       </div>
 
     </div>

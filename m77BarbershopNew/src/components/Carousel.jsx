@@ -30,7 +30,7 @@ const Carousel = ({ imageList = [], autoPlay = 5 }) => {
     return (
       <div className="relative w-full max-w-4xl mx-auto">
         {/* Carousel Images */}
-        <div className="overflow-hidden rounded-lg">
+        <div className="overflow-hidden ">
           <div
             className="flex transition-transform duration-500"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -49,13 +49,13 @@ const Carousel = ({ imageList = [], autoPlay = 5 }) => {
         {/* Navigation Buttons */}
         <button
           onClick={handlePrevious}
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full shadow-md hover:bg-gray-800 focus:outline-none"
+          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-700 text-white p-2 shadow-md hover:bg-gray-800 focus:outline-none"
         >
           {'<'}
         </button>
         <button
           onClick={handleNext}
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 text-white p-2 rounded-full shadow-md hover:bg-gray-800 focus:outline-none"
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 text-white p-2 shadow-md hover:bg-gray-800 focus:outline-none"
         >
           {">"}
         </button>
