@@ -7,6 +7,7 @@ import { RiFileHistoryFill } from "react-icons/ri";
 
 import { getItems, updateQuantity } from './inventoryAPI';
 import Checkout from './components/Checkout';
+import TicketHistory from './components/TicketHistory';
 
 
 export default function Inventory() {
@@ -15,11 +16,12 @@ export default function Inventory() {
 
     const dico = {
         "stock" : <Stock/>,
-        "checkout" : <Checkout/>
+        "checkout" : <Checkout/>,
+        "ticket-history" : <TicketHistory/>
     }
 
   return (
-    <div>
+    <div className='grid'>
 
         <h1 className='text-blue-500 font-bold text-5xl py-5'>
             Inventaire
@@ -33,7 +35,7 @@ export default function Inventory() {
             <button onClick={()=>{setSelection('checkout')}} className={`text-4xl p-5 ${selection=='checkout'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <MdShoppingCartCheckout/>
             </button>
-            <button className={`text-4xl p-5 bg-blue-700 hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
+            <button onClick={()=>{setSelection('ticket-history')}} className={`text-4xl p-5 bg-blue-700 hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <RiFileHistoryFill/>
             </button>
             <button className={`text-4xl p-5 bg-blue-700 hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>

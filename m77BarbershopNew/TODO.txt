@@ -11,31 +11,23 @@ TODOs:
         - add possibility to lock days for each person
             - admin(owner) can lock days for anyone
 
-    AppointmentForm :
-        - Check if services are the good ones               - DONE
-        - Add Services Selection                            - DONE
-
-    AddBarberForm : 
-        - refresh form after adding new person              - DONE
-
     
     Pages/Home + AppointmentForm:
         - link ContactSection to EmailJS API
         - EMAIL : add link to add appointment to 'Google Calendar'
 
-    Schedule : 
-        - fix db structure ( add break-hours and change calculing functions )       - DONE
-    
-    Header : 
-        - create interactive burger for MOBILE version                              - TODO
-        - add Logo  for                                                             - TODO
-        - (add all buttons + order)                                                 - DONE
-
     Footer : 
         - TODO
 
+    About us Page : 
+        - TODO
+    Gallery Page :
+        - TODO
+
+
     Inventory :
         * On Selling, send the ticket to db and use it after for a monthly analysis.    - TODO
+        * Save to a history whenever the user adds more to inventory !
     Admin : 
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
 

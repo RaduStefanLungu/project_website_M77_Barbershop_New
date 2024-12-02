@@ -72,6 +72,11 @@ export default function Checkout(){
 
     async function confirmTiket(e) {
         e.preventDefault();
+
+        // TODO :
+        // const tiket = {..}
+        // upload ticket
+        // update new values to db
     
         try {
             await Promise.all(
