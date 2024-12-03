@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getItems, updateQuantity } from "../inventoryAPI";
+import { getItems, updateQuantity, uploadTicket } from "../inventoryAPI";
 
 import { FaTrash } from "react-icons/fa";
 
@@ -39,6 +39,10 @@ export default function Checkout(){
             // If item is not in the cart, add it with quantity 1
             setSelectedItems([...selectedItems, [item, 1]]);
         }
+
+        console.log(selectedItems);
+        
+
     }
     
     function removeItemFromCart(e, item) {
@@ -69,6 +73,40 @@ export default function Checkout(){
         }
     }
 
+    function ticketSum(){
+        let sum = 0
+        selectedItems.map(
+            (tuple,key) => {
+                sum = sum + ( tuple[0].data.item_sell_price * tuple[1] )
+            }
+        )
+        return(sum.toFixed(2))
+    }
+
+    function createListOfItems(selectedItems){
+        // is based on the structure of selectedItems which is : [[item_full_data,quantity],[...],..]
+        // return new structure for ticket.items to be worth the DB 
+
+        let response = [];
+
+        selectedItems.map(
+            (value,key) => {
+                response.push(
+                    {
+                        item : {
+                            item_id : value[0].data.item_id,
+                            item_name : value[0].data.item_name,
+                            item_sell_price : value[0].data.item_sell_price,
+                            item_buy_price : value[0].data.item_buy_price
+                        },
+                        quantity : value[1],
+                    }
+                )
+            }
+        )
+
+        return(response);
+    }
 
     async function confirmTiket(e) {
         e.preventDefault();
@@ -77,7 +115,17 @@ export default function Checkout(){
         // const tiket = {..}
         // upload ticket
         // update new values to db
-    
+
+        const ticket = {
+            meta : {
+                timestamp : new Date(Date.now()),
+                created_by : 'ADMIN - TBD',                 // TODO CHANGE THIS TO ACTUAL USER
+            },
+            items : createListOfItems(selectedItems),
+            total_amount : ticketSum()
+        }
+        
+        // update existing values to db
         try {
             await Promise.all(
                 selectedItems.map(async (value, key) => {
@@ -95,7 +143,17 @@ export default function Checkout(){
                     }
                 })
             );
-    
+            
+            // send ticket to db
+            console.log(ticket);
+            try {
+                await uploadTicket(ticket)
+            } catch (error) {
+                console.log(error.message);
+                
+            }
+            
+
             setMessage(['Confirmation du tiket réussie !', false]);
     
             // Add 3 seconds delay
@@ -104,9 +162,6 @@ export default function Checkout(){
             setSelectedItems([]);
             setMessage([]);
     
-            // TODO :
-            // await saveToHistory(selectedItems);
-    
         } catch (error) {
             console.log(error);
             
@@ -114,15 +169,7 @@ export default function Checkout(){
         }
     }
     
-    function ticketSum(){
-        let sum = 0
-        selectedItems.map(
-            (tuple,key) => {
-                sum = sum + ( tuple[0].data.item_sell_price * tuple[1] )
-            }
-        )
-        return(sum.toFixed(2))
-    }
+    
 
     useEffect(() => {
         fetchItems();

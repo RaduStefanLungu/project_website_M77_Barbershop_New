@@ -31,6 +31,7 @@ const firestore = getStorage(app)
 
 const IMAGES_CONTAINER = 'items_images'
 const INVENTORY_COLLECTION = 'inventoryItems'
+const TICKET_COLLECTION = 'inventoryTickets'
 
 
 // UTILITIES
@@ -119,6 +120,7 @@ async function updateAvailability(itemID, bool) {
 
 // EXPORTED FUNCTIONS : 
 
+  // INVENTORY MANAGEMENT
 export async function addItem(itemData,itemImage){
   // real order :
   // check if item is already in inventory
@@ -239,6 +241,23 @@ export async function removeItem(itemID){
   await removeDocumentByID(itemID,INVENTORY_COLLECTION)
   addLog('removeItem',[itemID])
 }
+
+  // TICKET MANAGEMENT
+
+  export async function uploadTicket(data){
+    //upload given ticket to db
+    await addDoc(collection(firestore_db,TICKET_COLLECTION),data)
+
+  }
+
+  export async function getTickets(){
+    //returns all tickets from database
+  }
+  
+  export async function getTicketsByMonth(wanted_month){
+    //returns all tickets from with wanted_month 
+  }
+
 
 function addLog(functionName,params){
     // add log to collection 'logs' telling :
