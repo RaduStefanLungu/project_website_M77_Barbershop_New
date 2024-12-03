@@ -10,6 +10,9 @@ import Gallery from './pages/Gallery'
 import Header from './components/Header'
 import Admin from './pages/private/Admin'
 import MainLayout from './layouts/MainLayout'
+import { AuthProvider } from './context/AuthContext.jsx'
+import PrivateRoute from './context/PrivateRoute.jsx'
+import Login from './pages/Login.jsx'
 
 function App() {
 
@@ -21,22 +24,30 @@ function App() {
       
       <BrowserRouter>
 
-        <Routes>
+        <AuthProvider>
 
-          <Route element={<MainLayout/>} >
-            <Route path='/' exact element={<Home/>} />
-            <Route path='/a-propos' exact element={<About/>} />
-            <Route path='/gallerie' exact element={<Gallery/>} />
-            <Route path='/rendez-vous' exact element={<RendezVous/>} />
-          </Route>
+          <Routes>
 
-          <Route path='/dev' exact element={<Dev/>} />
-          <Route path='/inventory' exact element={<Inventory/>} />
+            <Route element={<MainLayout/>} >
+              <Route path='/' exact element={<Home/>} />
+              <Route path='/a-propos' exact element={<About/>} />
+              <Route path='/gallerie' exact element={<Gallery/>} />
+              <Route path='/rendez-vous' exact element={<RendezVous/>} />
+            </Route>
 
-          <Route path='/admin' exact element={<Admin/>} />
-          
+            <Route path='/login' exact element={<Login/>} />
 
-        </Routes>
+            <Route path='/dev' exact element={<Dev/>} />
+            <Route path='/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
+
+            <Route path='/admin' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
+            
+
+          </Routes>
+
+        </AuthProvider>
+
+        
       </BrowserRouter>
 
     </div>
