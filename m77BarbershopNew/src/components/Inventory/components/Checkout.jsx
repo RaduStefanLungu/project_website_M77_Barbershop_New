@@ -111,20 +111,25 @@ export default function Checkout(){
     async function confirmTiket(e) {
         e.preventDefault();
 
-        // TODO :
-        // const tiket = {..}
-        // upload ticket
-        // update new values to db
-
         const ticket = {
             meta : {
-                timestamp : new Date(Date.now()),
-                created_by : 'ADMIN - TBD',                 // TODO CHANGE THIS TO ACTUAL USER
+                timestamp : new Date().toISOString().split('.')[0],
+                created_by : 'ADMIN - TBD',                         // TODO CHANGE THIS TO ACTUAL USER
             },
             items : createListOfItems(selectedItems),
             total_amount : ticketSum()
         }
         
+
+        // send ticket to db
+        try {
+            await uploadTicket(ticket)
+        } catch (error) {
+            console.log(error.message);
+            
+        }
+
+
         // update existing values to db
         try {
             await Promise.all(
@@ -142,17 +147,7 @@ export default function Checkout(){
                         throw new Error(`Item ${value[0].data.item_id} not found`);
                     }
                 })
-            );
-            
-            // send ticket to db
-            console.log(ticket);
-            try {
-                await uploadTicket(ticket)
-            } catch (error) {
-                console.log(error.message);
-                
-            }
-            
+            ); 
 
             setMessage(['Confirmation du tiket réussie !', false]);
     
@@ -168,8 +163,7 @@ export default function Checkout(){
             setMessage([error.message, true]);
         }
     }
-    
-    
+
 
     useEffect(() => {
         fetchItems();
