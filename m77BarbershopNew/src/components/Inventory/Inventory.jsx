@@ -8,6 +8,7 @@ import { RiFileHistoryFill } from "react-icons/ri";
 import { getItems, updateQuantity } from './inventoryAPI';
 import Checkout from './components/Checkout';
 import TicketHistory from './components/TicketHistory';
+import { useAuth } from '../../context/AuthContext';
 
 
 export default function Inventory() {
@@ -20,8 +21,26 @@ export default function Inventory() {
         "ticket-history" : <TicketHistory/>
     }
 
+    const {currentUser,logout} = useAuth();
+
+    async function handleLogout(e){
+        e.preventDefault();
+
+        await logout();
+    }
+
   return (
     <div className='grid'>
+
+        <div className='bg-black text-white flex justify-between px-5'>
+            <div className='flex gap-2'>
+                <label>username : {currentUser.email} </label>
+            </div>
+            <div className='flex'>
+                <button onClick={handleLogout}>Log Out</button>
+            </div>
+
+        </div>
 
         <h1 className='text-blue-500 font-bold text-5xl py-5'>
             Inventaire
