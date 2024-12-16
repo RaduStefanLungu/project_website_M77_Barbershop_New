@@ -14,7 +14,7 @@ Planning :
         - Users can chose a barber, a date & hour and a service. 
             TODO : 
                 - list available hours /barber/date                         DONE
-                - list available services                                   TODO
+                - list available services                                   DONE
         - They'll receive a confirmation email if the appointment has been successully saved.
             TODO : 
                 - send confirmation email                                   TODO     

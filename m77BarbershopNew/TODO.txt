@@ -24,14 +24,15 @@ TODOs:
     Gallery Page :
         - TODO
 
-    Create sitemap.xml
+    Create and complete sitemap.xml             -TODO
 
 
 
     Inventory :
         * On Selling, send the ticket to db and use it after for a monthly analysis.    - DONE
         * Save to a history whenever the user adds more to inventory !                  - TODO
-        * Create view of TicketHistory and  show                                        - TODO
+            ** update ticket.meta.created_by by using the connected user.               - TODO
+        * Create view of TicketHistory and show                                         - TODO
     Admin : 
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
 
