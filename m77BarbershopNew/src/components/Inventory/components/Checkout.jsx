@@ -4,7 +4,7 @@ import { getItems, updateQuantity, uploadTicket } from "../inventoryAPI";
 import { FaTrash } from "react-icons/fa";
 
 
-export default function Checkout(){
+const Checkout = ({connectedUser}) => {
     const [itemsFromDB, setItemsFromDB] = useState([]);
 
     const [selectedItems,setSelectedItems] = useState([]);
@@ -114,7 +114,7 @@ export default function Checkout(){
         const ticket = {
             meta : {
                 timestamp : new Date().toISOString().split('.')[0],
-                created_by : 'ADMIN - TBD',                         // TODO CHANGE THIS TO ACTUAL USER
+                created_by : connectedUser,                         
             },
             items : createListOfItems(selectedItems),
             total_amount : ticketSum()
@@ -246,3 +246,5 @@ export default function Checkout(){
         </div>
     )
 }
+
+export default Checkout;

@@ -251,7 +251,11 @@ export async function removeItem(itemID){
   }
 
   export async function getTickets(){
-    //returns all tickets from database
+    const tickets_collection = await collection(firestore_db,TICKET_COLLECTION);
+    const docs = await getDocs(tickets_collection)
+
+    return docs
+
   }
   
   export async function getTicketsByMonth(wanted_month){

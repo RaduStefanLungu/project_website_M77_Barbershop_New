@@ -12,16 +12,17 @@ import { useAuth } from '../../context/AuthContext';
 
 
 export default function Inventory() {
+    const {currentUser,logout} = useAuth();
 
     const [selection,setSelection] = useState('checkout')
 
     const dico = {
         "stock" : <Stock/>,
-        "checkout" : <Checkout/>,
+        "checkout" : <Checkout connectedUser={currentUser.email}/>,
         "ticket-history" : <TicketHistory/>
     }
 
-    const {currentUser,logout} = useAuth();
+    
 
     async function handleLogout(e){
         e.preventDefault();

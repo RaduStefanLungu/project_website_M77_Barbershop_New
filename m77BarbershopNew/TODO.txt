@@ -30,9 +30,14 @@ TODOs:
 
     Inventory :
         * On Selling, send the ticket to db and use it after for a monthly analysis.    - DONE
+            ** update ticket.meta.created_by by using the connected user.               - DONE
+            
         * Save to a history whenever the user adds more to inventory !                  - TODO
-            ** update ticket.meta.created_by by using the connected user.               - TODO
-        * Create view of TicketHistory and show                                         - TODO
+
+        * Create view of TicketHistory and show                                         - DONE
+
+        * add financial rapport based on db tickets, monthly analysis (admin only)      - TODO
+
     Admin : 
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
 
