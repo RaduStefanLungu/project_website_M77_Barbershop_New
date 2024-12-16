@@ -293,6 +293,62 @@ export async function getSchedule(day,profile){
   }
 }
 
+export async function getScheduleFooter() {
+  // Weekday translation and order mapping
+  const dayTranslation = {
+    monday: "Lundi",
+    tuesday: "Mardi",
+    wednesday: "Mercredi",
+    thursday: "Jeudi",
+    friday: "Vendredi",
+    saturday: "Samedi",
+    sunday: "Dimanche",
+  };
+
+  const weekOrder = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+
+  // Fetch the schedule collection
+  let schedule_collection = await collection(firestore_db, "schedule");
+  let querySnapshot = await getDocs(schedule_collection);
+
+  // Create response array
+  let response = [];
+
+  querySnapshot.forEach((doc) => {
+    if (!doc.data().closed) {
+      response.push({
+        day: dayTranslation[doc.id], // Translate weekday to French
+        schedule: `${doc.data().actual_schedule.opening_hour} - ${doc.data().actual_schedule.closing_hour}`,
+      });
+    } else {
+      response.push({
+        day: dayTranslation[doc.id], // Translate weekday to French
+        schedule: `Fermé`,
+      });
+    }
+  });
+
+  // Sort response based on the weekOrder array
+  response.sort(
+    (a, b) => weekOrder.indexOf(Object.keys(dayTranslation).find(key => dayTranslation[key] === a.day)) - 
+              weekOrder.indexOf(Object.keys(dayTranslation).find(key => dayTranslation[key] === b.day))
+  );
+
+
+  console.log(response);
+  
+
+  return response;
+}
+
 
 
 // USER CONFIG

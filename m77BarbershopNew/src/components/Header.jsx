@@ -37,7 +37,7 @@ export default function Header() {
         </button>
 
         <div className={`absolute w-screen ${burgerClicked? " top-10 translate-y-0 duration-700 transition-transform" : "-top-32 -translate-y-full transition-transform duration-500"} md:top-0 md:translate-y-0 md:duration-0 md:relative md:w-auto grid text-center md:flex items-center gap-2 bg-[var(--brand-black)]`}>
-          <HeaderButton Text={"Acceuil"} Path={"/"} />
+          <HeaderButton Text={"Accueil"} Path={"/"} />
           <HeaderButton Text={"A propos"} Path={"/a-propos"} />
           <HeaderButton Text={"Gallerie"} Path={"/gallerie"} />
           <HeaderButton Text={"Rendez-vous"} Path={"/rendez-vous"} />

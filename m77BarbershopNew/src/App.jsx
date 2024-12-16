@@ -35,10 +35,10 @@ function App() {
               <Route path='/rendez-vous' exact element={<RendezVous/>} />
             </Route>
 
-            <Route path='/login' exact element={<Login/>} />
+            <Route path='/admin/login' exact element={<Login/>} />
 
             <Route path='/dev' exact element={<Dev/>} />
-            <Route path='/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
+            <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
 
             <Route path='/admin' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
             
@@ -46,7 +46,6 @@ function App() {
           </Routes>
 
         </AuthProvider>
-
         
       </BrowserRouter>
 

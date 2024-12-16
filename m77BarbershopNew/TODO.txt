@@ -17,12 +17,14 @@ TODOs:
         - EMAIL : add link to add appointment to 'Google Calendar'
 
     Footer : 
-        - TODO
+        - DONE
 
     About us Page : 
         - TODO
     Gallery Page :
         - TODO
+
+    Create sitemap.xml
 
 
 
