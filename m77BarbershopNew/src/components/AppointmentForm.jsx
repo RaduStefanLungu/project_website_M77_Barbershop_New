@@ -3,7 +3,6 @@ import { addAppointment2, getProfiles, getSchedule } from '../api/firebase'
 import { v4 } from 'uuid'
 
 import SERVICES from '../data/services.json'
-import ServicesCard from './services/ServicesCard'
 
 export default function AppointmentForm(){
     const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
@@ -45,34 +44,26 @@ export default function AppointmentForm(){
     async function handleSubmit(e){
         e.preventDefault();
 
-        // const response = await addAppointment2({
-        //     barber_id : chosenProfile.profile_id,
-        //     appointment_id : v4(),
-        //     appointment_hour : chosenHour,
-        //     appointment_date : clientAppointmentDate,
-        //     appointment_service : "modern haircut",
-        //     appointment_user : {
-        //       email : clientEmail,
-        //       name : `${clientLastName} ${clientFirstName}`,
-        //       phone : clientPhone
-        //     },
-        //     registered_time : new Date().toLocaleString()
-        //   })
-
-        console.log({
+        const appointment = {
             barber_id : chosenProfile.profile_id,
             appointment_id : v4(),
             appointment_hour : chosenHour,
             appointment_date : clientAppointmentDate,
-            appointment_service : "modern haircut",         //TODO : let user chose this !!
+            appointment_service : clientAppointmentService,
             appointment_user : {
               email : clientEmail,
               name : `${clientLastName} ${clientFirstName}`,
               phone : clientPhone
             },
             registered_time : new Date().toLocaleString()
-          });
+          }
+
+        console.log(appointment);
         
+        if(chosenProfile !== null){         // TODO : complete the conditions
+            await addAppointment2(appointment);
+            // TODO : send to message view 'thank you for your appointment ...'
+        }
 
     }
 

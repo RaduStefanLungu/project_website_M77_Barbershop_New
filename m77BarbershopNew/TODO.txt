@@ -13,8 +13,10 @@ TODOs:
 
     
     Pages/Home + AppointmentForm:
-        - link ContactSection to EmailJS API
-        - EMAIL : add link to add appointment to 'Google Calendar'
+        - link ContactSection to EmailJS API                                                    - TODO
+        - EMAIL : add link to add appointment to 'Google Calendar'                              - TODO
+        - create a 'thank you for your appointment' view for after clicking 'rezerver'          - TODO
+            -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
 
     Footer : 
         - DONE
@@ -32,13 +34,16 @@ TODOs:
         * On Selling, send the ticket to db and use it after for a monthly analysis.    - DONE
             ** update ticket.meta.created_by by using the connected user.               - DONE
             
-        * Save to a history whenever the user adds more to inventory !                  - TODO
+        * Save to a history whenever the user adds more to inventory !                  - DONE
 
         * Create view of TicketHistory and show                                         - DONE
 
         * add financial rapport based on db tickets, monthly analysis (admin only)      - TODO
+            --> use https://apexcharts.com/docs/chart-types/column-chart/ 
 
         * (maybe) real-time checking for items added in cart to not be over the available quantity          - TODO
+
+        ** Update visuals                                                               - TODO
 
     Admin : 
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
