@@ -31,6 +31,7 @@ const firestore = getStorage(app)
 
 const IMAGES_CONTAINER = 'items_images'
 const INVENTORY_COLLECTION = 'inventoryItems'
+const INVENTORY_UPDATES_COLLECTION = 'inventoryItemsUpdates'
 const TICKET_COLLECTION = 'inventoryTickets'
 
 
@@ -205,6 +206,18 @@ export async function updateQuantity(itemID, newQuantity) {
 
   // Get a reference to the document in Firestore based on itemID
   const itemRef = doc(firestore_db, INVENTORY_COLLECTION, itemID);
+  const itemSnapshop = await getDocumentById(INVENTORY_COLLECTION,itemID)
+
+  const updateTracer = {
+    item_id : itemID,
+    item_name : itemSnapshop.data.item_name,
+    made_by : 'test@test.com',
+    timestamp : new Date().toLocaleString('fr-BE', { timeZone: 'Europe/Brussels' }),
+    data : {
+      new_quantity : newQuantity,
+      old_quantity : itemSnapshop.data.item_quantity
+    }
+  }
 
   try {
           
@@ -219,7 +232,10 @@ export async function updateQuantity(itemID, newQuantity) {
         // Update the item_quantity field with the new value
         await updateDoc(itemRef, {
           'data.item_quantity': newQuantity // Use dot notation to update the nested field
-      });
+      }).then(
+        // keep track of quantity updates
+        await addItemUpdate(updateTracer)
+      )
   
         console.log(`Document ${itemID} successfully updated!`);
   
@@ -241,6 +257,14 @@ export async function removeItem(itemID){
   await removeDocumentByID(itemID,INVENTORY_COLLECTION)
   addLog('removeItem',[itemID])
 }
+
+
+async function addItemUpdate(data){
+  const result = await addDoc(collection(firestore_db,INVENTORY_UPDATES_COLLECTION),data)
+  return result;
+}
+
+
 
   // TICKET MANAGEMENT
 
@@ -280,7 +304,7 @@ function addLog(functionName,params){
     const logData = {
         function_name : functionName,
         function_params : params,
-        function_call_time : new Date().toLocaleString('en-GB',{timeZone:'UTC'})
+        function_call_time : new Date().toLocaleString('fr-BE', { timeZone: 'Europe/Brussels' })
     }
 
     //addToDb(data,'logs')

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getTickets } from '../inventoryAPI'
 
-import { IoMdArrowDropdownCircle,IoMdArrowDropupCircle } from "react-icons/io";
 import { MdOutlineKeyboardArrowDown,MdOutlineKeyboardArrowUp } from "react-icons/md";
 
 
@@ -57,12 +56,7 @@ export default function TicketHistory() {
 
   function handleOrderTicketsAscending(e){
     // e.preventDefault();
-
-    console.log(tickets);
-    console.log(orderByTimestamp(tickets,!orderTicketsAsceding));
     
-    
-
     setTickets(orderByTimestamp(tickets,!orderTicketsAsceding))
     setOrderTicketsAsceding(!orderTicketsAsceding)
   }
@@ -110,7 +104,7 @@ const TicketView = ({ticketData}) => {
       <button onClick={handleClickedDropdown} className='flex justify-between '>
         <div className='grid'>
           <label className=''>
-            {ticketData.data.meta.timestamp.split('T')[0]} {ticketData.data.meta.timestamp.split('T')[1].split('Z')[0].split('.')[0]}
+            {ticketData.data.meta.timestamp}
           </label>
           <div className='flex gap-5 font-bold'>
             <label>Total : </label>

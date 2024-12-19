@@ -113,7 +113,7 @@ const Checkout = ({connectedUser}) => {
 
         const ticket = {
             meta : {
-                timestamp : new Date().toISOString().split('.')[0],
+                timestamp : new Date().toLocaleString('fr-BE', { timeZone: 'Europe/Brussels' }),
                 created_by : connectedUser,                         
             },
             items : createListOfItems(selectedItems),

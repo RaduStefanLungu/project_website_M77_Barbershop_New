@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Stock from './components/Stock'
 
-import { FaBoxes,FaQuestion,FaTrash } from "react-icons/fa";
+import { FaBoxes,FaQuestion } from "react-icons/fa";
 import { MdShoppingCartCheckout } from "react-icons/md";
 import { RiFileHistoryFill } from "react-icons/ri";
 
-import { getItems, updateQuantity } from './inventoryAPI';
 import Checkout from './components/Checkout';
 import TicketHistory from './components/TicketHistory';
 import { useAuth } from '../../context/AuthContext';
