@@ -6,13 +6,24 @@ import { MdOutlineKeyboardArrowDown,MdOutlineKeyboardArrowUp } from "react-icons
 
 function orderByTimestamp(tickets, ascending) {
   return [...tickets].sort((a, b) => {
-    const timestampA = new Date(a.data.meta.timestamp);
-    const timestampB = new Date(b.data.meta.timestamp);
+    const parseTimestamp = (timestamp) => {
+      // Split the timestamp into date and time parts
+      const [datePart, timePart] = timestamp.split(" ");
+      const [day, month, year] = datePart.split("/").map(Number);
+      const [hours, minutes, seconds] = timePart.split(":").map(Number);
+
+      // Create a Date object
+      return new Date(year, month - 1, day, hours, minutes, seconds);
+    };
+
+    const timestampA = parseTimestamp(a.data.meta.timestamp);
+    const timestampB = parseTimestamp(b.data.meta.timestamp);
 
     // Ascending if `ascending` is true, otherwise descending
     return ascending ? timestampA - timestampB : timestampB - timestampA;
   });
 }
+
 
 
 
@@ -56,7 +67,14 @@ export default function TicketHistory() {
 
   function handleOrderTicketsAscending(e){
     // e.preventDefault();
+    console.log('> handleling order tickets ascending');
     
+    console.log(tickets);
+    console.log(orderByTimestamp(tickets,!orderTicketsAsceding));
+    
+    
+
+
     setTickets(orderByTimestamp(tickets,!orderTicketsAsceding))
     setOrderTicketsAsceding(!orderTicketsAsceding)
   }
