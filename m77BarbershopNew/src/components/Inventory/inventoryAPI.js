@@ -254,7 +254,17 @@ export async function removeItem(itemID){
     const tickets_collection = await collection(firestore_db,TICKET_COLLECTION);
     const docs = await getDocs(tickets_collection)
 
-    return docs
+    let response = []
+    docs.forEach(
+      (doc) => {
+        response.push({
+          id: doc.id,
+          data : doc.data()
+        })
+      }
+    )
+
+    return response;
 
   }
   

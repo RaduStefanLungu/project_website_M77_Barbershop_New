@@ -37,8 +37,10 @@ export default function Home() {
         <PourcentageBelt />
       </div>
 
-      <div className='container mx-auto'>
-        <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
+      <div className='bg-slate-950'>
+        <div className='container mx-auto'>
+          <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
+        </div>
       </div>
 
 
