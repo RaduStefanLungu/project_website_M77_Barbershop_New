@@ -171,7 +171,7 @@ const Checkout = ({connectedUser}) => {
 
     const CheckoutItem = ({itemData}) => {
         return(
-            <div className='bg-white shadow-md shadow-black/25 flex flex-col p-3 rounded-xl'>
+            <div className={`${itemData.data.item_quantity<=0? "bg-gray-300" : "bg-white"} shadow-md shadow-black/25 flex flex-col p-3 rounded-xl`}>
                 <div className='w-[75px] h-[75px] grid m-auto md:w-[100px] md:h-[100px] xl:w-[150px] xl:h-[150px]'>
                     <img src={itemData.data.item_image_url} className='w-fit' />
                 </div>
@@ -194,7 +194,7 @@ const Checkout = ({connectedUser}) => {
                             itemsFromDB.map(
                                 (value,key) => {
                                     return(
-                                        <button key={key} className='grid' onClick={(e)=>{addItemToCart(e,value)}}>
+                                        <button key={key} className='grid' disabled={value.data.item_quantity<=0} onClick={(e)=>{addItemToCart(e,value)}}>
                                             <CheckoutItem itemData={value} />
                                         </button>
                                     )

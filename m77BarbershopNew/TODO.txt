@@ -38,6 +38,8 @@ TODOs:
 
         * add financial rapport based on db tickets, monthly analysis (admin only)      - TODO
 
+        * (maybe) real-time checking for items added in cart to not be over the available quantity          - TODO
+
     Admin : 
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
 
@@ -45,4 +47,6 @@ TODOs:
 NOTES : 
     1. Lors de la creation d'un nouveau barber par l'admin, le mot de pass par defaut sera 'm77barber'.
     2. Quand on veut supprimer un utilisateur, il faut demander au Web Master (Radu) pour supprimer manuelement son compte.
-    3. 
+    3. Inventaire : quand on fait un ticket de vente, bien verifier avant qu'on a assez de produits à vendre 
+        (aka bien regarder # produits qu'on donne au client pour pas passer au dessus)
+    4. 
