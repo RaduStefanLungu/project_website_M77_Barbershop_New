@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import Stock from './components/Stock'
 
-import { FaBoxes,FaQuestion } from "react-icons/fa";
+import { FaBoxes,FaQuestion, FaChartPie } from "react-icons/fa";
+
 import { MdShoppingCartCheckout } from "react-icons/md";
 import { RiFileHistoryFill } from "react-icons/ri";
 
 import Checkout from './components/Checkout';
 import TicketHistory from './components/TicketHistory';
 import { useAuth } from '../../context/AuthContext';
+import Statistics from './components/Statistics';
 
 
 export default function Inventory() {
@@ -16,9 +18,10 @@ export default function Inventory() {
     const [selection,setSelection] = useState('checkout')
 
     const dico = {
-        "stock" : <Stock/>,
+        "stock" : <Stock connectedUser={currentUser.email}/>,
         "checkout" : <Checkout connectedUser={currentUser.email}/>,
-        "ticket-history" : <TicketHistory/>
+        "ticket-history" : <TicketHistory/>,
+        "statistics" : <Statistics/>,
     }
 
     
@@ -56,6 +59,9 @@ export default function Inventory() {
             </button>
             <button onClick={()=>{setSelection('ticket-history')}} className={`text-4xl p-5  ${selection=='ticket-history'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <RiFileHistoryFill/>
+            </button>
+            <button onClick={()=>{setSelection('statistics')}} className={`text-4xl p-5  ${selection=='statistics'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
+                <FaChartPie/>
             </button>
             <button className={`text-4xl p-5 bg-blue-700 hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <FaQuestion/>

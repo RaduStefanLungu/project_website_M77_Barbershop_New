@@ -15,7 +15,7 @@ import { v4 } from 'uuid';
 // TODO : add 'buying price / item  && selling price / item ==> make a sales rapport?'
 
 
-const Stock = () => {
+const Stock = ({connectedUser}) => {
 
     const [clickedAddItem, setClickedAdditem] = useState(false);
     const [activatedPopup, setActivatedPopup] = useState(false);
@@ -92,6 +92,7 @@ const Stock = () => {
                             PopupSetters={[activatedPopup, setActivatedPopup]}
                             PopupHolder={[popup, setPopup]}
                             UpdateItemsList={[updateDBItems,setUpdateDBItems]}
+                            ConnectedUser={connectedUser}
                         />
                     </div>
                 ))}
@@ -102,7 +103,7 @@ const Stock = () => {
 }
 
 
-const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
+const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList,ConnectedUser}) => {
     
     const ItemDetailsInterface = ({itemData,UpdateItemsList,PopupSetters,PopupHolder}) => {
         const [showDetails,setShowDetails] = useState(false)
@@ -130,7 +131,7 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList}) => {
         async function handleSave(e){
             e.preventDefault();
             try {
-                await updateQuantity(itemData.data.item_id,stockValue).then(
+                await updateQuantity(itemData.data.item_id,stockValue,ConnectedUser).then(
                     (resp) => {
                         setMessage(["Nouvelle quantité sauvegardée",true])
                         UpdateItemsList[1](true)

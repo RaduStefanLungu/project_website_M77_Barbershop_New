@@ -201,7 +201,7 @@ export async function getItems(){
 //   }
 // }
 
-export async function updateQuantity(itemID, newQuantity) {
+export async function updateQuantity(itemID, newQuantity,currentUserEmail) {
   // addLog('updateQuantity', [itemID, newQuantity]);
 
   // Get a reference to the document in Firestore based on itemID
@@ -211,7 +211,7 @@ export async function updateQuantity(itemID, newQuantity) {
   const updateTracer = {
     item_id : itemID,
     item_name : itemSnapshop.data.item_name,
-    made_by : 'test@test.com',
+    made_by : currentUserEmail,
     timestamp : new Date().toLocaleString('fr-BE', { timeZone: 'Europe/Brussels' }),
     data : {
       new_quantity : newQuantity,
