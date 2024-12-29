@@ -24,6 +24,7 @@ Planning :
             TODO : 
                 - create actual account in firebase.auth                    DONE
         - list all appointments by barber
+            - add button "annulation client"
             TODO : this
         - remove any appointment from each list
             TODO : this
@@ -43,22 +44,23 @@ Planning :
         - add possibility to lock days for each person                                          - TODO
             - admin(owner) can lock days for anyone                                             - TODO
 
-    
-    Pages/Home + AppointmentForm:
-        - link ContactSection to EmailJS API                                                    - TODO
-        - EMAIL : add link to add appointment to 'Google Calendar'                              - TODO
-        - create a 'thank you for your appointment' view for after clicking 'rezerver'          - TODO
-            -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
+    EMAIL LINKING Client-Admin :
+        Pages/Home + AppointmentForm:
+            - link ContactSection to EmailJS API                                                    - TODO
+            - EMAIL : add link to add appointment to 'Google Calendar'                              - TODO
+            - create a 'thank you for your appointment' view for after clicking 'rezerver'          - TODO
+                -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
 
-    Footer : 
+        Footer : 
         - DONE
 
-    About us Page : 
-        - TODO
-    Gallery Page :
-        - TODO
+    About us Page :         - DONE
+        - Add IMAGE         - TODO
+        
+    (Gallery Page) :
+                            - TODO
     Login Page : 
-        - TODO
+                            - TODO
 
     Create and complete sitemap.xml             -TODO
 

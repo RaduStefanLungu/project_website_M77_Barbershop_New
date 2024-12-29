@@ -21,9 +21,9 @@ export default function Header() {
     <header className='fixed z-[100] w-screen flex flex-col md:flex-row justify-between bg-[var(--brand-black)] py-3 md:px-5 xl:px-10'>
 
 
-      <div className='grid justify-center items-center pb-2 md:pb-0'>
+      <Link to={'/'} className='grid justify-center items-center pb-2 md:pb-0'>
         <img id='img' src={LOGO} className='w-[120px] h-[90px] bg-slate-600' />
-      </div>
+      </Link>
 
 
       <div className='relative flex flex-col md:flex-row'>

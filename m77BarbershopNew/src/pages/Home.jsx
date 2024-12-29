@@ -67,7 +67,7 @@ const HERO = () => {
       <div id='text + cta' className='flex justify-center items-center bg-black/40'>
 
         <div className='flex flex-col'>
-          <h1 className=' font-custom_1 text-[var(--brand-white)] tracking-wide uppercase text-center text-4xl lg:text-5xl 2xl:text-6xl md:mx-auto md:w-[450px] lg:w-[750px]'>
+          <h1 className=' font-custom_1 text-size-hero text-[var(--brand-white)] tracking-wide uppercase text-center  md:mx-auto md:w-[450px] lg:w-[750px]'>
             Nouveau concept, plus qu'un barbier
           </h1>
 
@@ -86,16 +86,15 @@ const TextBelt = () => {
   return(
     <div className='grid justify-center font-custom_1 text-center pt-5 pb-10'>
 
-      <h4 className='text-slate-600/75 uppercase tracking-wider text-sm xl:text-base'>Expérience prémium</h4>
+      <h4 className='text-design-h4'>Expérience prémium</h4>
 
-      <h2 className='text-slate-950 uppercase tracking-wider text-2xl xl:text-3xl font-bold pt-1 pb-3'>Dévoument au style</h2>
+      <h2 className='text-design-h2'>Dévoument au style</h2>
 
-      <p className='text-pretty text-lg lg:text-2xl text-slate-600/75 px-5 md:px-14 lg:px-32'>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin maximus pulvinar. Duis nec sem commodo, scelerisque justo nec, eleifend quam. 
-      Curabitur dictum ante ullamcorper mauris suscipit, semper condimentum nulla suscipit. 
-      Interdum et malesuada fames ac ante ipsum primis in faucibus. 
-      Donec aliquet lectus vel nunc sollicitudin sollicitudin. Ut ac quam ante. 
-      Praesent eros nulla, euismod quis facilisis ac, tincidunt nec purus.
+      <p className='text-design-p'>
+      Nous croyons que chaque coupe est une œuvre d’art et chaque client mérite une attention personnalisée.
+       Forts d’une expertise raffinée et d’un œil pour le détail, nous combinons techniques traditionnelles et tendances modernes pour sublimer votre style.
+        Notre salon, conçu pour offrir confort et élégance, est plus qu’un lieu de soin : c’est une expérience où qualité et passion se rencontrent. 
+         Faites l’expérience d’un service premium et laissez-nous redéfinir votre routine de grooming avec dévouement et style.
       </p>
 
     </div>
@@ -112,8 +111,8 @@ const ImageBelt = () => {
 
       <div className='font-custom_1 text-center text-[var(--brand-white)] grid justify-center items-center pt-5 pb-10 backdrop-blur-[2px] backdrop-grayscale bg-black/40'>
 
-        <h4 className='uppercase tracking-wider text-xs lg:text-sm xl:text-base py-1'>Pourquoi Nous?</h4>
-        <h2 className='uppercase tracking-wider lg:tracking-widest text-xl lg:text-2xl xl:text-3xl font-bold pt-1 pb-3'>Car vous méritez le meilleur</h2>
+        <h4 className='text-design-h4 text-white'>Pourquoi Nous?</h4>
+        <h2 className='text-design-h2 text-white'>Car vous méritez le meilleur</h2>
 
       </div>
 
@@ -123,24 +122,16 @@ const ImageBelt = () => {
   )
 }
 
-const CardBelt = () => {
-  return(
-    <div>
-      This will be a card belt.
-    </div>
-  )
-}
-
 const PourcentageBelt = () => {
   return(
     <div className='font-custom_1 grid gap-5 justify-center items-center pt-20 pb-20'>
 
       <div className='grid gap-5 md:grid-cols-2'>
-        <label className='text-center text-4xl lg:text-5xl 2xl:text-6xl'>
+        <label className='text-center text-size-large'>
           <span className='font-bold'>+ 300</span> Clients fidèles
         </label>
 
-        <label className='text-center text-4xl lg:text-5xl 2xl:text-6xl'>
+        <label className='text-center text-size-large'>
           Satisfaction à <span className='font-bold'>100%</span>
         </label>
 
@@ -161,11 +152,11 @@ const GallerySection = ({imageList}) => {
   return(
     <div className='grid px-10 pb-20 bg-[var(--brand-black)] text-[var(--brand-white)]'>
 
-      <h3 className='section-title pt-10 pb-5'>
+      <h3 className='section-title'>
         Gallérie
       </h3>
-
-      {/* <div className='grid grid-cols-2 gap-5'>
+{/* 
+      <div className='grid grid-cols-2 gap-5'>
         <div className='grid justify-center'>
           <img src={IMAGE_1} className='max-w-[350px]'/>
         </div>
@@ -187,9 +178,9 @@ const GallerySection = ({imageList}) => {
         <Carousel imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} autoPlay={10} />
       </div>
 
-      <div className='grid md:mx-32 mt-5 md:mt-10'>
+      {/* <div className='grid md:mx-32 mt-5 md:mt-10'>
         <Link to={'/gallerie'} className='button-2 text-center'>Découvrir d'avance</Link>
-      </div>
+      </div> */}
 
     </div>
   )
@@ -227,13 +218,13 @@ const ContactSection = () => {
   }
 
   return(
-    <div className='font-custom_1 grid pt-10 pb-5 px-10'>
+    <div className='font-custom_1 grid pb-20 px-10'>
 
-      <h3 className='section-title pb-5'>
+      <h3 className='section-title'>
         Contactez Nous
       </h3>
 
-      <p className='pb-5 text-lg lg:text-2xl xl:w-[1000px]'>
+      <p className='pb-5 text-size-normal xl:w-[1000px]'>
       Nous sommes là pour répondre à toutes vos questions dans le but de vous offrir la meilleure expérience.
       Vous pouvez remplir le formulaire, nous appeler ou nous envoyer un e-mail.
       <br/><br/>À très bientôt,<br/>
