@@ -15,7 +15,7 @@ export default function Login() {
         e.preventDefault()
         
         const result = await login(emailRef.current.value, passwordRef.current.value)
-        redirect('/inventory')
+        redirect('/admin/inventory')
     }
   
     return (

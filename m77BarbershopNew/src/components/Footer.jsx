@@ -116,7 +116,7 @@ const Links = () => {
         <a href={'/a-propos'} className='text-blue-500 underline'>A propos</a>
         <a href={'/gallerie'} className='text-blue-500 underline'>Gallerie</a>
         <a href={'/rendez-vous'} className='text-blue-500 underline'>Rendez-vous</a>
-        <a href={'/login'} className='text-blue-500 underline'>Admin</a>
+        <a href={'/admin/login'} className='text-blue-500 underline'>Admin</a>
 
       </div>
 
