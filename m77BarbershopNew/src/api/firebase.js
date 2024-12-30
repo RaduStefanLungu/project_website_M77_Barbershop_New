@@ -444,6 +444,18 @@ export async function getProfiles(){
   return profiles;
 }
 
+export async function getProfileByEmail(email){
+  const all_profiles = await getProfiles();
+  
+  for(let i = 0; i < all_profiles.length; i++){
+    if(all_profiles[i].email === email){
+      return(all_profiles[i]);
+    }
+  }
+
+  return null;
+}
+
 
 // <dev_tools> 
 

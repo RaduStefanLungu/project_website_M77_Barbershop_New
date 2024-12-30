@@ -22,7 +22,7 @@ export default function Login() {
             const result = await login(emailRef.current.value, passwordRef.current.value)
             console.log(result);
             
-            redirect('/admin/profile')
+            redirect('/user/dashboard')
             
         } catch (error) {
             console.log(error.message);

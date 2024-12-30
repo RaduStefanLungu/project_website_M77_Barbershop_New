@@ -37,13 +37,13 @@ Planning :
             - add 'change password'                                                                 - TODO
             - add customizable user_description (shown to clients on appointment list)              - TODO
             - add customizable image                                                                - TODO
-            - add possibility to lock days for each person                                          - TODO
-                - admin(owner) can lock days for anyone                                             - TODO
 
     User Dashboard :
         - hub to go to other parts of the user system
     User RDVs : 
         - list of appointments for the day (or all appointments)
+        - add possibility to lock days for each person                                          - TODO
+                - admin(owner) can lock days for anyone                                             - TODO
 
     EMAIL LINKING Client-Admin :
         Pages/Home + AppointmentForm:
