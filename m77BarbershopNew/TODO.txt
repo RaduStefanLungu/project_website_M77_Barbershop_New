@@ -6,9 +6,6 @@ Project : Appointment System
 Planning : 
     Users : 
         - Users can chose a barber, a date & hour and a service. 
-            TODO : 
-                - list available hours /barber/date                         DONE
-                - list available services                                   DONE
         - They'll receive a confirmation email if the appointment has been successully saved.
             TODO : 
                 - send confirmation email                                   TODO     
@@ -21,8 +18,6 @@ Planning :
 
     - Admin(owner) can do : 
         - create/delete new accounts for each employee -> creating/deleting profiles as well
-            TODO : 
-                - create actual account in firebase.auth                    DONE
         - list all appointments by barber
             - add button "annulation client"
             TODO : this
@@ -31,18 +26,24 @@ Planning :
         - check a daily report of # of appointments/barber + amount($)/barber
             TODO : this
 
-
-    Home Page : 
-        - update text for 'Devoument au Style'                                                  - TODO
-
     Profiles Dashboard :
         - when admin adds new barber in system, create an Firebase AUTH account automatically   - DONE
         - remove user && remove user from Auth                                                  - TODO
-        - add customizable user_description (shown to clients on appointment list)              - TODO
-        - add customizable image                                                                - TODO
 
-        - add possibility to lock days for each person                                          - TODO
-            - admin(owner) can lock days for anyone                                             - TODO
+    User Profile :
+        - db info
+        - description (for clients to see on AppointmentForm)
+
+            - add 'change password'                                                                 - TODO
+            - add customizable user_description (shown to clients on appointment list)              - TODO
+            - add customizable image                                                                - TODO
+            - add possibility to lock days for each person                                          - TODO
+                - admin(owner) can lock days for anyone                                             - TODO
+
+    User Dashboard :
+        - hub to go to other parts of the user system
+    User RDVs : 
+        - list of appointments for the day (or all appointments)
 
     EMAIL LINKING Client-Admin :
         Pages/Home + AppointmentForm:
@@ -51,15 +52,10 @@ Planning :
             - create a 'thank you for your appointment' view for after clicking 'rezerver'          - TODO
                 -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
 
-        Footer : 
-        - DONE
-
     About us Page :         - DONE
         - Add IMAGE         - TODO
-        
+
     (Gallery Page) :
-                            - TODO
-    Login Page : 
                             - TODO
 
     Create and complete sitemap.xml             -TODO

@@ -1,7 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export default function Login() {
     
@@ -9,30 +11,53 @@ export default function Login() {
     const passwordRef = useRef();
     const { login } = useAuth()
 
+    const [errorMessage,setErrorMessage] = useState('')
+
     const redirect = useNavigate();
   
     async function handleLogin(e){
         e.preventDefault()
+
+        try {
+            const result = await login(emailRef.current.value, passwordRef.current.value)
+            console.log(result);
+            
+            redirect('/admin/profile')
+            
+        } catch (error) {
+            console.log(error.message);
+            
+            setErrorMessage(error.message)
+        }
         
-        const result = await login(emailRef.current.value, passwordRef.current.value)
-        redirect('/admin/inventory')
+        
     }
   
     return (
-    <div className='grid bg-blue-500 px-2 py-3 rounded-tr-xl'>
+    <div>
+        <Header/>
+        <div className='pt-[155px] grid bg-[var(--brand-black)] px-2 py-3 rounded-tr-xl font-custom_1 min-h-screen'>
 
-        <div className='grid justify-center'>
-            <h1 className='my-auto text-center pb-5 text-4xl font-bold text-white'> Connection </h1>
+            <div className='grid justify-center py-10 mb-auto'>
+                
+                <form onSubmit={handleLogin} className='flex flex-col justify-center gap-3 max-w-[400px] p-5 border-[0.15rem] border-[var(--brand-white)]'>
 
-            <form onSubmit={handleLogin} className='flex flex-col justify-center gap-1 max-w-[400px] bg-white p-5 border-blue-500 border-[0.15rem] rounded-xl'>
+                    <h1 className='my-auto text-center text-design-h2 text-[var(--brand-white)] py-0'> Connection </h1>
+                    <h4 className='my-auto text-center text-design-h4 text-[var(--brand-white)]'> Utilisateurs </h4>
 
-                <input required ref={emailRef} type='email' placeholder='example@text.com' className='min-w-[300px] px-1 py-2 placeholder:px-1 rounded-xl border-blue-500 border-[0.15rem]' />
-                <input required ref={passwordRef} type='password' placeholder='mot de pass' className='min-w-[300px] px-1 py-2 placeholder:px-1 rounded-xl border-blue-500 border-[0.15rem]' />
+                    <input required ref={emailRef} type='email' placeholder='example@text.com' className='min-w-[300px] px-1 py-2 placeholder:px-1 border-[0.15rem] border-[var(--brand-white)]' />
+                    <input required ref={passwordRef} type='password' placeholder='mot de pass' className='min-w-[300px] px-1 py-2 placeholder:px-1 border-[0.15rem] border-[var(--brand-white)]' />
+                    
+                    <p className='text-red-500'>
+                        {errorMessage}
+                    </p>
 
-                <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mx-auto mt-2'>Connection</button>
-            </form>
+                    <button type='submit' className='button-2 mx-auto mt-2 py-2 px-10'>Connection</button>
+                </form>
+            </div>
+
         </div>
-
+        <Footer/>
     </div>
   )
 }
