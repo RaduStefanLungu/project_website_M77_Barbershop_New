@@ -7,13 +7,13 @@ export default function UserDashboard() {
 
     
   return (
-    <div className='container mx-auto py-20'>
+    <div className='container min-h-screen mx-auto py-20'>
         
         <div className='grid justify-center'>
             <h2 className='text-design-h2 text-center'>Bienvenue <br/>{currentUser.email}</h2>
         </div>
 
-        <div className='grid grid-cols-2 gap-5 py-10 px-5 text-center'>
+        <div className='grid md:grid-cols-2 gap-5 py-10 px-5 text-center'>
             <Link to={'/user/profile'} className='button-1'>
                 Mon Profile
             </Link>

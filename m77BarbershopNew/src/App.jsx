@@ -18,6 +18,7 @@ import Profile from './pages/private/user/Profile.jsx'
 import Appointments from './pages/private/user/Appointments.jsx'
 import Statistics from './components/Inventory/components/Statistics.jsx'
 import Rapport from './pages/private/admin/Rapport.jsx'
+import AdminLayout from './layouts/AdminLayout.jsx'
 
 function App() {
 
@@ -38,19 +39,20 @@ function App() {
             </Route>
 
 
-            <Route path='/dev' exact element={<Dev/>} />
+            <Route element={<AdminLayout/>}>
+              <Route path='/admin/login' exact element={<Login/>} />
+              <Route path='/admin' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
 
-            <Route path='/admin/login' exact element={<Login/>} />
+              <Route path='/user/dashboard' exact element={<PrivateRoute><UserDashboard/></PrivateRoute>} />
+              <Route path='/user/profile' exact element={<PrivateRoute><Profile/></PrivateRoute>} />
+              <Route path='/user/rdvs' exact element={<PrivateRoute><Appointments/></PrivateRoute>} />
 
-            <Route path='/user/dashboard' exact element={<PrivateRoute><UserDashboard/></PrivateRoute>} />
-            <Route path='/user/profile' exact element={<PrivateRoute><Profile/></PrivateRoute>} />
-            <Route path='/user/rdvs' exact element={<PrivateRoute><Appointments/></PrivateRoute>} />
+              <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
+              <Route path='/admin/rapport' exact element={<PrivateRoute><Rapport/></PrivateRoute>} />
 
-            <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
-            <Route path='/admin/rapport' exact element={<PrivateRoute><Rapport/></PrivateRoute>} />
 
-            <Route path='/admin' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
-            
+              <Route path='/dev' exact element={<Dev/>} />
+            </Route>            
 
           </Routes>
 

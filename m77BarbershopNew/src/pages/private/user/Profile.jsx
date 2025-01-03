@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import { getProfileByEmail } from '../../../api/firebase'
 
 export default function Profile() {
   
   const [profile,setProfile] = useState(null)
+
+  const [activeView,setActiveView] = useState(null)
+  const [showView,setShowView] = useState(false)
 
   const {currentUser} = useAuth()
 
@@ -24,19 +27,44 @@ export default function Profile() {
     e.preventDefault()
 
   }
+
+  function handleBackButtonForViews(e){
+    e.preventDefault()
+    setShowView(false)
+    setActiveView(null)
+  }
+
+  function handleChangeDescription(e){
+    e.preventDefault()
+    setActiveView(<ChangeDescriptionView profile={profile} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
+    setShowView(true)
+  }
+
+  function handleChangeImage(e){
+    e.preventDefault()
+    setActiveView(<ChangeImageView profile={profile} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
+    setShowView(true)
+  }
   
 
   if(profile === null ){
     return(
-      <div>
+      <div className='font-bold text-4xl'>
         This profile isn't registered
       </div>
     )
   }
 
   return (
-    <div className='container mx-auto grid py-10 px-5 xl:px-0'>
-
+    <div className='relative container mx-auto grid py-10 px-5 xl:px-0'>
+      
+      {
+        showView ? 
+          <div className='absolute top-0 left-0 bg-blue-300 w-screen h-screen grid'>
+            {activeView}
+          </div> :
+          <></>
+      }
 
       <h2 className='text-design-h2'>Profile</h2>
 
@@ -49,8 +77,8 @@ export default function Profile() {
         </div>
 
         <div className='grid grid-cols-2 gap-5 justify-center'>
-          <button className='bg-red-300'>Changer l'image</button>
-          <button className='bg-red-300'>Changer la description</button>
+          <button onClick={handleChangeImage} className='bg-red-300'>Changer l'image</button>
+          <button onClick={handleChangeDescription} className='bg-red-300'>Changer la description</button>
           <button className='bg-red-300'>Mot de passe oublié</button>
           <button className='bg-red-300'>Change Image</button>
 
@@ -68,3 +96,59 @@ export default function Profile() {
 }
 
 
+const ChangeDescriptionView = ({profile,backButton}) => {
+  const [userDescription,setUserDescription] = useState('')
+  const descriptionRef = useRef()
+  return(
+    <div className='flex flex-col p-5'>
+      <label className='font-custom_1 font-bold text-3xl'>Nouvelle Description</label>
+      <label className='text-[var(--brand-gray-75)]'>Conseil : maximum 20 mots.</label>
+      <textarea placeholder={profile.profile_description} ref={descriptionRef} className='h-[500px] px-3 py-1'></textarea>
+      <div className='flex justify-center gap-5 pt-5'>
+        {backButton}
+        <button className='bg-red-300'>Sauvegarder</button>
+      </div>
+    </div>
+  )
+}
+
+const ChangeImageView = ({profile,backButton}) => {
+  const [img,setImg] = useState(null)
+
+  function handleSave(e){
+    e.preventDefault();
+    // image id : profile.image
+    // image url : profile.image_url
+
+    //TODO:
+    // #1 upload new image
+    // #2 delete old image
+    // #3 update profile.image_url
+    // #4 update profile.image
+
+    
+  }
+
+  return(
+    <div className='flex flex-col p-5'>
+      <label className='font-custom_1 font-bold text-3xl'>Nouvelle Image</label>
+      <label className='text-[var(--brand-gray-75)]'>Conseil : dimension de 250x450 pixels.</label>
+      <div className='grid py-10'>
+        <input type='file' onChange={(e)=>{setImg(e.target.files[0])}}></input>
+        <div className='grid justify-center py-5'>
+          {
+            img !== null ? 
+              <img src={URL.createObjectURL(img)} alt='user-image-used-for-clients-in-appointment-form' 
+                className='w-[250px] h-[450px]' ></img> :
+              <div className='w-[250px] h-[450px] bg-white grid items-center justify-center font-medium'>Prévisualisation d'Image</div>
+          }
+          <button onClick={()=>{setImg(null)}} className='bg-red-300 p-3 mt-5'>Supprimer séléction</button>
+        </div>
+      </div>
+      <div className='flex justify-center gap-5 pt-5'>
+        {backButton}
+        <button onClick={handleSave} className='bg-red-300'>Sauvegarder</button>
+      </div>
+    </div>
+  )
+}

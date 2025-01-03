@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { useAuth } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ export default function Login() {
     
     const emailRef = useRef();
     const passwordRef = useRef();
-    const { login } = useAuth()
+    const { login,currentUser } = useAuth()
 
     const [errorMessage,setErrorMessage] = useState('')
 
@@ -32,6 +32,12 @@ export default function Login() {
         
         
     }
+
+    useEffect(()=>{
+        if(currentUser){
+            redirect('/user/dashboard')
+        }
+    },[])
   
     return (
     <div>

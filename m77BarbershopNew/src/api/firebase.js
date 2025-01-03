@@ -420,6 +420,48 @@ export async function addProfileAndUploadImage(profileData,imageFile){
   }
 }
 
+export async function updateImage(profileData,newImageFile){
+  const uploadImageResponse = await uploadImage(imageFile,profileData.image)
+
+  if(uploadImageResponse){
+    const imageUrl = await getImageByPath(profileData.image)
+    profileData.image_url = imageUrl
+    const updatedProfile = await updateProfile(profileData)
+    if(updatedProfile !== null){
+      return(true)
+    }
+    else{
+      return(false)
+    }
+  }
+}
+
+export async function updateProfile(profileData){
+  try{
+    const myDocument = await getDocumentById('profiles',profileData.profile_id);
+
+    // if profile exists, update it 
+    if(myDocument !== null){
+      setDoc(doc(firestore_db,'profiles',profileData.profile_id),profileData)
+      return(profileData)
+    }
+
+    // profile doesn't exists
+    else{
+      return(null)
+    }
+
+  }catch(e){
+    addError({
+      e_message: "Failed to update profile in << profiles >> firestore table.",
+      program_execution: "Failed to execute firebase.updateProfile(...)",
+      program_function_error: `updateProfile(${profileData})`,
+      program_page: "/profile",
+    })
+    return(e)
+  }
+}
+
 export async function removeProfile(profileID){
   try {
       const docRef = doc(firestore_db, 'profiles', profileID);
