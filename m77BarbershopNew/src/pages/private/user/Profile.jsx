@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
-import { getProfileByEmail, updateDescription, updateImage } from '../../../api/firebase'
+import { changePassword, getProfileByEmail, updateDescription, updateImage } from '../../../api/firebase'
+import { Link } from 'react-router-dom'
 
 export default function Profile() {
   
@@ -23,11 +24,6 @@ export default function Profile() {
     fetchData();
   },[])
 
-  function handleSave(e){
-    e.preventDefault()
-
-  }
-
   function handleBackButtonForViews(e){
     e.preventDefault()
     setShowView(false)
@@ -43,6 +39,12 @@ export default function Profile() {
   function handleChangeImage(e){
     e.preventDefault()
     setActiveView(<ChangeImageView profile={profile} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
+    setShowView(true)
+  }
+
+  function handleChangePassword(e){
+    e.preventDefault()
+    setActiveView(<ChangePasswordView currentUser={currentUser} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
     setShowView(true)
   }
   
@@ -76,17 +78,18 @@ export default function Profile() {
           <h4>{profile.email}</h4>
         </div>
 
-        <div className='grid grid-cols-2 gap-5 justify-center'>
-          <button onClick={handleChangeImage} className='bg-red-300'>Changer l'image</button>
-          <button onClick={handleChangeDescription} className='bg-red-300'>Changer la description</button>
-          <button className='bg-red-300'>Mot de passe oublié</button>
-          <button className='bg-red-300'>Change Image</button>
-
+        <div className='grid gap-5 justify-center'>
+          <div className='grid grid-cols-2 gap-5 justify-center'>
+            <button onClick={handleChangeImage} className='bg-red-300'>Changer l'image</button>
+            <button onClick={handleChangeDescription} className='bg-red-300'>Changer la description</button>
+          </div>
+          <div className='grid justify-center'>
+            <button onClick={handleChangePassword} className='bg-red-300'>Changer Mot de Pass</button>
+          </div>
         </div>
 
         <div className='flex gap-5 mx-auto py-10'>
-          <button className='bg-red-300'>Annuler</button>
-          <button onClick={handleSave} className='bg-red-300'>Sauvegarder</button>
+          <Link to={'/user/dashboard'} className='bg-red-300'>Retour</Link>
         </div>
         
       </div>
@@ -100,6 +103,7 @@ const ChangeDescriptionView = ({profile,backButton}) => {
   // const [userDescription,setUserDescription] = useState('')
   const descriptionRef = useRef()
   const [clickedSaved,setClickedSaved] = useState(false)
+  const [message,setMessage] = useState(["",false])
 
   async function handleSave(e){
     e.preventDefault();
@@ -110,9 +114,11 @@ const ChangeDescriptionView = ({profile,backButton}) => {
       if(response !== null){
         // setUserDescription(descriptionRef.current.value)
         setClickedSaved(true)
+        setMessage(["Description mise à jour avec succès !",false])
         return(true)
       }
     }).catch((error) => {
+      setMessage(["Erreur lors de la mise à jour de la description !",true])
       return(false)
     })
   }
@@ -122,6 +128,9 @@ const ChangeDescriptionView = ({profile,backButton}) => {
       <label className='font-custom_1 font-bold text-3xl'>Nouvelle Description</label>
       <label className='text-[var(--brand-gray-75)]'>Conseil : maximum 20 mots.</label>
       <textarea placeholder={profile.profile_description} ref={descriptionRef} className='h-[500px] px-3 py-1'></textarea>
+      <div className='p-3 grid text-center justify-center'>
+        <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message[0]}</p>
+      </div>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
         <button onClick={handleSave} disabled={clickedSaved} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
@@ -171,11 +180,56 @@ const ChangeImageView = ({profile,backButton}) => {
         </div>
       </div>
       <div className='grid text-center justify-center'>
-        <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message}</p>
+        <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message[0]}</p>
       </div>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
         <button onClick={handleSave} disabled={saveClicked} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
+      </div>
+    </div>
+  )
+}
+
+const ChangePasswordView = ({currentUser,backButton}) => {
+  // const [userDescription,setUserDescription] = useState('')
+  const passwordRef = useRef()
+  const confirmPasswordRef = useRef()
+  const [clickedSaved,setClickedSaved] = useState(false)
+  const [message,setMessage] = useState(["",false])
+
+  async function handleSave(e){
+    e.preventDefault();
+    if(passwordRef.current.value !== confirmPasswordRef.current.value){
+      setMessage(["Les mots de pass ne correspondent pas !",true])
+      return(false)
+    }
+    await changePassword(currentUser,passwordRef.current.value).then((response) => {
+      if(response !== null){
+        // setUserDescription(passwordRef.current.value)
+        setClickedSaved(true)
+        setMessage(["Mot de pass mis à jour avec succès !",false])
+        return(true)
+      }
+    }).catch((error) => {
+      setMessage(["Erreur lors de la mise à jour de la description !",true])
+      return(false)
+    })
+  }
+
+  return(
+    <div className='flex flex-col p-5'>
+      <label className='font-custom_1 font-bold text-3xl'>Nouveau Mot de Pass</label>
+      <label className='text-[var(--brand-gray-75)]'>Conseil : minimum 9 caractères, contenant des letters et chiffres</label>
+      <div className='grid gap-3 py-5 px-3'>
+        <input type='password' placeholder='nouveau mot de pass' ref={passwordRef} className='px-1'></input>
+        <input type='password' placeholder='confirmer le mot de pass' ref={confirmPasswordRef} className='px-1'></input>
+      </div>
+      <div className='p-3 grid text-center justify-center'>
+        <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message[0]}</p>
+      </div>
+      <div className='flex justify-center gap-5 pt-5'>
+        {backButton}
+        <button onClick={handleSave} disabled={clickedSaved} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
       </div>
     </div>
   )

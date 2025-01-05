@@ -1,6 +1,6 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from 'firebase/app'
-import { getAuth,createUserWithEmailAndPassword,deleteUser } from "firebase/auth"
+import { getAuth,createUserWithEmailAndPassword, updatePassword } from "firebase/auth"
 
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
@@ -485,6 +485,23 @@ export async function updateDescription(profileData,newDescription) {
     return(e)
   }
 }
+
+export async function changePassword(currentUser,newPassword) {
+    try {
+        // const user = auth.currentUser;
+        if (currentUser) {
+            await updatePassword(currentUser,newPassword);
+            return true;
+        } else {
+            console.error('No user is currently signed in.');
+            return false;
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        return false;
+    }
+    
+  }
 
 export async function updateProfile(profileData){
   try{
