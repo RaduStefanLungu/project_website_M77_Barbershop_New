@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
-import { getProfileByEmail } from '../../../api/firebase'
+import { getProfileByEmail, updateImage } from '../../../api/firebase'
 
 export default function Profile() {
   
@@ -115,18 +115,25 @@ const ChangeDescriptionView = ({profile,backButton}) => {
 const ChangeImageView = ({profile,backButton}) => {
   const [img,setImg] = useState(null)
 
-  function handleSave(e){
+  const [message,setMessage] = useState(["",false])
+  const [saveClicked,setSaveClicked] = useState(false)
+
+  async function handleSave(e){
     e.preventDefault();
-    // image id : profile.image
-    // image url : profile.image_url
-
-    //TODO:
-    // #1 upload new image
-    // #2 delete old image
-    // #3 update profile.image_url
-    // #4 update profile.image
-
-    
+    if(img === null){
+      setMessage(["Pas d'image sélectionnée !",true])
+      return(false);
+    }
+    await updateImage(profile,img).then((response) => {
+      if(response){
+        setSaveClicked(true)
+        setMessage(["Image mise à jour avec succès !",false])
+        return(true)
+      }
+    }).catch((error) => {
+      setMessage(["Erreur lors de la mise à jour de l'image !",true])
+      return(false)
+    })
   }
 
   return(
@@ -145,9 +152,12 @@ const ChangeImageView = ({profile,backButton}) => {
           <button onClick={()=>{setImg(null)}} className='bg-red-300 p-3 mt-5'>Supprimer séléction</button>
         </div>
       </div>
+      <div className='grid text-center justify-center'>
+        <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message}</p>
+      </div>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
-        <button onClick={handleSave} className='bg-red-300'>Sauvegarder</button>
+        <button onClick={handleSave} disabled={saveClicked} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
       </div>
     </div>
   )

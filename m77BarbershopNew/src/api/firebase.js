@@ -4,7 +4,8 @@ import { getAuth,createUserWithEmailAndPassword,deleteUser } from "firebase/auth
 
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
-import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage'
+import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes, deleteObject } from 'firebase/storage'
+import { v4 as uuidv4 } from 'uuid';
 
 
 const firebaseConfig = {
@@ -421,18 +422,67 @@ export async function addProfileAndUploadImage(profileData,imageFile){
 }
 
 export async function updateImage(profileData,newImageFile){
-  const uploadImageResponse = await uploadImage(imageFile,profileData.image)
+
+  // image id : profileData.image
+  // image url : profileData.image_url
+
+  //TODO:
+  // #1 upload new image
+  // #2 delete old image
+  // #3 update profileData.image_url
+  // #4 update profileData.image   
+
+  const randomImageName = uuidv4();
+  const uploadImageResponse = await uploadImage(newImageFile, randomImageName);
+  
+  
+
+  const oldImageId = profileData.image
 
   if(uploadImageResponse){
-    const imageUrl = await getImageByPath(profileData.image)
-    profileData.image_url = imageUrl
+    const newImageUrl = await getImageByPath(randomImageName)
+    
+    // update profileData.image_url
+    profileData.image_url = newImageUrl
+    // update profieData.image 
+    profileData.image = randomImageName
+    // update profile in db
     const updatedProfile = await updateProfile(profileData)
     if(updatedProfile !== null){
-      return(true)
+      // remove old image
+      const removeImageResponse = await removeImage(oldImageId)
+      return(true);
     }
     else{
       return(false)
     }
+  }
+
+}
+
+export async function updateDescription(profileData,newDescription) {
+  try{
+    const myDocument = await getDocumentById('profiles',profileData.profile_id);
+
+    // if profile exists, update it 
+    if(myDocument !== null){
+      setDoc(doc(firestore_db,'profiles',profileData.profile_id),{...profileData,profile_description:newDescription})
+      return({...profileData,profile_description:newDescription})
+    }
+
+    // profile doesn't exists
+    else{
+      return(null)
+    }
+
+  }catch(e){
+    addError({
+      e_message: "Failed to update profile in << profiles >> firestore table.",
+      program_execution: "Failed to execute firebase.updateProfile(...)",
+      program_function_error: `updateProfile(${profileData})`,
+      program_page: "/profile",
+    })
+    return(e)
   }
 }
 
@@ -530,7 +580,17 @@ export async function addNewDocument(collection_name,data){
 
 // Situational :
 
-function removeImage(){}
+async function removeImage(imageID) {
+  const imgRef = ref(firestore, `photos/${imageID}`);
+  try {
+    const response = await deleteObject(imgRef);
+    console.log(`Image ${imageID} removed successfully.`);
+    return(true);
+    
+  } catch (error) {
+    console.error('Error removing image:', error);
+  }
+}
 
 function uploadVideo(){}
 
