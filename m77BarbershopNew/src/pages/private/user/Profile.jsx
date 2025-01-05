@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
-import { getProfileByEmail, updateImage } from '../../../api/firebase'
+import { getProfileByEmail, updateDescription, updateImage } from '../../../api/firebase'
 
 export default function Profile() {
   
@@ -97,8 +97,26 @@ export default function Profile() {
 
 
 const ChangeDescriptionView = ({profile,backButton}) => {
-  const [userDescription,setUserDescription] = useState('')
+  // const [userDescription,setUserDescription] = useState('')
   const descriptionRef = useRef()
+  const [clickedSaved,setClickedSaved] = useState(false)
+
+  async function handleSave(e){
+    e.preventDefault();
+    if(descriptionRef.current.value === ''){
+      return(false)
+    }
+    await updateDescription(profile,descriptionRef.current.value).then((response) => {
+      if(response !== null){
+        // setUserDescription(descriptionRef.current.value)
+        setClickedSaved(true)
+        return(true)
+      }
+    }).catch((error) => {
+      return(false)
+    })
+  }
+
   return(
     <div className='flex flex-col p-5'>
       <label className='font-custom_1 font-bold text-3xl'>Nouvelle Description</label>
@@ -106,7 +124,7 @@ const ChangeDescriptionView = ({profile,backButton}) => {
       <textarea placeholder={profile.profile_description} ref={descriptionRef} className='h-[500px] px-3 py-1'></textarea>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
-        <button className='bg-red-300'>Sauvegarder</button>
+        <button onClick={handleSave} disabled={clickedSaved} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
       </div>
     </div>
   )
