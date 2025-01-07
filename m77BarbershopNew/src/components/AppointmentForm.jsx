@@ -27,6 +27,8 @@ export default function AppointmentForm(){
     const [hoursOfDay,setHoursOfDay] = useState([])
     const [chosenHour,setChosenHour] = useState('')
 
+    const [appointmentConfirmed,setAppointmentConfirmed] = useState(false);
+
 
     useEffect(()=>{
         async function fetchProfiles(){
@@ -61,8 +63,13 @@ export default function AppointmentForm(){
         console.log(appointment);
         
         if(chosenProfile !== null){         // TODO : complete the conditions
-            await addAppointment2(appointment);
+            await addAppointment2(appointment).then(
+                (response) => {
+                    setAppointmentConfirmed(response)
+                }
+            )
             // TODO : send to message view 'thank you for your appointment ...'
+
         }
 
     }
@@ -237,6 +244,9 @@ export default function AppointmentForm(){
                                 </div>
                             
                             </div>
+                            <div className='p-3'>
+                                <div className={`w-[50px] h-[50px] rounded-full ${appointmentConfirmed? "bg-green-500":"bg-red-500"}`}></div>
+                            </div>  
                             <div className='grid grid-flow-col gap-5 py-5'>
                                 <button className='button-1' onClick={handleBack}>Retour</button>
                                 <button type='submit' className='button-2'>Rezerver</button>

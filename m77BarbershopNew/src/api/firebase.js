@@ -80,6 +80,19 @@ const appointments_collection_structure = [
   }
 ]
 
+const appointments_collection_structure_2 = [
+  {
+    "2024-01-07" : [
+      {
+        "barber_id_1" : [
+          {/* appointment_1 */},
+          {/* appointment_2 */}
+        ]
+      }
+    ]
+  }
+]
+
 const appointment_structure = {
   appointment : {
     barber_id : "GigelFrone",
@@ -114,6 +127,7 @@ function getAppointmentsOfBarber(barber_id,appointments_list){
   return(response)
 } 
 
+
 /*
   Input : wanted hour and a list appointments
   Output : true if given hour is taken in the list, else false
@@ -140,7 +154,19 @@ export async function addAppointment2(data){
   // check if day-document already exists in the database
   const day_document = await getDocumentById('appointments',data.appointment_date)
 
-  if(day_document !== null){
+  // day hasn't been initiated
+  if(day_document === null) {
+    console.log('Document doesnt exist.');
+    await setDoc(doc(firestore_db,'appointments',data.appointment_date),{
+      locked: false,                      // used for e.g. : holidays 
+      appointments : [data]
+    })
+    console.log(`New document ${data.appointment_date} has been created. Array ${data.appointment_date}.appointments has been created by adding new appointment.`);
+    return(true)
+  }
+
+  // day has been initiated
+  else{
     console.log(`Document ${data.appointment_date} already exists.`);
     if(day_document.locked){
       console.log(`Given day is locked !`);
@@ -154,10 +180,11 @@ export async function addAppointment2(data){
         console.log(`Profile ${profile_doc.profile_id} includes ${data.appointment_date} as LOCKED DAY.`);
         return(false)
       }
+      // profile has not the given day locked 
       else{
         console.log(`> Value of IsHourTaken : ${isHourTaken(data.appointment_hour,getAppointmentsOfBarber(data.barber_id,day_document.appointments))}
                     > variable_hour : ${data.appointment_hour}
-                    > variable_appointment_list : ${getAppointmentsOfBarber(data.barber_id,day_document.appointments)}`);
+                    > variable_appointment_list : TBD`);
         
         if(isHourTaken(data.appointment_hour,getAppointmentsOfBarber(data.barber_id,day_document.appointments))){
           console.log(`Wanted hour ${data.appointment_hour} is already taken for ${data.barber_id}.`);
@@ -166,7 +193,7 @@ export async function addAppointment2(data){
         else{
           const day_document_ref = doc(firestore_db, "appointments", data.appointment_date);
           await updateDoc(day_document_ref, {
-            appointments: arrayUnion({ data })
+            appointments: arrayUnion(data)
             })
             console.log(`Array ${data.appointment_date}.appointments has been updated by adding new appointment.`);
             return(true)
@@ -174,28 +201,6 @@ export async function addAppointment2(data){
       }
     }
   }
-  else{
-    console.log('Document doesnt exist.');
-    await setDoc(doc(firestore_db,'appointments',data.appointment_date),{
-      locked: false,
-      appointments: [data]
-    })
-    console.log(`New document ${data.appointment_date} has been created. Array ${data.appointment_date}.appointments has been created by adding new appointment.`);
-    return(true)
-    
-  }
-
-  //  if it does :
-  //    check if day is locked
-  //        if it is: return false
-  //        else : 
-  //            get the barber_name, verify if its locked,
-  //            if it is : return false
-  //            else : 
-  //                 check if there is another appointment the same appointment_hour
-  //                     if it is : return false
-  //                     else : 
-  //                        append new appointment & return true
 
 }
 
@@ -274,13 +279,14 @@ export async function getSchedule(day,profile){
   }
 
   else{
+    
     generatedHoursFromDb.forEach(
       (element) => {
         
         if(profile.locked_days.includes(String(day))){
           response.push([element[0],true])
         }
-        else if(isHourTaken(element[0], dayDocument.appointments)){
+        else if(isHourTaken(element[0], getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))){
           response.push([element[0],true])
         }
         else{

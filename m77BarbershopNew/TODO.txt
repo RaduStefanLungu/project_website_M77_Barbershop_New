@@ -61,6 +61,8 @@ Planning :
 
     Create and complete sitemap.xml             -TODO
 
+Appointment System : 
+    - fix the fact that 1 hour = 1 user , 2 users can't have the same hour (but they should cuz 2 different persons)    - TODO
 
 Project : Inventory System
     

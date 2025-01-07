@@ -74,6 +74,15 @@ async function getImageByPath(path){
   return(await getDownloadURL(imgRef)) 
 }
 
+/**
+ * Validates if an item with the given itemID exists and is available in the inventory.
+ *
+ * @async
+ * @function isValidItem
+ * @param {string} itemID - The ID of the item to validate.
+ * @returns {Promise<boolean>} - Returns a promise that resolves to true if the item is valid and available, otherwise false.
+ * @throws {Error} - Throws an error if there is an issue fetching the document.
+ */
 async function isValidItem(itemID) {
   try {
       // Fetch the document from the INVENTORY_COLLECTION using the item_id
@@ -88,7 +97,7 @@ async function isValidItem(itemID) {
       const itemData = itemDoc.data();
       
       // Check if the item is valid based on custom conditions (e.g., availability)
-      if (itemData && itemData.available) {
+      if (itemData && itemData.availablity) {
           return true; // The item is valid
       } else {
           return false; // The item is not available or valid
@@ -243,6 +252,7 @@ export async function updateQuantity(itemID, newQuantity,currentUserEmail) {
       }
       else{
         // wait for 2 seconds and try again (only once)
+        // TODO 
       }
 
       
