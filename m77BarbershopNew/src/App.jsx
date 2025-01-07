@@ -20,6 +20,7 @@ import Statistics from './components/Inventory/components/Statistics.jsx'
 import Rapport from './pages/private/admin/Rapport.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 
+
 function App() {
 
   return (

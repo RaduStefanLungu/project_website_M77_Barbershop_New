@@ -554,7 +554,9 @@ export async function getProfiles(){
   
   const profiles = []
   querySnapshot.forEach((doc) => {
-    profiles.push({...doc.data()})
+    if(doc.data().visible){
+      profiles.push({...doc.data()})
+    }
   })  
 
   return profiles;

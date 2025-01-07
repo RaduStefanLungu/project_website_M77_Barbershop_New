@@ -3,6 +3,7 @@ import { addAppointment2, getProfiles, getSchedule } from '../api/firebase'
 import { v4 } from 'uuid'
 
 import SERVICES from '../data/services.json'
+import { Link } from 'react-router-dom'
 
 export default function AppointmentForm(){
 
@@ -10,7 +11,8 @@ export default function AppointmentForm(){
 
     const [chosenProfile,setChosenProfile] = useState(null)
 
-
+    const [appointView,setAppointView] = useState(null)
+    const [showAppointView,setShowAppointView] = useState(false)
 
     useEffect(()=>{
         async function fetchProfiles(){
@@ -23,31 +25,31 @@ export default function AppointmentForm(){
 
         fetchProfiles()
     },[])
-
-    
     
 
     function handleBack(e){
         e.preventDefault()
         setChosenProfile(null)
+
+        setAppointView(null)
+        setShowAppointView(false)
+        
+        scrollToTop()
     }
     
     return(
         <div className=''>
             {/* <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2> */}
-            <div className=''>
+            <div className={`${!showAppointView? "block" : "hidden"}`}>
 
                 {
-                    chosenProfile === null? 
-                    <div className={`${chosenProfile === null? "grid" : "hidden"}`}>
-                        <ProfileSelection existingProfiles={profiles} profileSetter={setChosenProfile}></ProfileSelection>
-                    </div> :
-                    <div className={`${chosenProfile !== null? "grid" : "hidden"}`}>
-                        <TakingAppointment barberProfile={chosenProfile} backButtonFunction={handleBack}></TakingAppointment>
-                    </div>
+                    chosenProfile === null ? 
+                    <ProfileSelection existingProfiles={profiles} profileSetter={setChosenProfile}></ProfileSelection> :
+                    <TakingAppointment barberProfile={chosenProfile} backButtonFunction={handleBack} appointViewSetter={[appointView,setAppointView]} showViewSetter={[showAppointView,setShowAppointView]}></TakingAppointment>
                 }
-
-                
+            </div>
+            <div className={`${showAppointView? "block" : "hidden"}`}>
+                {appointView}
             </div>
         </div>
     )
@@ -99,7 +101,7 @@ const ProfileSelection = ({existingProfiles,profileSetter}) => {
     )
 }
 
-const TakingAppointment = ({barberProfile, backButtonFunction}) => {
+const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,showViewSetter}) => {
     const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
         timeZone: 'Europe/Brussels', 
         year: 'numeric', 
@@ -118,10 +120,12 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
     const [hoursOfDay,setHoursOfDay] = useState([])
     const [chosenHour,setChosenHour] = useState('')
 
-    const [appointmentConfirmed,setAppointmentConfirmed] = useState(false);
+    const [clickedSubmit,setClickedSubmit] = useState(false);
 
     async function handleSubmit(e){
         e.preventDefault();
+
+        setClickedSubmit(true);
 
         const appointment = {
             barber_id : barberProfile.profile_id,
@@ -139,10 +143,21 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
 
         console.log(appointment);
         
-        if(barberProfile !== null){         // TODO : complete the conditions
+        if(barberProfile !== null && clientFirstName && clientLastName && clientEmail && clientPhone && clientAppointmentDate && clientAppointmentService && chosenHour){
             await addAppointment2(appointment).then(
                 (response) => {
-                    setAppointmentConfirmed(response)
+                    let message = null
+                    if(response){
+                        message = <span>Votre rendez-vous a été sauvegardé !<br/> Un email de confirmation a été envoyé.</span>
+                    }
+                    else{
+                        message = <span>Erreur lors de la sauvegarde de votre rendez-vous !<br/> Veuillez réessayer.</span>
+                    }
+                    appointViewSetter[1](<AppointmentResponseView success={response} message={message} />)
+                    showViewSetter[1](true)
+
+                    scrollToTop();
+
                 }
             )
             // TODO : send to message view 'thank you for your appointment ...'
@@ -169,7 +184,15 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
         e.preventDefault();
         backButtonFunction(e);
 
-
+        setClientFirstName('');
+        setClientLastName('');
+        setClientEmail('');
+        setClientPhone('');
+        setClientAppointmentDate('');
+        setClientAppointmentService('');
+        setHoursOfDay([]);
+        setChosenHour('');
+        setAppointmentConfirmed(false);
     }
 
     return(
@@ -218,7 +241,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
                                                                 value.services.map(
                                                                     (service,key2)=>{
                                                                         return(
-                                                                            <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] ${clientAppointmentService===service.name ? "border-red-500" : "border-[var(--brand-black)]"}`}>
+                                                                            <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] border-[var(--brand-black)] ${clientAppointmentService===service.name ? "bg-[var(--brand-black)] text-white" : ""}`}>
                                                                                 <div className='grid grid-cols-2'>
                                                                                     <label className='text-xl'>{service.name}</label>
                                                                                     <label className='text-xl'>{service.price}€</label>
@@ -247,13 +270,13 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
                                                                 value.services.map(
                                                                     (service,key2)=>{
                                                                         return(
-                                                                            <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] ${clientAppointmentService===service.name ? "border-red-500" : "border-[var(--brand-black)]"}`}>
+                                                                            <button type='button' key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] border-[var(--brand-black)] ${clientAppointmentService===service.name ? "bg-[var(--brand-black)] text-white" : ""}`}>
                                                                                 <div className='grid grid-cols-2'>
                                                                                     <label className='text-xl'>{service.name}</label>
                                                                                     <label className='text-xl'>{service.price}€</label>
                                                                                 </div>
                                                                                 <label>{service.description}</label>
-                                                                            </div>
+                                                                            </button>
                                                                         )
                                                                     }
                                                                 )
@@ -268,12 +291,9 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
                                 </div>
                             
                             </div>
-                            <div className='p-3'>
-                                <div className={`w-[50px] h-[50px] rounded-full ${appointmentConfirmed? "bg-green-500":"bg-red-500"}`}></div>
-                            </div>  
                             <div className='grid grid-flow-col gap-5 py-5'>
                                 <button type='button' className='button-1' onClick={handleBack}>Retour</button>
-                                <button type='submit' className='button-2'>Rezerver</button>
+                                <button type='submit' disabled={clickedSubmit} className='button-2 disabled:bg-gray-300'>Rezerver</button>
                             </div>
                             
                         </div>
@@ -281,14 +301,11 @@ const TakingAppointment = ({barberProfile, backButtonFunction}) => {
     )
 }
 
-// why is TakingAppointment auto submitting when the user choses an hour after chosing the date?
-
-
 const HourTab = ({setter,hour,taken, selected}) => {
 
     return(
         <button type='button' onClick={()=>{setter[1](hour)}}
-            disabled={taken} className={`${taken? "bg-red-500" : "bg-green-500 hover:border-black"} text-white px-5 py-2 rounded-lg border-[0.15rem] ${selected? " border-black" : " border-transparent"} `}>
+            disabled={taken} className={`${taken? "bg-red-500" : "bg-green-500 hover:border-[var(--brand-black)]"} text-white px-5 py-2 rounded-lg border-[0.15rem] ${selected? " border-[var(--brand-black)]" : " border-transparent"} `}>
             {hour}
         </button>
     )
@@ -332,3 +349,25 @@ const HoursGrid = ({hours,chosenHourSetter}) => {
         return(<></>)
     }
 }
+
+const AppointmentResponseView = ({success,message}) => {
+    
+    return(
+        <div className='bg-[var(--brand-white)] grid py-5'>
+            <label className={`${success? "text-green-500" : "text-red-500"} text-start font-bold font-custom_1 text-2xl`}>{message}</label>
+            <div className='py-5 flex justify-center items-center gap-5'>
+                <Link to={'/rendez-vous'} onClick={(e)=>{e.preventDefault();window.location.reload();}} className='button-1'>Retour</Link>
+                <Link to={'/'} className='button-2'>Accueil</Link>
+            </div>
+        </div>
+    )
+}
+
+
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Optional: "smooth" for animated scroll or "auto" for instant scroll
+    });
+};
