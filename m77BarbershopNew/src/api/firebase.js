@@ -211,7 +211,8 @@ export async function removeAppointment2(){}
   Output : list of appointments for the given day of the given profile
 */
 export async function getAppointments(day,profile){
-  //TODO
+  const dayDocument = await getDocumentById('appointments',day)
+  return(getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))
 }
 
 /*

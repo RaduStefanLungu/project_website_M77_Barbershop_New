@@ -5,29 +5,11 @@ import { v4 } from 'uuid'
 import SERVICES from '../data/services.json'
 
 export default function AppointmentForm(){
-    const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
-        timeZone: 'Europe/Brussels', 
-        year: 'numeric', 
-        month: '2-digit', 
-        day: '2-digit'
-      }).split('/').reverse().join('-'))
 
     const [profiles,setProfiles] = useState([])
 
     const [chosenProfile,setChosenProfile] = useState(null)
 
-    const [clientFirstName,setClientFirstName] = useState('')
-    const [clientLastName,setClientLastName] = useState('')
-    const [clientEmail,setClientEmail] = useState('')
-    const [clientPhone,setClientPhone] = useState('')
-    const [clientAppointmentDate,setClientAppointmentDate] = useState('')
-
-    const [clientAppointmentService,setClientAppointmentService] = useState('')
-
-    const [hoursOfDay,setHoursOfDay] = useState([])
-    const [chosenHour,setChosenHour] = useState('')
-
-    const [appointmentConfirmed,setAppointmentConfirmed] = useState(false);
 
 
     useEffect(()=>{
@@ -43,11 +25,106 @@ export default function AppointmentForm(){
     },[])
 
     
+    
+
+    function handleBack(e){
+        e.preventDefault()
+        setChosenProfile(null)
+    }
+    
+    return(
+        <div className=''>
+            {/* <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2> */}
+            <div className=''>
+
+                {
+                    chosenProfile === null? 
+                    <div className={`${chosenProfile === null? "grid" : "hidden"}`}>
+                        <ProfileSelection existingProfiles={profiles} profileSetter={setChosenProfile}></ProfileSelection>
+                    </div> :
+                    <div className={`${chosenProfile !== null? "grid" : "hidden"}`}>
+                        <TakingAppointment barberProfile={chosenProfile} backButtonFunction={handleBack}></TakingAppointment>
+                    </div>
+                }
+
+                
+            </div>
+        </div>
+    )
+}
+const ProfileCard = ({ profile,setter, clickable=false }) => {
+
+    function handleClickedProfile(e) {
+        e.preventDefault();         
+        if(clickable){
+            setter(profile)
+        }
+        
+    }
+    
+    return (
+        <button type='button' onClick={handleClickedProfile}>
+            <div className="relative container m-auto w-[250px] h-[450px] overflow-hidden">
+                <div className={`absolute overflow-hidden bottom-0 ${clickable? "backdrop-grayscale bg-black/35 hover:bg-transparent hover:backdrop-grayscale-0 transition-all duration-500" : ""} z-20 w-[250px] h-[550px] flex`}>
+                    <div className={`text-white text-start flex flex-col w-full h-full px-5 pt-[425px] transform ${clickable? "translate-y-0 hover:translate-y-[100px]" : "translate-y-[100px]"}  transition-transform duration-500 ease-in-out`}>
+                        <label className="font-custom_1 font-bold text-xl pb-2">
+                            {profile.last_name + " " + profile.first_name}
+                        </label>
+                        <p className='font-custom_1 text-sm italic'>
+                            {profile.profile_description}
+                        </p>
+                    </div>
+                    
+                </div>
+                <img src={profile.image_url} className="w-[250px] h-[450px] absolute top-0 z-0" alt="Profile"/>
+            </div>
+        </button>
+    );
+};
+
+const ProfileSelection = ({existingProfiles,profileSetter}) => {
+    return(
+        <div className='grid'>
+            <h2 className='font-custom_1 text-3xl py-3'> Choisisez le barber</h2>
+            <div id='chose_user' className='grid md:grid-cols-2 lg:grid-flow-col gap-10'>
+                {
+                    existingProfiles.map((profile,key) => {                            
+                        return(
+                            <ProfileCard key={key} profile={profile} setter={profileSetter} clickable={true} ></ProfileCard>
+                        )
+                    })
+                }
+            </div>
+        </div>
+    )
+}
+
+const TakingAppointment = ({barberProfile, backButtonFunction}) => {
+    const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
+        timeZone: 'Europe/Brussels', 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit'
+      }).split('/').reverse().join('-'))
+
+    const [clientFirstName,setClientFirstName] = useState('')
+    const [clientLastName,setClientLastName] = useState('')
+    const [clientEmail,setClientEmail] = useState('')
+    const [clientPhone,setClientPhone] = useState('')
+    const [clientAppointmentDate,setClientAppointmentDate] = useState('')
+
+    const [clientAppointmentService,setClientAppointmentService] = useState('')
+
+    const [hoursOfDay,setHoursOfDay] = useState([])
+    const [chosenHour,setChosenHour] = useState('')
+
+    const [appointmentConfirmed,setAppointmentConfirmed] = useState(false);
+
     async function handleSubmit(e){
         e.preventDefault();
 
         const appointment = {
-            barber_id : chosenProfile.profile_id,
+            barber_id : barberProfile.profile_id,
             appointment_id : v4(),
             appointment_hour : chosenHour,
             appointment_date : clientAppointmentDate,
@@ -62,7 +139,7 @@ export default function AppointmentForm(){
 
         console.log(appointment);
         
-        if(chosenProfile !== null){         // TODO : complete the conditions
+        if(barberProfile !== null){         // TODO : complete the conditions
             await addAppointment2(appointment).then(
                 (response) => {
                     setAppointmentConfirmed(response)
@@ -73,36 +150,6 @@ export default function AppointmentForm(){
         }
 
     }
-
-    const ProfileCard = ({ profile,setter, clickable=false }) => {
-
-        function handleClickedProfile(e) {
-            e.preventDefault();         
-            if(clickable){
-                setter(profile)
-            }
-            
-        }
-        
-        return (
-            <button onClick={handleClickedProfile}>
-                <div className="relative container m-auto w-[250px] h-[450px] overflow-hidden">
-                    <div className={`absolute overflow-hidden bottom-0 ${clickable? "backdrop-grayscale bg-black/35 hover:bg-transparent hover:backdrop-grayscale-0 transition-all duration-500" : ""} z-20 w-[250px] h-[550px] flex`}>
-                        <div className={`text-white text-start flex flex-col w-full h-full px-5 pt-[425px] transform ${clickable? "translate-y-0 hover:translate-y-[100px]" : "translate-y-[100px]"}  transition-transform duration-500 ease-in-out`}>
-                            <label className="font-custom_1 font-bold text-xl pb-2">
-                                {profile.last_name + " " + profile.first_name}
-                            </label>
-                            <p className='font-custom_1 text-sm italic'>
-                                {profile.profile_description}
-                            </p>
-                        </div>
-                        
-                    </div>
-                    <img src={profile.image_url} className="w-[250px] h-[450px] absolute top-0 z-0" alt="Profile"/>
-                </div>
-            </button>
-        );
-    };
     
 
     async function handleDateChosen(e){
@@ -110,50 +157,27 @@ export default function AppointmentForm(){
         setChosenHour('')
 
         setClientAppointmentDate(e.target.value);
-        setHoursOfDay(await getSchedule(e.target.value,chosenProfile))
+        setHoursOfDay(await getSchedule(e.target.value,barberProfile))
     }
 
     function handleServiceSelect(e,selected_service){
         e.preventDefault();
         setClientAppointmentService(selected_service)
-        
     }
 
     function handleBack(e){
-        e.preventDefault()
+        e.preventDefault();
+        backButtonFunction(e);
 
-        setChosenProfile(null)
-        setClientAppointmentDate('')
-        setHoursOfDay([])
-
-        setClientAppointmentService('')
 
     }
-    
-    return(
-        <div className=''>
-            {/* <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2> */}
-            <form onSubmit={handleSubmit} className=''>
 
-                {
-                    chosenProfile === null? 
-                    <div className='grid'>
-                        <h2 className='font-custom_1 text-3xl py-3'> Choisisez le barber</h2>
-                        <div id='chose_user' className='grid md:grid-cols-2 lg:grid-flow-col gap-10'>
-                            {
-                                profiles.map((profile,key) => {                            
-                                    return(
-                                        <ProfileCard key={key} profile={profile} setter={setChosenProfile} clickable={true} ></ProfileCard>
-                                    )
-                                })
-                            }
-                        </div>
-                    </div> :
-                    <div className='flex flex-col justify-center md:flex-row gap-5'>
+    return(
+        <form onSubmit={handleSubmit} className='flex flex-col justify-center md:flex-row gap-5'>
 
                         <div className='flex flex-col justify-center items-center'>
                             <div className='mb-auto'>
-                                <ProfileCard profile={chosenProfile} setter={setChosenProfile} clickable={false}></ProfileCard>
+                                <ProfileCard profile={barberProfile} setter={null} clickable={false}></ProfileCard>
                             </div>
                             {/* <div className='grid pt-0'>
                                 <button className='button-1' onClick={handleBack}>Retour</button>
@@ -248,25 +272,22 @@ export default function AppointmentForm(){
                                 <div className={`w-[50px] h-[50px] rounded-full ${appointmentConfirmed? "bg-green-500":"bg-red-500"}`}></div>
                             </div>  
                             <div className='grid grid-flow-col gap-5 py-5'>
-                                <button className='button-1' onClick={handleBack}>Retour</button>
+                                <button type='button' className='button-1' onClick={handleBack}>Retour</button>
                                 <button type='submit' className='button-2'>Rezerver</button>
                             </div>
                             
                         </div>
-                    </div>
-                }
-
-                
-            </form>
-        </div>
+                    </form>
     )
 }
+
+// why is TakingAppointment auto submitting when the user choses an hour after chosing the date?
 
 
 const HourTab = ({setter,hour,taken, selected}) => {
 
     return(
-        <button onClick={()=>{setter[1](hour)}}
+        <button type='button' onClick={()=>{setter[1](hour)}}
             disabled={taken} className={`${taken? "bg-red-500" : "bg-green-500 hover:border-black"} text-white px-5 py-2 rounded-lg border-[0.15rem] ${selected? " border-black" : " border-transparent"} `}>
             {hour}
         </button>
