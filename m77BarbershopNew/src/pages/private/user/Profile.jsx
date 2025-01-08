@@ -24,6 +24,8 @@ export default function Profile() {
     fetchData();
   },[])
 
+  const BACKBUTTON = <button onClick={handleBackButtonForViews} className='-button-2'>Retour</button>
+
   function handleBackButtonForViews(e){
     e.preventDefault()
     setShowView(false)
@@ -32,37 +34,37 @@ export default function Profile() {
 
   function handleChangeDescription(e){
     e.preventDefault()
-    setActiveView(<ChangeDescriptionView profile={profile} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
+    setActiveView(<ChangeDescriptionView profile={profile} backButton={BACKBUTTON}/>)
     setShowView(true)
   }
 
   function handleChangeImage(e){
     e.preventDefault()
-    setActiveView(<ChangeImageView profile={profile} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
+    setActiveView(<ChangeImageView profile={profile} backButton={BACKBUTTON}/>)
     setShowView(true)
   }
 
   function handleChangePassword(e){
     e.preventDefault()
-    setActiveView(<ChangePasswordView currentUser={currentUser} backButton={<button onClick={handleBackButtonForViews} className='bg-red-300'>Retour</button>}/>)
+    setActiveView(<ChangePasswordView currentUser={currentUser} backButton={BACKBUTTON}/>)
     setShowView(true)
   }
   
 
   if(profile === null ){
     return(
-      <div className='font-bold text-4xl'>
+      <div className='font-bold text-4xl font-custom_1'>
         This profile isn't registered
       </div>
     )
   }
 
   return (
-    <div className='relative container mx-auto grid py-10 px-5 xl:px-0'>
+    <div className='font-custom_1 relative grid py-10 px-5 xl:px-20 2xl:px-40'>
       
       {
         showView ? 
-          <div className='absolute top-0 left-0 bg-blue-300 w-screen h-screen grid'>
+          <div className='absolute top-0 left-0 bg-black/90 text-white w-full h-full grid'>
             {activeView}
           </div> :
           <></>
@@ -72,24 +74,26 @@ export default function Profile() {
 
       <div className='grid'>
 
-        <div className='flex flex-col justify-center items-center pb-5'>
-          <img src={profile.image_url} alt='user-image-used-for-clients-in-appointment-form' 
-              className='w-[250px] h-[450px] hover:backdrop-grayscale' ></img>
+        <div className='flex flex-col justify-center items-center pb-5 '>
+          <div className="border-[var(--brand-black)] border-[0.15rem] p-5">
+            <img src={profile.image_url} alt='user-image-used-for-clients-in-appointment-form' 
+                className='w-[250px] h-[450px]' ></img>
+          </div>
           <h4>{profile.email}</h4>
         </div>
 
         <div className='grid gap-5 justify-center'>
           <div className='grid grid-cols-2 gap-5 justify-center'>
-            <button onClick={handleChangeImage} className='bg-red-300'>Changer l'image</button>
-            <button onClick={handleChangeDescription} className='bg-red-300'>Changer la description</button>
+            <button onClick={handleChangeImage} className='button-1'>Changer l'image</button>
+            <button onClick={handleChangeDescription} className='button-1'>Changer la description</button>
           </div>
           <div className='grid justify-center'>
-            <button onClick={handleChangePassword} className='bg-red-300'>Changer Mot de Pass</button>
+            <button onClick={handleChangePassword} className='button-1'>Changer Mot de Pass</button>
           </div>
         </div>
 
         <div className='flex gap-5 mx-auto py-10'>
-          <Link to={'/user/dashboard'} className='bg-red-300'>Retour</Link>
+          <Link to={'/user/dashboard'} className='button-2'>Retour</Link>
         </div>
         
       </div>
@@ -124,16 +128,16 @@ const ChangeDescriptionView = ({profile,backButton}) => {
   }
 
   return(
-    <div className='flex flex-col p-5'>
+    <div className='flex flex-col p-5 max-w-[500px] mx-auto'>
       <label className='font-custom_1 font-bold text-3xl'>Nouvelle Description</label>
-      <label className='text-[var(--brand-gray-75)]'>Conseil : maximum 20 mots.</label>
-      <textarea placeholder={profile.profile_description} ref={descriptionRef} className='h-[500px] px-3 py-1'></textarea>
+      <label className='text-[var(--brand-white-80)]'>Conseil : maximum 20 mots.</label>
+      <textarea placeholder={profile.profile_description} ref={descriptionRef} className='h-[500px] px-3 py-1 text-[var(--brand-black)]'></textarea>
       <div className='p-3 grid text-center justify-center'>
         <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message[0]}</p>
       </div>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
-        <button onClick={handleSave} disabled={clickedSaved} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
+        <button onClick={handleSave} disabled={clickedSaved} className='button-2 disabled:bg-gray-300'>Sauvegarder</button>
       </div>
     </div>
   )
@@ -151,7 +155,8 @@ const ChangeImageView = ({profile,backButton}) => {
       setMessage(["Pas d'image sélectionnée !",true])
       return(false);
     }
-    await updateImage(profile,img).then((response) => {
+    else{
+      await updateImage(profile,img).then((response) => {
       if(response){
         setSaveClicked(true)
         setMessage(["Image mise à jour avec succès !",false])
@@ -161,22 +166,24 @@ const ChangeImageView = ({profile,backButton}) => {
       setMessage(["Erreur lors de la mise à jour de l'image !",true])
       return(false)
     })
+    }
+    
   }
 
   return(
-    <div className='flex flex-col p-5'>
+    <div className='flex flex-col p-5 max-w-[500px] mx-auto'>
       <label className='font-custom_1 font-bold text-3xl'>Nouvelle Image</label>
-      <label className='text-[var(--brand-gray-75)]'>Conseil : dimension de 250x450 pixels.</label>
+      <label className='text-[var(--brand-white-80)]'>Conseil : dimension de 250x450 pixels.</label>
       <div className='grid py-10'>
         <input type='file' onChange={(e)=>{setImg(e.target.files[0])}}></input>
         <div className='grid justify-center py-5'>
           {
             img !== null ? 
               <img src={URL.createObjectURL(img)} alt='user-image-used-for-clients-in-appointment-form' 
-                className='w-[250px] h-[450px]' ></img> :
-              <div className='w-[250px] h-[450px] bg-white grid items-center justify-center font-medium'>Prévisualisation d'Image</div>
+                className='w-[250px] h-[450px] mx-auto border-white border-[0.05rem]' ></img> :
+              <div className='w-[250px] h-[450px] bg-white text-[var(--brand-black)] grid items-center justify-center font-medium mx-auto border-white border-[0.05rem]'>Prévisualisation d'Image</div>
           }
-          <button onClick={()=>{setImg(null)}} className='bg-red-300 p-3 mt-5'>Supprimer séléction</button>
+          <button onClick={()=>{setImg(null)}} className='-button-2 mt-5'>Supprimer séléction</button>
         </div>
       </div>
       <div className='grid text-center justify-center'>
@@ -184,7 +191,7 @@ const ChangeImageView = ({profile,backButton}) => {
       </div>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
-        <button onClick={handleSave} disabled={saveClicked} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
+        <button onClick={handleSave} disabled={saveClicked} className='button-2 disabled:bg-gray-300'>Sauvegarder</button>
       </div>
     </div>
   )
@@ -217,19 +224,19 @@ const ChangePasswordView = ({currentUser,backButton}) => {
   }
 
   return(
-    <div className='flex flex-col p-5'>
+    <div className='flex flex-col p-5 max-w-[500px] mx-auto'>
       <label className='font-custom_1 font-bold text-3xl'>Nouveau Mot de Pass</label>
-      <label className='text-[var(--brand-gray-75)]'>Conseil : minimum 9 caractères, contenant des letters et chiffres</label>
+      <label className='text-[var(--brand-white-80)]'>Conseil : minimum 9 caractères, contenant des letters et chiffres</label>
       <div className='grid gap-3 py-5 px-3'>
-        <input type='password' placeholder='nouveau mot de pass' ref={passwordRef} className='px-1'></input>
-        <input type='password' placeholder='confirmer le mot de pass' ref={confirmPasswordRef} className='px-1'></input>
+        <input type='password' placeholder='Nouveau mot de pass' ref={passwordRef} className='px-1 py-3'></input>
+        <input type='password' placeholder='Confirmer le mot de pass' ref={confirmPasswordRef} className='px-1 py-3'></input>
       </div>
       <div className='p-3 grid text-center justify-center'>
         <p className={`font-bold ${message[1]? "text-red-500" : "text-green-500"}`}>{message[0]}</p>
       </div>
       <div className='flex justify-center gap-5 pt-5'>
         {backButton}
-        <button onClick={handleSave} disabled={clickedSaved} className='bg-red-300 disabled:bg-gray-300'>Sauvegarder</button>
+        <button onClick={handleSave} disabled={clickedSaved} className='button-2 disabled:bg-gray-300'>Sauvegarder</button>
       </div>
     </div>
   )

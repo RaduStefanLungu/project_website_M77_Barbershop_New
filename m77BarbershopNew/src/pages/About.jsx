@@ -120,7 +120,7 @@ const About = () => {
             Prenez rendez-vous dès aujourd’hui et laissez notre équipe vous offrir le meilleur du grooming masculin.
           </p>
           <Link to="/rendez-vous" className="button-1">
-            Réserver un rendez-vous
+            Prendre un rendez-vous
           </Link>
         </div>
       </div>
