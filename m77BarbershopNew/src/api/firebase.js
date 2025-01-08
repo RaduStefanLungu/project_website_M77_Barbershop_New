@@ -212,7 +212,12 @@ export async function removeAppointment2(){}
 */
 export async function getAppointments(day,profile){
   const dayDocument = await getDocumentById('appointments',day)
-  return(getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))
+  if(dayDocument===null){
+    return([])
+  }
+  else{
+    return(getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))
+  }
 }
 
 /*
@@ -349,11 +354,6 @@ export async function getScheduleFooter() {
     (a, b) => weekOrder.indexOf(Object.keys(dayTranslation).find(key => dayTranslation[key] === a.day)) - 
               weekOrder.indexOf(Object.keys(dayTranslation).find(key => dayTranslation[key] === b.day))
   );
-
-
-  console.log(response);
-  
-
   return response;
 }
 
@@ -391,7 +391,11 @@ async function addProfile(profileData){
 
     // if profile doesn't exists, create it 
     if(myDocument === null){
-      setDoc(doc(firestore_db,'profiles',profileData.profile_id),profileData)
+      setDoc(doc(firestore_db,'profiles',profileData.profile_id),
+    {
+      ...profileData,
+      admin : false
+    })
       return(profileData)
     }
 
@@ -554,12 +558,17 @@ export async function getProfiles(){
   
   const profiles = []
   querySnapshot.forEach((doc) => {
-    if(doc.data().visible){
+    if(doc.data()){
       profiles.push({...doc.data()})
     }
-  })  
-
+  })
   return profiles;
+}
+
+export async function getVisibleProfiles(){
+  const all_profiles = await getProfiles();
+  const visible_profiles = all_profiles.filter((profile) => profile.visible === true)
+  return(visible_profiles)
 }
 
 export async function getProfileByEmail(email){

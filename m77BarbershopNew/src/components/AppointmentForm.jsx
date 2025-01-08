@@ -1,5 +1,5 @@
 import { useState,useEffect } from 'react'
-import { addAppointment2, getProfiles, getSchedule } from '../api/firebase'
+import { addAppointment2, getSchedule, getVisibleProfiles } from '../api/firebase'
 import { v4 } from 'uuid'
 
 import SERVICES from '../data/services.json'
@@ -16,7 +16,7 @@ export default function AppointmentForm(){
 
     useEffect(()=>{
         async function fetchProfiles(){
-            await getProfiles().then(
+            await getVisibleProfiles().then(
                 (response) => {
                     setProfiles(response)
                 }

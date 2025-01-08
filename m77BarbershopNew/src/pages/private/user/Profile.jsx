@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
-import { changePassword, getProfileByEmail, updateDescription, updateImage } from '../../../api/firebase'
+import { changePassword, getProfileByEmail, getProfiles, updateDescription, updateImage } from '../../../api/firebase'
 import { Link } from 'react-router-dom'
 
 export default function Profile() {
@@ -15,7 +15,7 @@ export default function Profile() {
   async function fetchData(){
     await getProfileByEmail(currentUser.email).then(
       (response)=>{
-        setProfile(response)
+        setProfile(response)        
       }
     )
   }

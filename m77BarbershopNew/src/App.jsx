@@ -19,6 +19,7 @@ import Appointments from './pages/private/user/Appointments.jsx'
 import Statistics from './components/Inventory/components/Statistics.jsx'
 import Rapport from './pages/private/admin/Rapport.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
+import RapportRDVs from './pages/private/admin/RapportRDVs.jsx'
 
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
               <Route path='/user/dashboard' exact element={<PrivateRoute><UserDashboard/></PrivateRoute>} />
               <Route path='/user/profile' exact element={<PrivateRoute><Profile/></PrivateRoute>} />
               <Route path='/user/rdvs' exact element={<PrivateRoute><Appointments/></PrivateRoute>} />
+              <Route path='/users/rdvs/rapport' exact element={<PrivateRoute><RapportRDVs/></PrivateRoute>} />
+              
 
               <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
               <Route path='/admin/rapport' exact element={<PrivateRoute><Rapport/></PrivateRoute>} />
