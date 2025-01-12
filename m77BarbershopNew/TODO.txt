@@ -41,7 +41,7 @@ Planning :
     User Dashboard :
         - hub to go to other parts of the user system
     User RDVs : 
-        - list of appointments for the day (or all appointments)
+        - list of appointments for the day (or all appointments)                                    - DONE
         - lock days                                                                                 - TODO
         - add possibility to lock days for each person                                              - TODO
                 - admin(owner) can lock days for anyone                                             - TODO

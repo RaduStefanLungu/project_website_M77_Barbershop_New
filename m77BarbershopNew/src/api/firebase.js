@@ -5,7 +5,7 @@ import { getAuth,createUserWithEmailAndPassword, updatePassword } from "firebase
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
 import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes, deleteObject } from 'firebase/storage'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, v4 } from 'uuid';
 
 
 const firebaseConfig = {
@@ -135,7 +135,7 @@ function getAppointmentsOfBarber(barber_id,appointments_list){
 function isHourTaken(hour,appointments_list){
   for (let index = 0; index < appointments_list.length; index++) {
     const element = appointments_list[index];
-    if(element.appointment_hour === hour){
+    if(element.appointment_hour === hour && element.confirmed !== "CANCELED"){
       return(true);
     }
   }
@@ -143,6 +143,32 @@ function isHourTaken(hour,appointments_list){
   return(false)
 }
 
+/**
+ * Checks if the given appointment ID exists in the list of appointments.
+ * If it does, generates a new unique ID that does not exist in the list.
+ *
+ * @param {string} appointment_id - The appointment ID to check.
+ * @param {Array<Object>} appointments_list - The list of appointment objects.
+ * @returns {string} - The original appointment ID if it does not exist in the list, otherwise a new unique ID.
+ */
+function checkAppointmentsIds(appointment_id,appointments_list){
+  let ids = []
+  for (let index = 0; index < appointments_list.length; index++) {
+    const element = appointments_list[index];
+    ids.push(element.appointment_id)
+  }
+
+  if(ids.includes(appointment_id)){
+    let new_id = v4();
+    while(ids.includes(new_id)){
+      new_id = v4();
+    }
+    return(new_id)
+  }
+  else{
+    return(appointment_id)
+  }
+}
 
 // data = {"day" : "2024-10-21", ...}
 /*
@@ -150,7 +176,6 @@ function isHourTaken(hour,appointments_list){
   Output : true if appointment has been successfully registered, else false
 */
 export async function addAppointment2(data){
-  
   // check if day-document already exists in the database
   const day_document = await getDocumentById('appointments',data.appointment_date)
 
@@ -182,10 +207,10 @@ export async function addAppointment2(data){
       }
       // profile has not the given day locked 
       else{
-        console.log(`> Value of IsHourTaken : ${isHourTaken(data.appointment_hour,getAppointmentsOfBarber(data.barber_id,day_document.appointments))}
-                    > variable_hour : ${data.appointment_hour}
-                    > variable_appointment_list : TBD`);
-        
+        // check if the appointment_id is unique and update it if necessary 
+        data.appointment_id = checkAppointmentsIds(data.appointment_id,day_document.appointments)
+
+        // check if the wanted hour is already taken        
         if(isHourTaken(data.appointment_hour,getAppointmentsOfBarber(data.barber_id,day_document.appointments))){
           console.log(`Wanted hour ${data.appointment_hour} is already taken for ${data.barber_id}.`);
           return(false)
@@ -217,6 +242,30 @@ export async function getAppointments(day,profile){
   }
   else{
     return(getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))
+  }
+}
+
+export async function updateAppointment(day,appointment_id,confirmation_state){
+  if(!["CONFIRMED","ABSENT","CANCELED",'UNCONFIRMED'].includes(confirmation_state)){
+    return(false)
+  }
+
+  const dayDocument = await getDocumentById('appointments',day)
+  if(dayDocument === null){
+    return(false)
+  }
+  else{
+    const updatedAppointments = dayDocument.appointments.map((appointment) => {
+      if(appointment.appointment_id === appointment_id){
+        appointment.confirmed = confirmation_state
+      }
+      return(appointment)
+    })
+    const dayDocumentRef = doc(firestore_db, "appointments", day);
+    await updateDoc(dayDocumentRef, {
+      appointments: updatedAppointments
+    })
+    return(true)
   }
 }
 

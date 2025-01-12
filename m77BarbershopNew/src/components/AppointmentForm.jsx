@@ -138,10 +138,9 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
               name : `${clientLastName} ${clientFirstName}`,
               phone : clientPhone
             },
+            confirmed : 'UNCONFIRMED',
             registered_time : new Date().toLocaleString()
           }
-
-        console.log(appointment);
         
         if(barberProfile !== null && clientFirstName && clientLastName && clientEmail && clientPhone && clientAppointmentDate && clientAppointmentService && chosenHour){
             await addAppointment2(appointment).then(
