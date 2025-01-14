@@ -43,9 +43,30 @@
                 {
                     "name" : "Cheveux + Barbe",
                     "price" : 35,
-                    "description" : "description du service"
+                    "description" : ""
                 }
             ]
         }
-    ]
+    ],
+    "special" : [
+        {
+            "group" : "Sur Place",
+            "services" : [
+                {
+                    "name" : "Décoloration",
+                    "price" : "à partir de 60",
+                    "description" : ""
+                },
+                {
+                    "name" : "Mèche",
+                    "price" : "à partir de 45",
+                    "description" : ""
+                },{
+                    "name" : "Coulage",
+                    "price" : 25,
+                    "description" : ""
+                }
+            ]
+        }
+    ] 
 }

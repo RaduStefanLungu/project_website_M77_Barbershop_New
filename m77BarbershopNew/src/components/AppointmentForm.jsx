@@ -290,6 +290,10 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                                 </div>
                             
                             </div>
+                            <ul className='py-3 list-disc grid gap-3'>
+                                <li className='text-start'><span className='font-bold'>A partir de 18h30</span> il y aura un <span className='font-bold'>supplément de 10€</span></li>
+                                <li className='text-start'>Au dela de <span className='font-bold'>10 minutes de retard</span>, le rendez-vous sera <span className='font-bold'>annulé</span> !</li>
+                            </ul>
                             <div className='grid grid-flow-col gap-5 py-5'>
                                 <button type='button' className='button-1' onClick={handleBack}>Retour</button>
                                 <button type='submit' disabled={clickedSubmit} className='button-2 disabled:bg-gray-300'>Rezerver</button>

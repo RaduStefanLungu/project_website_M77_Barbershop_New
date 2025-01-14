@@ -28,7 +28,7 @@ Planning :
 
     Profiles Dashboard :
         - when admin adds new barber in system, create an Firebase AUTH account automatically   - DONE
-        - remove user && remove user from Auth                                                  - TODO
+        - remove user && remove user from Auth                                                  - Admin (IT)
 
     User Profile :
         - db info
@@ -50,7 +50,9 @@ Planning :
         Pages/Home + AppointmentForm:
             - link ContactSection to EmailJS API                                                    - TODO
             - EMAIL : add link to add appointment to 'Google Calendar'                              - TODO
-            - create a 'thank you for your appointment' view for after clicking 'rezerver'          - TODO
+                - dans l'email rajouter : 'Au dela de 10min de retard,                              - TODO
+                                             le rendez-vous sera perdu et annulé'
+            - create a 'thank you for your appointment' view for after clicking 'rezerver'          - DONE
                 -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
 
     About us Page :         - DONE

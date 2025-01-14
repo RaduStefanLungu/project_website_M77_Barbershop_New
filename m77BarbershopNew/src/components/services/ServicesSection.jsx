@@ -19,6 +19,10 @@ const ServicesSection = () => {
           </div>
   
         </div>
+
+        <div className="grid md:justify-center pt-5 pb-10 gap-20">
+          <ServicesCard Services={SERVICES.special[0]} />
+        </div>
         
       </div>
     )
