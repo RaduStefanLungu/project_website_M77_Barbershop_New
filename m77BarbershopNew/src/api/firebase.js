@@ -118,6 +118,9 @@ const appointment_structure = {
 */
 function getAppointmentsOfBarber(barber_id,appointments_list){  
   let response = []
+  if(appointments_list === undefined || appointments_list ===null){
+    appointments_list = []
+  }
   for (let index = 0; index < appointments_list.length; index++) {
     const element = appointments_list[index];
     if(element.barber_id == barber_id){
@@ -334,21 +337,33 @@ export async function getSchedule(day,profile){
   }
 
   else{
+
+    if(dayDocument.locked){
+      generatedHoursFromDb.forEach(
+        (element)=> {
+          response.push([element[0],true]);
+        }
+      )
+    }
+
+    else{
+      generatedHoursFromDb.forEach(
+        (element) => {
+          
+          if(profile.locked_days.includes(String(day))){
+            response.push([element[0],true])
+          }
+          else if(isHourTaken(element[0], getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))){
+            response.push([element[0],true])
+          }
+          else{
+            response.push(element)
+          }
+        }
+      )
+    }
     
-    generatedHoursFromDb.forEach(
-      (element) => {
-        
-        if(profile.locked_days.includes(String(day))){
-          response.push([element[0],true])
-        }
-        else if(isHourTaken(element[0], getAppointmentsOfBarber(profile.profile_id,dayDocument.appointments))){
-          response.push([element[0],true])
-        }
-        else{
-          response.push(element)
-        }
-      }
-    )
+    
     return(response)
     
     
@@ -780,6 +795,20 @@ export async function unlockDays(days_list){
 return(true)
 }
 
+export async function getAllGeneralLockedDays() {
+  const appointmentsCollection = collection(firestore_db, 'appointments');
+  const querySnapshot = await getDocs(appointmentsCollection);
+  const lockedDays = [];
+
+  querySnapshot.forEach((doc) => {
+    if (doc.data().locked) {
+      lockedDays.push(doc.id);
+    }
+  });
+  
+  return lockedDays;
+}
+
 async function lockDay(documentID) {
   try {
       const appointmentsRef = doc(firestore_db, 'appointments', documentID);
@@ -831,6 +860,7 @@ async function unlockDay(documentID) {
 
 export async function lockProfileDay(profile_id,day){
   const profile_doc = await getDocumentById('profiles',profile_id)
+  
   if(profile_doc.locked_days.includes(day)){
     return([false,'Journée déjà bloquée !'])
   }
@@ -843,8 +873,6 @@ export async function lockProfileDay(profile_id,day){
 
 export async function unlockProfileDay(profile_id,day){
   const profile_doc = await getDocumentById('profiles',profile_id)
-  console.log(day);
-  
   if(profile_doc.locked_days.includes(day)){
     const updatedLockedDays = profile_doc.locked_days.filter((locked_day) => locked_day !== day)
     await updateProfile({...profile_doc,locked_days:updatedLockedDays})

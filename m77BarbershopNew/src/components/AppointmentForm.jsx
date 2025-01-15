@@ -191,7 +191,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
         setClientAppointmentService('');
         setHoursOfDay([]);
         setChosenHour('');
-        setAppointmentConfirmed(false);
+        // setAppointmentConfirmed(false);
     }
 
     return(

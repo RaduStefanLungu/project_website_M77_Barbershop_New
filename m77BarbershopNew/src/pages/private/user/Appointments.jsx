@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaTableCellsRowLock } from "react-icons/fa6";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { useAuth } from '../../../context/AuthContext';
-import { getAppointments, getProfileByEmail, lockProfileDay, unlockProfileDay, updateAppointment } from '../../../api/firebase';
+import { getAllGeneralLockedDays, getAppointments, getProfileByEmail, getProfiles, lockDays, lockProfileDay, unlockDays, unlockProfileDay, updateAppointment } from '../../../api/firebase';
 
 import { MdEmail, MdMarkEmailRead } from "react-icons/md";
 import { CiCircleChevDown,CiCircleChevUp,CiUnlock } from "react-icons/ci";
@@ -43,7 +43,7 @@ export default function Appointments() {
   }
 
   return (
-    <div className='font-custom_1 min-h-screen relative flex flex-col max-w-[750px] mx-auto'>
+    <div className='font-custom_1 min-h-screen relative flex flex-col max-w-[750px] mx-auto pb-10'>
 
       <div className={`${popUp!==null? "grid" : "hidden"} absolute top-0 left-0 bg-black/90 h-full w-screen`}>
         {popUp}
@@ -274,8 +274,18 @@ const LockDays = ({profile}) => {
 
   const [historyClicked,setHistoryClicked] = useState(false)
   const [activeClicked,setActiveClicked] = useState(false)
+  const [allLockedClicked,setAllLockedClicked] = useState(false)
   const [chosenDay, setChosenDay] = useState(getTodayDate()); // Selected day
   const [message, setMessage] = useState([]);
+
+  const [allProfiles,setAllProfiles] = useState([])
+  const selectedProfileRef = useRef();
+  const [otherProfileChosenDay, setOtherProfileChosenDay] = useState(getTodayDate());
+  const [otherProfileMessage, setOtherProfileMessage] = useState([]);
+
+  const [selectedAllChosenDay, setSelectedAllChosenDay] = useState(getTodayDate());
+  const [allMessage, setAllMessage] = useState([]);
+  const [allLockedDays, setAllLockedDays] = useState([]);
 
   async function handleBlockDay(e){
     e.preventDefault();
@@ -309,6 +319,71 @@ const LockDays = ({profile}) => {
     )
   }
 
+  async function handleAdminLockForOther(e){
+    e.preventDefault();
+    console.log(selectedProfileRef.current.value,otherProfileChosenDay);
+
+    await lockProfileDay(selectedProfileRef.current.value,otherProfileChosenDay).then(
+      (response) => {
+        setOtherProfileMessage([response[0],`Jour ${otherProfileChosenDay} bloqué pour le profil ${selectedProfileRef.current.value} - ${response[1]}`])
+        // wait 3 seconds and reset message
+        setTimeout(()=>{
+          setOtherProfileMessage([])
+        },3000)
+      }
+    )
+    
+  }
+
+  async function handleAdminLockForAll(e){
+    e.preventDefault();
+    await lockDays([selectedAllChosenDay]).then((response)=>{
+      setAllMessage([response[0],`Jour ${selectedAllChosenDay} bloqué pour tous`]);
+      setTimeout(()=>{
+        setAllMessage([])
+      },3000)
+      
+    })
+  }
+
+  async function handleAdminUnlockForAll(e,day){
+    e.preventDefault();
+    await unlockDays([day]).then(
+      (response)=>{
+        if(response){
+          setAllMessage([response,`Jour ${day} débloqué pour tous`]);
+          setTimeout(()=>{
+            setAllMessage([])
+          },3000)
+        }
+      }
+    )
+  }
+
+  async function fetchProfiles(){
+    // get all profiles
+    await getProfiles().then(
+      (response)=>{
+        setAllProfiles(response)
+      }
+    )
+  }
+
+  async function fetchAllLockedDays(){
+    await getAllGeneralLockedDays().then(
+      (response)=>{
+        setAllLockedDays(response);
+      }
+    )
+  }
+
+  useEffect(()=>{
+    if(profile.admin){
+      fetchProfiles();
+      fetchAllLockedDays();
+    }
+  },[])
+
   if(profile===null || profile === undefined){
     return(
       <div>
@@ -318,72 +393,175 @@ const LockDays = ({profile}) => {
   }
   else{
     return(
-    <div className='py-10 grid'>
-      <h2 className="text-design-h2">Bloquer des jours</h2>
-      <p className='text-design-p text-sm text-start p-0'>
-        Vous pouvez bloquer des jours pour lesquels vous ne voulez pas prendre de rendez-vous.<br/>
-        Les jours bloqués seront affichés en rouge dans le calendrier des rendez-vous.
-      </p>
-      <div className='grid grid-flow-col'>
-        <div id='history' className='py-5'>
-          <div className='flex items-center text-center gap-3'>
-            <label className='text-xl'>Historique</label>
-            {
-              historyClicked ? <CiCircleChevUp onClick={()=>{setHistoryClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setHistoryClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
-            }
+    <div className='py-10 grid gap-10'>
+      <div id='self-lock-days' className='grid'>
+        <div className='pb-5'>
+          <h2 className="text-design-h2">Bloquer des jours</h2>
+          <p className='text-design-p text-sm text-start p-0'>
+            Vous pouvez bloquer des jours pour lesquels vous ne voulez pas prendre de rendez-vous.<br/>
+            Les jours bloqués seront affichés en rouge dans le calendrier des rendez-vous.
+          </p>
+        </div>
+        <div className='grid grid-flow-col'>
+          <div id='history' className=''>
+            <div className='flex items-center text-center gap-3'>
+              <label className='text-xl'>Historique</label>
+              {
+                historyClicked ? <CiCircleChevUp onClick={()=>{setHistoryClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setHistoryClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
+              }
+            </div>
+            <div id='historique-container' className={`${historyClicked? "flex flex-col h-[150px]" : "hidden"}  overflow-auto`}>
+              {
+                profile.locked_days.map((day,index)=>{
+                  if(getTodayDate()>day){
+                    return(
+                      <div key={index} className='flex gap-5 px-5'>
+                        <span className='text-red-700'>{day}</span>
+                      </div>
+                    )
+                  }
+                })
+              }
+            </div>
           </div>
-          <div id='historique-container' className='grid'>
-            {
-              profile.locked_days.map((day,index)=>{
-                if(getTodayDate()>day){
-                  return(
-                    <div key={index} className='flex gap-5 px-5'>
-                      <span className='text-red-700'>{day}</span>
-                    </div>
-                  )
-                }
-              })
-            }
+          <div id='active-future-locked-days' className=''>
+            <div className='flex items-center text-center gap-3'>
+              <label className='text-xl'>Jours à venir</label>
+              {
+                activeClicked ? <CiCircleChevUp onClick={()=>{setActiveClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setActiveClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
+              }
+            </div>
+            <div id='active-future-locked-days-container' className={`${activeClicked? "flex flex-col h-[150px]" : "hidden"} overflow-auto`}>
+              {
+                profile.locked_days.map((day,index)=>{
+                  if(getTodayDate()<=day){
+                    return(
+                      <div key={index} className='flex justify-between px-5'>
+                        <span className={`${getTodayDate() === day? "text-green-500": "text-green-700"} font-bold`}>{day}</span>
+                        <button type='button' onClick={(e)=>{handleUnlockDay(e,day)}} className='text-2xl' ><CiUnlock/></button>
+                      </div>
+                    )
+                  }
+                })
+              }
+            </div>
           </div>
         </div>
-        <div id='active-future-locked-days' className='py-5'>
-          <div className='flex items-center text-center gap-3'>
-            <label className='text-xl'>Jours à venir</label>
-            {
-              activeClicked ? <CiCircleChevUp onClick={()=>{setActiveClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setActiveClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
-            }
-          </div>
-          <div id='active-future-locked-days-container' className='grid'>
-            {
-              profile.locked_days.map((day,index)=>{
-                if(getTodayDate()<=day){
-                  return(
-                    <div key={index} className='flex justify-between px-5'>
-                      <span className={`${getTodayDate() === day? "text-green-500": "text-green-700"} font-bold`}>{day}</span>
-                      <button type='button' onClick={(e)=>{handleUnlockDay(e,day)}} className='text-2xl' ><CiUnlock/></button>
-                    </div>
-                  )
-                }
-              })
-            }
+        <div className='flex flex-col gap-5 pt-5'>
+          <div className='grid'>
+            <div className='flex gap-3'>
+              <label className="my-auto text-xl">Choisisez le jour à bloquer : </label>
+              <input
+                type="date"
+                min={getTodayDate()}
+                value={chosenDay} // Bind the input value to `chosenDay`
+                onChange={(e)=>{setChosenDay(e.target.value)}}
+                className="text-xl"
+              />
+            </div>
+            <div className='grid gap-3'>
+              <p className={`${message[0]? "text-green-500":"text-red-500"}`}>{message[1]}</p>
+              <button type='button' onClick={handleBlockDay} className='button-1 mr-auto'>Bloquer</button>
+            </div>
           </div>
         </div>
       </div>
-      <div className='flex flex-col gap-5'>
-        <div className='flex gap-3'>
-          <label className="my-auto text-xl">Choisisez le jour à bloquer : </label>
-          <input
-            type="date"
-            min={getTodayDate()}
-            value={chosenDay} // Bind the input value to `chosenDay`
-            onChange={(e)=>{setChosenDay(e.target.value)}}
-            className="text-xl"
-          />
-        </div>
-        <div>
-          <p className={`${message[0]? "text-green-500":"text-red-500"}`}>{message[1]}</p>
-        </div>
-        <button type='button' onClick={handleBlockDay} className='button-1 mr-auto'>Bloquer</button>
+      <div id='admin-lock-days-for-other-profiles'>
+            {
+              profile.admin? 
+              <div>
+                <div className='grid pb-5'>
+                  <h2 className='text-design-h2'>ADMIN - Bloquer des jours pour d'autres profils</h2>
+                  <p className='text-design-p text-sm text-start p-0'>
+                    Vous pouvez bloquer des jours pour d'autres profils.<br/>
+                    Les jours bloqués seront affichés en rouge dans le calendrier des rendez-vous.
+                  </p>
+                </div>
+                <div className='grid grid-cols-2'>
+                  <label>Choisissez le profil : </label>
+                  {/* dropdown input list with profiles' ids : */}
+                  <select ref={selectedProfileRef} className='text-xl border-[0.15rem] border-[var(--brand-black)]'>
+                    {
+                      allProfiles.map((profile,index)=>{
+                        return(
+                          <option key={index} value={profile.profile_id}>{profile.profile_id}</option>
+                        )
+                      })
+                    }
+                  </select>
+                </div>
+                <div className='grid grid-cols-2'>
+                  <label>Choisissez le jour à bloquer : </label>
+                  <input
+                    type="date"
+                    min={getTodayDate()}
+                    value={otherProfileChosenDay} // Bind the input value to `otherProfileChosenDay`
+                    onChange={(e)=>{setOtherProfileChosenDay(e.target.value)}}
+                    className="text-xl mr-auto"
+                  />
+                </div>
+                <div>
+                  <span className={`${otherProfileMessage[0]? "text-green-500" : "text-red-500"}`}>{otherProfileMessage[1]}</span>
+                </div>
+                <div className='grid justify-start pt-5'>
+                  <button type='button' onClick={handleAdminLockForOther} className='button-1'>Bloquer</button>
+                </div>
+              </div> 
+              : <></>
+            }
+      </div>
+      <div id='admin-lock-days-for-all'>
+            {
+              profile.admin? 
+              <div>
+                <div className='grid pb-5'>
+                  <h2 className='text-design-h2'>ADMIN - Bloquer des jours pour <span className='underline'>tous</span></h2>
+                  <p className='text-design-p text-sm text-start p-0'>
+                    Vous pouvez bloquer des jours pour tout le monde (example: fermeture du salon pour congé annuel)<br/>
+                    Les jours bloqués seront affichés en rouge dans le calendrier des rendez-vous.
+                  </p>
+                </div>
+                <div id='active-future-locked-days' className=''>
+                  <div className='flex items-center text-center gap-3'>
+                    <label className='text-xl'>Jours totalement bloqués</label>
+                    {
+                      allLockedClicked ? <CiCircleChevUp onClick={()=>{setAllLockedClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setAllLockedClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
+                    }
+                  </div>
+                  <div id='active-future-locked-days-container' className={`${allLockedClicked? "flex flex-col h-[150px]" : "hidden"} overflow-auto`}>
+                    {
+                      allLockedDays.map((day,index)=>{
+                        if(getTodayDate()<=day){
+                          return(
+                            <div key={index} className='flex justify-between px-5'>
+                              <span className={`${getTodayDate() === day? "text-green-500": "text-green-700"} font-bold`}>{day}</span>
+                              <button type='button' onClick={(e)=>{handleAdminUnlockForAll(e,day)}} className='text-2xl' ><CiUnlock/></button>
+                            </div>
+                          )
+                        }
+                      })
+                    }
+                  </div>
+                </div>
+                <div className='grid grid-cols-2'>
+                  <label>Choisissez le jour à bloquer : </label>
+                  <input
+                    type="date"
+                    min={getTodayDate()}
+                    value={selectedAllChosenDay} // Bind the input value to `otherProfileChosenDay`
+                    onChange={(e)=>{setSelectedAllChosenDay(e.target.value)}}
+                    className="text-xl mr-auto"
+                  />
+                </div>
+                <div>
+                  <span className={`${allMessage[0]? "text-green-500": "text-red-500"}`}>{allMessage[1]}</span>
+                </div>
+                <div className='grid justify-start pt-5'>
+                  <button type='button' onClick={handleAdminLockForAll} className='button-1'>Bloquer</button>
+                </div>
+              </div> 
+              : <></>
+            }
       </div>
     </div>
   )

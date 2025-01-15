@@ -43,9 +43,9 @@ Planning :
     User RDVs : 
         - list of appointments for the day (or all appointments)                                    - DONE
         - Link 'rappel email'                                                                       - TODO
-        - lock days                                                                                 - TODO
-        - add possibility to lock days for each person                                              - TODO
-                - admin(owner) can lock days for anyone                                             - TODO
+        - lock days                                                                                 - DONE
+        - add possibility to lock days for each person                                              - DONE
+                - admin(owner) can lock days for anyone                                             - DONE
 
     EMAIL LINKING Client-Admin :
         Pages/Home + AppointmentForm:
