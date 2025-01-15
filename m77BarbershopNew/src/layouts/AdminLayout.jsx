@@ -10,7 +10,7 @@ export default function AdminLayout() {
     <>
         {/* <Header/> */}
         <div className='bg-[var(--brand-black)] grid justify-center'>
-            <img src={LOGO} className='w-[150px] '></img>
+            <a href="/user/dashboard"><img src={LOGO} className='w-[150px] '></img></a>
         </div>
         <div className="">
           <Outlet/>

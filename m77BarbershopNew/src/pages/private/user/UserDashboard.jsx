@@ -3,8 +3,13 @@ import { useAuth } from '../../../context/AuthContext'
 import { Link } from 'react-router-dom'
 
 export default function UserDashboard() {
-    const {currentUser} = useAuth()
+    const {currentUser,logout} = useAuth()
 
+    async function handleLogout(e){
+        e.preventDefault();
+
+        await logout();
+    }
     
   return (
     <div className='container min-h-screen mx-auto py-20'>
@@ -26,6 +31,9 @@ export default function UserDashboard() {
             <Link to={'/admin/rapport'} className='button-1'>
                 Rapport
             </Link>
+            <button type='button' onClick={handleLogout} className='button-2'>
+                Déconnection
+            </button>
         </div>
 
     </div>

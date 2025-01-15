@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaTableCellsRowLock } from "react-icons/fa6";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { useAuth } from '../../../context/AuthContext';
-import { getAppointments, getProfileByEmail, updateAppointment } from '../../../api/firebase';
-import { Link } from 'react-router-dom';
+import { getAppointments, getProfileByEmail, lockProfileDay, unlockProfileDay, updateAppointment } from '../../../api/firebase';
 
 import { MdEmail, MdMarkEmailRead } from "react-icons/md";
-import { CiCircleChevDown,CiCircleChevUp } from "react-icons/ci";
+import { CiCircleChevDown,CiCircleChevUp,CiUnlock } from "react-icons/ci";
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -16,18 +17,19 @@ export default function Appointments() {
     const {currentUser} = useAuth()
 
     const [profileData,setProfileData] = useState({})
-    const [appointments,setAppointments] = useState([])
 
     const [view,setView] = useState('my-appointments')
 
     const [popUp,setPopUp] = useState(null)
 
-    async function fetchProfile(){
-      await getProfileByEmail(currentUser.email).then(
-        (response)=>{
-            setProfileData(response)            
+    async function fetchProfile() {
+      await getProfileByEmail(currentUser.email).then((response) => {
+        if (response.locked_days) {
+          // order chronologically the locked_days
+          response.locked_days.sort((a, b) => new Date(a) - new Date(b));
         }
-      )
+        setProfileData(response);
+      });
     }
     
     useEffect(()=>{
@@ -36,12 +38,12 @@ export default function Appointments() {
 
     const dico = {
       "my-appointments" : <MyAppointments profile={profileData} popUpSetter={[popUp,setPopUp]}/>,
-      "lock-days" : <LockDays/>,
+      "lock-days" : <LockDays profile={profileData}/>,
       "admin-rapport" : <AdminRpport/>
   }
 
   return (
-    <div className='font-custom_1 min-h-screen relative'>
+    <div className='font-custom_1 min-h-screen relative flex flex-col max-w-[750px] mx-auto'>
 
       <div className={`${popUp!==null? "grid" : "hidden"} absolute top-0 left-0 bg-black/90 h-full w-screen`}>
         {popUp}
@@ -60,6 +62,9 @@ export default function Appointments() {
       </div>
       <div className='grid px-5'>
         {dico[view]}
+      </div>
+      <div className='grid ml-auto px-5'>
+        <Link to={'/user/dashboard'} className='button-2'>Retour</Link>
       </div>
     </div>
   )
@@ -83,10 +88,10 @@ const MyAppointments = ({ profile,popUpSetter }) => {
   const [showColorCode,setShowColorCode] = useState(false)
   const colorCode = {
     // used for visual representation of the appointment status
-    'CONFIRMED' : 'green-500',
-    'ABSENT' : 'orange-500',
-    'CANCELED' : 'red-500',
-    'UNCONFIRMED' : 'gray-500'
+    'CONFIRMED' : ["bg-green-500","border-green-500"],
+    'ABSENT' : ["bg-orange-500","border-orange-500"],
+    'CANCELED' : ["bg-red-500","border-red-500"],
+    'UNCONFIRMED' : ["bg-gray-500","border-gray-500"]
   }
 
 
@@ -118,6 +123,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
       e.preventDefault();
       await updateAppointment(chosenDay,appointment_id,confirmation_state).then(
         (response)=>{
+          fetchAppointments(chosenDay)
           popUpSetter[1](null) // close the popup
           
         }
@@ -160,7 +166,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     }
 
     return(
-      <div className={`border-${colorCode[data.confirmed]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
+      <div className={`${colorCode[data.confirmed][1]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
         <h1 className='text-xl'>{data.appointment_hour}</h1>
         
         <div className='grid'>
@@ -171,7 +177,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
             }
           </div>
           <div className={`${showDetails? "grid" : "hidden"} gap-5 `}>
-            <button className='button-1'>Rappel Email</button>
+            <button className='button-1 disabled:bg-gray-500 hover:text-[var(--brand-white)]' disabled={today>chosenDay}>Rappel Email</button>
             <div className='grid'>
               <span>Nom : {data.appointment_user.name}</span>
               <span>GSM : {data.appointment_user.phone}</span>
@@ -183,6 +189,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
                   <span>{data.appointment_id}</span>
                   <span>Barber : {data.barber_id}</span>
                   <span>Pris le : {data.registered_time}</span>
+                  <span>Statut : {data.confirmed}</span>
                 </div>
               </div>
 
@@ -222,19 +229,19 @@ const MyAppointments = ({ profile,popUpSetter }) => {
           </div>
           <div className={`${showColorCode? "grid" : "hidden"} px-5 py-1 grid-cols-2 gap-5 border-x-[0.15rem] border-b-[0.15rem] border-[var(--brand-black)]`}>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full bg-${colorCode["CONFIRMED"]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["CONFIRMED"][0]}`} />
               <span>présent</span>
             </div>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full bg-${colorCode["ABSENT"]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["ABSENT"][0]}`} />
               <span>absent</span>
             </div>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full bg-${colorCode["CANCELED"]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["CANCELED"][0]}`} />
               <span>annulé</span>
             </div>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full bg-${colorCode["UNCONFIRMED"]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["UNCONFIRMED"][0]}`} />
               <span>non confirmé</span>
             </div>
           </div>
@@ -255,12 +262,134 @@ const MyAppointments = ({ profile,popUpSetter }) => {
 
 
 
-const LockDays = () => {
-  return(
-    <div>
-      <h1>Lock Days</h1>
+const LockDays = ({profile}) => {
+  const getTodayDate = () => {
+    return new Date().toLocaleString("en-GB", {
+      timeZone: "Europe/Brussels",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).split("/").reverse().join("-");
+  };
+
+  const [historyClicked,setHistoryClicked] = useState(false)
+  const [activeClicked,setActiveClicked] = useState(false)
+  const [chosenDay, setChosenDay] = useState(getTodayDate()); // Selected day
+  const [message, setMessage] = useState([]);
+
+  async function handleBlockDay(e){
+    e.preventDefault();
+    await lockProfileDay(profile.profile_id,chosenDay).then(
+      (response) => {
+        setMessage(response)
+        if(response[0]){
+          profile.locked_days = [...profile.locked_days,chosenDay]
+        }
+        // wait 3 seconds and reset message
+        setTimeout(()=>{
+          setMessage([])
+        },3000)
+      }
+    )
+  }
+
+  async function handleUnlockDay(e,day){
+    e.preventDefault();
+    await unlockProfileDay(profile.profile_id,day).then(
+      (response) => {
+        setMessage(response)
+        if(response[0]){
+          profile.locked_days = profile.locked_days.filter((locked_day)=>{return locked_day !== day})
+        }
+        // wait 3 seconds and reset message
+        setTimeout(()=>{
+          setMessage([])
+        },3000)
+      }
+    )
+  }
+
+  if(profile===null || profile === undefined){
+    return(
+      <div>
+        <h1>Profile not found</h1>
+      </div>
+    )
+  }
+  else{
+    return(
+    <div className='py-10 grid'>
+      <h2 className="text-design-h2">Bloquer des jours</h2>
+      <p className='text-design-p text-sm text-start p-0'>
+        Vous pouvez bloquer des jours pour lesquels vous ne voulez pas prendre de rendez-vous.<br/>
+        Les jours bloqués seront affichés en rouge dans le calendrier des rendez-vous.
+      </p>
+      <div className='grid grid-flow-col'>
+        <div id='history' className='py-5'>
+          <div className='flex items-center text-center gap-3'>
+            <label className='text-xl'>Historique</label>
+            {
+              historyClicked ? <CiCircleChevUp onClick={()=>{setHistoryClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setHistoryClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
+            }
+          </div>
+          <div id='historique-container' className='grid'>
+            {
+              profile.locked_days.map((day,index)=>{
+                if(getTodayDate()>day){
+                  return(
+                    <div key={index} className='flex gap-5 px-5'>
+                      <span className='text-red-700'>{day}</span>
+                    </div>
+                  )
+                }
+              })
+            }
+          </div>
+        </div>
+        <div id='active-future-locked-days' className='py-5'>
+          <div className='flex items-center text-center gap-3'>
+            <label className='text-xl'>Jours à venir</label>
+            {
+              activeClicked ? <CiCircleChevUp onClick={()=>{setActiveClicked(false)}} className='text-3xl my-auto cursor-pointer'/> : <CiCircleChevDown onClick={()=>{setActiveClicked(true)}} className='text-3xl my-auto cursor-pointer'/>
+            }
+          </div>
+          <div id='active-future-locked-days-container' className='grid'>
+            {
+              profile.locked_days.map((day,index)=>{
+                if(getTodayDate()<=day){
+                  return(
+                    <div key={index} className='flex justify-between px-5'>
+                      <span className={`${getTodayDate() === day? "text-green-500": "text-green-700"} font-bold`}>{day}</span>
+                      <button type='button' onClick={(e)=>{handleUnlockDay(e,day)}} className='text-2xl' ><CiUnlock/></button>
+                    </div>
+                  )
+                }
+              })
+            }
+          </div>
+        </div>
+      </div>
+      <div className='flex flex-col gap-5'>
+        <div className='flex gap-3'>
+          <label className="my-auto text-xl">Choisisez le jour à bloquer : </label>
+          <input
+            type="date"
+            min={getTodayDate()}
+            value={chosenDay} // Bind the input value to `chosenDay`
+            onChange={(e)=>{setChosenDay(e.target.value)}}
+            className="text-xl"
+          />
+        </div>
+        <div>
+          <p className={`${message[0]? "text-green-500":"text-red-500"}`}>{message[1]}</p>
+        </div>
+        <button type='button' onClick={handleBlockDay} className='button-1 mr-auto'>Bloquer</button>
+      </div>
     </div>
   )
+  }
+
+  
 }
 
 const AdminRpport = () => {

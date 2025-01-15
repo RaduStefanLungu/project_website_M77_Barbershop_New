@@ -4,7 +4,7 @@ import { changePassword, getProfileByEmail, getProfiles, updateDescription, upda
 import { Link } from 'react-router-dom'
 
 export default function Profile() {
-  
+
   const [profile,setProfile] = useState(null)
 
   const [activeView,setActiveView] = useState(null)
@@ -92,7 +92,7 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className='flex gap-5 mx-auto py-10'>
+        <div className='flex gap-5 ml-auto py-10'>
           <Link to={'/user/dashboard'} className='button-2'>Retour</Link>
         </div>
         

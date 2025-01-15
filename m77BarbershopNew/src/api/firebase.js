@@ -765,6 +765,7 @@ export async function removeAppointment(appointment_date,appointment_number){
 }
 }
 
+
 export async function lockDays(days_list){
     days_list.forEach( day => {
     lockDay(day)
@@ -825,6 +826,32 @@ async function unlockDay(documentID) {
 
   } catch (error) {
       console.error('Error locking day: ', error);
+  }
+}
+
+export async function lockProfileDay(profile_id,day){
+  const profile_doc = await getDocumentById('profiles',profile_id)
+  if(profile_doc.locked_days.includes(day)){
+    return([false,'Journée déjà bloquée !'])
+  }
+  else{
+    const updatedLockedDays = [...profile_doc.locked_days,day]
+    await updateProfile({...profile_doc,locked_days:updatedLockedDays})
+    return([true,'Journée bloquée avec succès !'])
+  }
+}
+
+export async function unlockProfileDay(profile_id,day){
+  const profile_doc = await getDocumentById('profiles',profile_id)
+  console.log(day);
+  
+  if(profile_doc.locked_days.includes(day)){
+    const updatedLockedDays = profile_doc.locked_days.filter((locked_day) => locked_day !== day)
+    await updateProfile({...profile_doc,locked_days:updatedLockedDays})
+    return([true,'Journée débloquée avec succès !'])
+  }
+  else{
+    return([false,'Journée déjà débloquée !'])
   }
 }
 
