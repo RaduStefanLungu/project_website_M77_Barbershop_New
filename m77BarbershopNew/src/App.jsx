@@ -20,6 +20,7 @@ import Statistics from './components/Inventory/components/Statistics.jsx'
 import Rapport from './pages/private/admin/Rapport.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 import RapportRDVs from './pages/private/admin/RapportRDVs.jsx'
+import FillDb from './misc-to-be-removed/FillDb.jsx'
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
 
 
               <Route path='/dev' exact element={<Dev/>} />
+              <Route path='/dev/fill-db' exact element={<FillDb/>}/>
             </Route>            
 
           </Routes>

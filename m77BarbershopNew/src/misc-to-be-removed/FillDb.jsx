@@ -1,0 +1,168 @@
+import React from 'react'
+import { v4 } from 'uuid';
+import { addAppointment2, getProfileByEmail, getSchedule } from '../api/firebase';
+
+export default function FillDb() {
+
+    function generateRandomUser(){
+        let data_structure = {
+            email : 'example@example.com',
+            name : 'My Example',
+            phone : '0123456789'
+        }
+        return(data_structure);
+    }
+
+    function createAppointment(barberID,date,time,serviceName){
+        const appointment = {
+                    barber_id : barberID,
+                    appointment_id : v4(),
+                    appointment_hour : time,
+                    appointment_date : date,
+                    appointment_service : serviceName,
+                    appointment_user : generateRandomUser(),
+                    confirmed : 'UNCONFIRMED',
+                    registered_time : new Date().toLocaleString()
+                  }
+        return(appointment);
+    }
+
+    function getAllDaysOfMonth(month) {
+        const response = []; // List to store the dates
+        const year = new Date().getFullYear(); // Get the current year
+      
+        // Get the total number of days in the given month
+        const daysInMonth = new Date(year, month, 0).getDate(); // month is 1-indexed here
+      
+        // Loop through the days of the month
+        for (let day = 2; day <= daysInMonth+1; day++) {
+          const date = new Date(year, month - 1, day); // month is 0-indexed here
+          const formattedDate = date.toISOString().split("T")[0];
+          response.push(formattedDate);
+        }
+      
+        return response;
+      }
+
+    async function getDispoHoursPerDay(day,barberProfile){
+        const hours_list = await getSchedule(day,barberProfile);
+        return hours_list;
+    }
+      
+
+    async function getAvailableHoursPerMonthFor(wantedMonth,barberProfile){
+
+        let list_of_day_and_hours = []
+
+        const days_of_month = getAllDaysOfMonth(wantedMonth);
+        for (let index = 0; index < days_of_month.length; index++) {
+            let response = {
+                day : '',
+                hours : []
+            }
+            const day = days_of_month[index];
+            const hours_of_day = await getDispoHoursPerDay(day,barberProfile);
+            response.day = day;
+            
+            for(let y=0;y<hours_of_day.length;y++){
+                const tuple =hours_of_day[y]; 
+                if(!tuple[1]){
+                    response.hours.push(tuple[0]);
+                }
+            }
+            list_of_day_and_hours.push(response);
+        }
+        return(list_of_day_and_hours)
+    }
+
+    function getRandomService(){
+        //todo
+        const services = [
+            "Coupe Classique",
+            "Coupe Moderne",
+            "Coupe Etudiant",
+            "Coupe Enfant",
+            "Taille de barbe",
+            "Cheveux + Barbe"
+        ]
+
+        let random = Math.floor(Math.random() * services.length)
+        return(services[random])
+    }
+
+    function randomGenerateAppointments(barberProfile,data){
+        const barber_id = barberProfile.profile_id
+        // select random numbers between 0 and length of data
+        let result = []
+        for(let i=0;i<data.length;i++){
+            const element = data[i];
+            let select_day = Math.round(Math.random())
+            
+            let rdv = {
+                day : element.day,
+                appointments : []
+            }
+
+            if(select_day === 1){
+                for(let j=0;j<element.hours.length;j++){
+                    const hour = element.hours[j]
+                    let select_hour = Math.round(Math.random())
+                    if(select_hour === 1){
+                        rdv.appointments.push(createAppointment(barber_id,element.day,hour,getRandomService()))
+                    }
+                }
+            }
+            result.push(rdv);
+        }
+
+        return(result);
+    }
+
+    async function handleFillAppointmentsMG(e){
+        e.preventDefault();
+        console.log(`Please Wait, filling appointments...`);
+
+        const WANTED_MONTH = 2 // change this to change the wanted month;
+
+        const barberProfile = await getProfileByEmail("maitregims@test.com")
+        const january_data_mg = await getAvailableHoursPerMonthFor(WANTED_MONTH,barberProfile)
+        
+        const generated_appointments = randomGenerateAppointments(barberProfile,january_data_mg);
+
+        console.log(`Appointments : ${generated_appointments.length}`);
+        
+
+        for(let j=0;j<generated_appointments.length;j++){
+            const element = generated_appointments[j]
+            const appointments = element.appointments;
+            for(let index=0; index<appointments.length;index++){
+                const appointment = appointments[index];
+                console.log(appointment);
+                await addAppointment2(appointment).then(
+                    (response)=>{
+                        if(response){
+                            console.log(`Appointment: ${appointment.appointment_id} SUCCESSFULLY added.`)
+                        }
+                        else{
+                            console.log(`Appointment: ${appointment.appointment_id} FAILED to be added.`)
+                        }
+                    }
+                );
+            }
+        }
+
+        console.log(`\nFinished adding appointments to db.`);
+        
+        
+    }
+
+  return (
+    <div className='bg-[var(--brand-black)] min-h-screen flex flex-col'>
+        
+        <div id='holder' className='max-w-[750px] bg-[var(--brand-white)] grid mx-auto p-10'>
+            <button type='button' onClick={handleFillAppointmentsMG} className='button-1 '>Fill Appointments of MaitreGims</button>
+        </div>
+
+    </div>
+  )
+}
