@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { HiScissors } from "react-icons/hi";
 import { TbBottle } from "react-icons/tb";
@@ -10,6 +10,11 @@ import { Link } from 'react-router-dom';
 
 
 const About = () => {
+
+  useEffect(() =>{
+    scrollToTop();
+  },[])
+
   return (
     <div className="bg-gray-50 text-gray-800 py-12 font-custom_1">
       {/* SEO Metadata */}
@@ -138,5 +143,12 @@ const Card = ({icon,text}) => {
   )
 }
 
+
+const scrollToTop = () => {
+  window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: "smooth" for animated scroll or "auto" for instant scroll
+  });
+};
 
 export default About;

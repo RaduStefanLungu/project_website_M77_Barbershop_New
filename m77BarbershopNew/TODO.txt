@@ -6,9 +6,7 @@ Project : Appointment System
 Planning : 
     Users : 
         - Users can chose a barber, a date & hour and a service. 
-        - They'll receive a confirmation email if the appointment has been successully saved.
-            TODO : 
-                - send confirmation email                                   TODO     
+        - They'll receive a confirmation email if the appointment has been successully saved.  
 
     - Barbers can do:  
         - connect with own account, choose the day (>= today) and list their appointments.
@@ -20,15 +18,14 @@ Planning :
         - create/delete new accounts for each employee -> creating/deleting profiles as well
         - list all appointments by barber
             - add button "annulation client"
-            TODO : this
-        - remove any appointment from each list
-            TODO : this
         - check a daily report of # of appointments/barber + amount($)/barber
             TODO : this
 
-    Profiles Dashboard :
-        - when admin adds new barber in system, create an Firebase AUTH account automatically   - DONE
-        - remove user && remove user from Auth                                                  - Admin (IT)
+    Admin Dash (/admin/management):
+        - add posibility to turn employees into admins ?                                            - TODO
+        - lock full days (e.g. fermeture vacance etc...)                                            - TODO
+        - change schedule                                                                           - TODO
+        - remove user && remove user from Auth                                                      - Admin (IT)
 
     User Profile :
         - db info
@@ -47,7 +44,7 @@ Planning :
         - add possibility to lock days for each person                                              - DONE
                 - admin(owner) can lock days for anyone                                             - DONE
 
-    EMAIL LINKING Client-Admin :
+    EMAIL LINKING Client-Admin (TODO) :
         Pages/Home + AppointmentForm:
             - link ContactSection to EmailJS API                                                    - TODO
             - EMAIL : add link to add appointment to 'Google Calendar'                              - TODO
@@ -56,7 +53,7 @@ Planning :
             - create a 'thank you for your appointment' view for after clicking 'rezerver'          - DONE
                 -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
 
-    About us Page :         - DONE
+    About us Page :
         - Add IMAGE         - TODO
 
     (Gallery Page) :

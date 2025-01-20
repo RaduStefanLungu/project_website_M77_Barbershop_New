@@ -76,16 +76,16 @@ export default function AddBarberForm() {
     }
 
     return(
-        <form className='flex flex-col gap-1 max-w-[400px] bg-white p-5 border-blue-500 border-[0.15rem] rounded-xl' onSubmit={handleCreateTable}>
-            <label className='text-2xl font-bold text-white bg-blue-500 px-2 py-2 mb-2 rounded-xl'>Nouveau Barber</label>
+        <form className='font-custom_1 flex flex-col gap-1 max-w-[400px] bg-white p-5 border-[var(--brand-black)] border-[0.15rem]' onSubmit={handleCreateTable}>
+            <label className='text-2xl font-bold text-white bg-[var(--brand-black)] px-2 py-2 mb-2'>Nouveau Barber</label>
             <div className='grid grid-cols-2'>
-                <input onChange={(e)=>{setLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
-                <input onChange={(e)=>{setFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                <input onChange={(e)=>{setLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='px-1 py-2 border-[var(--brand-black)] border-[0.15rem]' />
+                <input onChange={(e)=>{setFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='px-1 py-2 border-[var(--brand-black)] border-[0.15rem]' />
             </div>
-            <input onChange={(e)=>{setEmail(e.target.value)}} required type='email' placeholder='Email' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+            <input onChange={(e)=>{setEmail(e.target.value)}} required type='email' placeholder='Email' className='px-1 py-2 border-[var(--brand-black)] border-[0.15rem]' />
             <div className='flex flex-col'>
                 <label className='pb-1'>Date du début de contrat</label>
-                <input onChange={(e)=>{setStartingContract(e.target.value)}} required type='date' min={today} placeholder='starting contract' className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                <input onChange={(e)=>{setStartingContract(e.target.value)}} required type='date' min={today} placeholder='starting contract' className='px-1 py-2 border-[var(--brand-black)] border-[0.15rem]' />
             </div>
             {/* <input type='checkbox' onClick={handleIsCDI} className='w-4'/> */}
             <div className='flex gap-5'>
@@ -94,7 +94,7 @@ export default function AddBarberForm() {
             </div>
             <div className={`flex-col ${isCDI? "hidden" : "flex" }`}>
                 <label className='pb-1'>Date de fin de contrat</label>
-                <input onChange={(e)=>{setEndingContract(e.target.value)}} type='date' min={today} placeholder='ending contract' disabled={isCDI} required={isCDI} className='px-1 py-2 rounded-xl border-blue-500 border-[0.15rem]' />
+                <input onChange={(e)=>{setEndingContract(e.target.value)}} type='date' min={today} placeholder='ending contract' disabled={isCDI} required={isCDI} className='px-1 py-2 border-[var(--brand-black)] border-[0.15rem]' />
             </div>
 
             <div className='flex flex-col'>
@@ -111,7 +111,7 @@ export default function AddBarberForm() {
                 }
             </div>
 
-            <button type='submit' className='bg-blue-500 text-white font-semibold py-2 px-10 rounded-xl mr-auto mt-2'>Rajouter</button>
+            <button type='submit' className='bg-[var(--brand-black)] text-white font-semibold py-2 px-10 mr-auto mt-2'>Rajouter</button>
         </form>
     )
 }

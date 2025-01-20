@@ -13,6 +13,8 @@ import IMAGE_6 from '../assets/gallery/image00006.jpeg';
 import IMAGE_8 from '../assets/gallery/image00008.jpeg';
 import Carousel from '../components/Carousel';
 
+import INFO_DATA from '../data/data.json'
+
 
 
 export default function Home() {
@@ -233,8 +235,8 @@ const ContactSection = () => {
 
       <div className='flex flex-col items-start gap-5 lg:flex-row'>
         <div className='grid gap-5'>
-          <ContactCard Icon={<FaPhoneAlt/>} Text_1={'Contactez-nous par téléphone'} Text_2={'0472/24.75.15'} />
-          <ContactCard Icon={<TfiEmail/>} Text_1={'Envoyez-nous un email'} Text_2={'mircoperrotta2000@icloud.com'} />
+          <ContactCard Icon={<FaPhoneAlt/>} Text_1={'Contactez-nous par téléphone'} Text_2={INFO_DATA.mirco.contact_phone} />
+          <ContactCard Icon={<TfiEmail/>} Text_1={'Envoyez-nous un email'} Text_2={INFO_DATA.mirco.contact_email} />
         </div>
 
         <form onSubmit={handleSubmit} className='grid gap-3 w-[350px] md:w-[450x] lg:w-[550px] xl:text-xl'>

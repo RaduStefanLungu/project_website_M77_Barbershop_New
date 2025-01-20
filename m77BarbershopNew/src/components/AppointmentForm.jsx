@@ -5,6 +5,8 @@ import { v4 } from 'uuid'
 import SERVICES from '../data/services.json'
 import { Link } from 'react-router-dom'
 
+import INFO_DATA from '../data/data.json'
+
 export default function AppointmentForm(){
 
     const [profiles,setProfiles] = useState([])
@@ -147,7 +149,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                 (response) => {
                     let message = null
                     if(response){
-                        message = <span>Votre rendez-vous a été sauvegardé !<br/> Un email de confirmation a été envoyé.</span>
+                        message = <span>Votre rendez-vous a été sauvegardé !<br/> Un email de confirmation a été envoyé.<br/>Pour tout changement, contactez : {INFO_DATA.mirco.contact_phone} </span>
                     }
                     else{
                         message = <span>Erreur lors de la sauvegarde de votre rendez-vous !<br/> Veuillez réessayer.</span>

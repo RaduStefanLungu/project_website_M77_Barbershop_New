@@ -82,7 +82,7 @@ export default function TicketHistory() {
 
 
   return (
-    <div className='flex flex-col bg-blue-500 px-2 py-3 rounded-tr-xl'>
+    <div className='flex flex-col bg-[var(--brand-black)] px-2 py-3'>
       <h1 className='text-start my-auto pb-5 text-4xl font-bold text-white'>Historique de Tickets</h1>
 
       <div className='flex gap-5 font-bold py-2 bg-white'>
@@ -117,7 +117,7 @@ const TicketView = ({ticketData}) => {
   }
 
   return(
-    <div className='grid bg-blue-200 hover:bg-blue-300 transition-all duration-200 p-2 rounded'>
+    <div className='grid bg-[var(--brand-black-25)] transition-all duration-200 p-2'>
 
       <button onClick={handleClickedDropdown} className='flex justify-between '>
         <div className='grid'>
@@ -138,10 +138,10 @@ const TicketView = ({ticketData}) => {
 
       </button>
 
-      <div className={`${clickedDropdown? 'grid' : 'hidden'} bg-blue-100 p-2`}>
-        <div className='flex gap-10'>
-          <label>Id : </label>
-          <label>{ticketData.id}</label>
+      <div className={`${clickedDropdown? 'grid' : 'hidden'} bg-[var(--brand-white)] p-2`}>
+        <div className='grid'>
+          <label>Fait par : <span className='font-medium'>{ticketData.data.meta.created_by}</span></label>
+          <label className='text-xs'>Id : {ticketData.id}</label>
         </div>
         <div className='grid'>
           <label className='py-2'>Objets</label>
@@ -150,8 +150,8 @@ const TicketView = ({ticketData}) => {
               ticketData.data.items.map(
                 (value,key)=>{
                   return(
-                    <div key={key} className='grid grid-cols-3 border-[0.10rem] border-black'>
-                      <label className='col-span-2 overflow-auto max-h-[50px] px-2 border-r-[0.10rem] border-black'>{value.item.item_name}</label>
+                    <div key={key} className='grid grid-cols-3 border-[0.10rem] border-[var(--brand-black)]'>
+                      <label className='col-span-2 overflow-auto max-h-[50px] px-2 border-r-[0.10rem] border-[var(--brand-black)]'>{value.item.item_name}</label>
                       <div className='col-span-1 grid grid-cols-2'> 
                         <label className='text-right px-3'>{value.quantity}x</label>
                         <label className='text-center'>{value.item.item_sell_price} €</label>

@@ -13,7 +13,7 @@ import Statistics from './components/Statistics';
 
 
 export default function Inventory() {
-    const {currentUser,logout} = useAuth();
+    const {currentUser} = useAuth();
 
     const [selection,setSelection] = useState('checkout')
 
@@ -24,51 +24,35 @@ export default function Inventory() {
         "statistics" : <Statistics/>,
     }
 
-    
 
-    async function handleLogout(e){
-        e.preventDefault();
-
-        await logout();
-    }
 
   return (
     <div className='grid'>
 
-        <div className='bg-black text-white flex justify-between px-5'>
-            <div className='flex gap-2'>
-                <label>username : {currentUser.email} </label>
-            </div>
-            <div className='flex'>
-                <button onClick={handleLogout}>Log Out</button>
-            </div>
-
-        </div>
-
-        <h1 className='text-blue-500 font-bold text-5xl py-5'>
+        <h1 className='section-title py-5'>
             Inventaire
         </h1>
 
 
         <div id='buttons' className=''>
-            <button onClick={()=>{setSelection('stock')}} className={`text-4xl p-5 ${selection=='stock'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-l-transparent border-r-white border-[0.15rem]`}>
+            <button onClick={()=>{setSelection('stock')}} className={`text-4xl p-5 ${selection=='stock'? "bg-[var(--brand-black)]" : "bg-[var(--brand-black-50)]"} hover:bg-[var(--brand-black-50)] text-white border-y-transparent border-l-transparent border-r-white border-[0.15rem]`}>
                 <FaBoxes/>
             </button>
-            <button onClick={()=>{setSelection('checkout')}} className={`text-4xl p-5 ${selection=='checkout'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
+            <button onClick={()=>{setSelection('checkout')}} className={`text-4xl p-5 ${selection=='checkout'? "bg-[var(--brand-black)]" : "bg-[var(--brand-black-50)]"} hover:bg-[var(--brand-black-50)] text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <MdShoppingCartCheckout/>
             </button>
-            <button onClick={()=>{setSelection('ticket-history')}} className={`text-4xl p-5  ${selection=='ticket-history'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
+            <button onClick={()=>{setSelection('ticket-history')}} className={`text-4xl p-5  ${selection=='ticket-history'? "bg-[var(--brand-black)]" : "bg-[var(--brand-black-50)]"} hover:bg-[var(--brand-black-50)] text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <RiFileHistoryFill/>
             </button>
-            <button onClick={()=>{setSelection('statistics')}} className={`text-4xl p-5  ${selection=='statistics'? "bg-blue-500" : "bg-blue-700"} hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
+            <button onClick={()=>{setSelection('statistics')}} className={`text-4xl p-5  ${selection=='statistics'? "bg-[var(--brand-black)]" : "bg-[var(--brand-black-50)]"} hover:bg-[var(--brand-black-50)] text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <FaChartPie/>
             </button>
-            <button className={`text-4xl p-5 bg-blue-700 hover:bg-blue-500 text-white border-y-transparent border-x-white border-[0.15rem]`}>
+            <button className={`text-4xl p-5 bg-[var(--brand-black)] hover:bg-[var(--brand-black-50)] text-white border-y-transparent border-x-white border-[0.15rem]`}>
                 <FaQuestion/>
             </button>
         </div>
 
-        <div id='container' className='grid pb-5 bg-slate-300'>
+        <div id='container' className='grid pb-5'>
             {dico[selection]}
         </div>
 

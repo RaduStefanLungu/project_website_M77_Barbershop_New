@@ -280,6 +280,8 @@ async function addItemUpdate(data){
 
   export async function uploadTicket(data){
     //upload given ticket to db
+    console.log(data);
+    
     await addDoc(collection(firestore_db,TICKET_COLLECTION),data)
 
   }

@@ -119,16 +119,6 @@ const Checkout = ({connectedUser}) => {
             items : createListOfItems(selectedItems),
             total_amount : ticketSum()
         }
-        
-
-        // send ticket to db
-        try {
-            await uploadTicket(ticket)
-        } catch (error) {
-            console.log(error.message);
-            
-        }
-
 
         // update existing values to db
         try {
@@ -142,7 +132,7 @@ const Checkout = ({connectedUser}) => {
                         const newQuantity = itemsFromDB[dbItemIndex].data.item_quantity - value[1];
     
                         // Call updateQuantity without client-side validation
-                        await updateQuantity(value[0].data.item_id, newQuantity);
+                        await updateQuantity(value[0].data.item_id, newQuantity,connectedUser);
                     } else {
                         throw new Error(`Item ${value[0].data.item_id} not found`);
                     }
@@ -150,6 +140,18 @@ const Checkout = ({connectedUser}) => {
             ); 
 
             setMessage(['Confirmation du tiket réussie !', false]);
+
+            // send ticket to db since it was successfully updated in db
+            // try {
+            //     await uploadTicket(ticket)
+            // } catch (error) {
+            //     console.log(error.message);
+                
+            // }
+
+            console.log(`TICKET : ${ticket}`);
+            
+            await uploadTicket(ticket)
     
             // Add 3 seconds delay
             await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -171,7 +173,7 @@ const Checkout = ({connectedUser}) => {
 
     const CheckoutItem = ({itemData}) => {
         return(
-            <div className={`${itemData.data.item_quantity<=0? "bg-gray-300" : "bg-white"} shadow-md shadow-black/25 flex flex-col p-3 rounded-xl`}>
+            <div className={`${itemData.data.item_quantity<=0? "bg-gray-300" : "bg-white"} shadow-md shadow-black/25 flex flex-col p-3`}>
                 <div className='w-[75px] h-[75px] grid m-auto md:w-[100px] md:h-[100px] xl:w-[150px] xl:h-[150px]'>
                     <img src={itemData.data.item_image_url} className='w-fit' />
                 </div>
@@ -185,11 +187,11 @@ const Checkout = ({connectedUser}) => {
 
     return(
         <div>
-            <div className='flex flex-col bg-blue-500 px-2 py-3 rounded-tr-xl'>
+            <div className='flex flex-col bg-[var(--brand-black)] px-2 py-3 '>
                 <h1 className='text-start my-auto pb-5 text-4xl font-bold text-white'>Vente</h1>
                 <div className='flex flex-col md:flex-row'>
 
-                    <div id='item_grid' className='md:rounded-br-3xl special-vente-shadow-1 bg-blue-300 py-5 px-5 gap-2 h-[750px] overflow-y-auto grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                    <div id='item_grid' className=' special-vente-shadow-1 bg-[var(--brand-white)] py-5 px-5 gap-2 h-[750px] overflow-y-auto grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                         {
                             itemsFromDB.map(
                                 (value,key) => {
@@ -203,7 +205,7 @@ const Checkout = ({connectedUser}) => {
                         }
                     </div>
 
-                    <div id='ticket + confirm button' className='flex flex-col special-vente-shadow-1 mb-auto rounded-br-3xl'>
+                    <div id='ticket + confirm button' className='flex flex-col special-vente-shadow-1 mb-auto'>
                         <div id='tiket' className='bg-gray-100 py-5 grid '>
                                 <label className=' text-2xl font-bold pb-2 px-2 '>Ticket</label>
                                 
@@ -235,9 +237,9 @@ const Checkout = ({connectedUser}) => {
 
                             </div>
 
-                            <div className='bg-gray-100 p-5 grid rounded-br-3xl'>
+                            <div className='bg-gray-100 p-5 grid'>
                                 <label className={`${message[1]? "text-red-500 font-bold" : "text-green-500"} py-5 text-center`}>{message}</label>
-                                <button onClick={(e)=>{confirmTiket(e)}} className='px-5 py-2 m-auto text-xl text-white bg-blue-500 border-blue-500 border-[0.15rem] rounded-xl' > Confirmer </button>
+                                <button onClick={(e)=>{confirmTiket(e)}} className='px-5 py-2 m-auto text-xl text-white bg-[var(--brand-black)] border-[var(--brand-black)] border-[0.15rem]' > Confirmer </button>
                             </div>
                     </div>
                 </div>

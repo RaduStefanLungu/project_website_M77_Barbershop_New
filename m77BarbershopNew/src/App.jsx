@@ -51,11 +51,11 @@ function App() {
               <Route path='/user/rdvs' exact element={<PrivateRoute><Appointments/></PrivateRoute>} />
               <Route path='/users/rdvs/rapport' exact element={<PrivateRoute><RapportRDVs/></PrivateRoute>} />
               
-
+              <Route path='/admin/management' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
               <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
               <Route path='/admin/rapport' exact element={<PrivateRoute><Rapport/></PrivateRoute>} />
 
-
+              {/* V REMOVE THIS AFTER V */}
               <Route path='/dev' exact element={<Dev/>} />
               <Route path='/dev/fill-db' exact element={<FillDb/>}/>
             </Route>            

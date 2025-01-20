@@ -8,6 +8,7 @@ import { getAllGeneralLockedDays, getAppointments, getProfileByEmail, getProfile
 import { MdEmail, MdMarkEmailRead } from "react-icons/md";
 import { CiCircleChevDown,CiCircleChevUp,CiUnlock } from "react-icons/ci";
 import { Link } from 'react-router-dom';
+import RapportRDVs from '../admin/RapportRDVs';
 
 
 
@@ -39,7 +40,7 @@ export default function Appointments() {
     const dico = {
       "my-appointments" : <MyAppointments profile={profileData} popUpSetter={[popUp,setPopUp]}/>,
       "lock-days" : <LockDays profile={profileData}/>,
-      "admin-rapport" : <AdminRpport/>
+      "admin-rapport" : <RapportRDVs/>
   }
 
   return (
@@ -53,9 +54,11 @@ export default function Appointments() {
         <button onClick={()=>{setView('my-appointments')}} className={`${view==='my-appointments'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
           <FaCalendarAlt/>
         </button>
-        <button onClick={()=>{setView('lock-days')}} className={`${view==='lock-days'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
+        {
+          profileData.admin ? <button onClick={()=>{setView('lock-days')}} className={`${view==='lock-days'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
           <FaTableCellsRowLock/>
-        </button>
+        </button> : <></>
+        }
         {
           profileData.admin ? <button onClick={()=>{setView('admin-rapport')}} className={`${view==='admin-rapport'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}><IoStatsChartSharp/></button> : <></>
         }
@@ -109,7 +112,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
   // Fetch appointments on component mount and when `chosenDay` changes
   useEffect(() => {
     fetchAppointments(chosenDay);
-  }, [chosenDay]); // TODO add profile here
+  }, [chosenDay,profile]); // TODO add profile here
 
   // Handle day selection
   const handleNewDay = (e) => {
@@ -166,7 +169,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     }
 
     return(
-      <div className={`${colorCode[data.confirmed][1]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
+      <div className={`${data.confirmed === 'UNCONFIRMED' ? colorCode[data.confirmed][1] : colorCode[data.confirmed][0]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
         <h1 className='text-xl'>{data.appointment_hour}</h1>
         
         <div className='grid'>
@@ -177,7 +180,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
             }
           </div>
           <div className={`${showDetails? "grid" : "hidden"} gap-5 `}>
-            <button className='button-1 disabled:bg-gray-500 hover:text-[var(--brand-white)]' disabled={today>chosenDay}>Rappel Email</button>
+            <button className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
             <div className='grid'>
               <span>Nom : {data.appointment_user.name}</span>
               <span>GSM : {data.appointment_user.phone}</span>
@@ -568,12 +571,4 @@ const LockDays = ({profile}) => {
   }
 
   
-}
-
-const AdminRpport = () => {
-  return(
-    <div>
-      <h1>Admin Rapport</h1>
-    </div>
-  )
 }

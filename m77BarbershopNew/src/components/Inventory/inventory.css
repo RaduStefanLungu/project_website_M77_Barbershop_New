@@ -2,26 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --brand-black: #020617;
+    --brand-black-25: rgba(2, 6, 23,0.25);
+    --brand-black-50: rgba(2, 6, 23,0.50);
+    --brand-black-75: rgba(2, 6, 23, 0.75);
+    --brand-white: #ffffff;
+    --brand-white-80: rgba(255, 255, 255, 0.8);
 
+    --brand-gray-75 : rgba(71, 85, 105, 0.75);
+  }
 
 
 .card {
     @apply
     w-[150px] h-[200px]
     lg:w-[250px] lg:h-[350px]
-    rounded-xl
     shadow-md shadow-black/25
 }
 
 .cardBorder {
     @apply
-    border-[0.15rem] border-blue-500/50
-    hover:border-blue-500 transition-all duration-200
+    border-[0.15rem] border-[var(--brand-black)]
 }
 
 .cardAnimation {
     @apply
-    bg-gray-200 hover:bg-blue-500
+    bg-[var(--brand-white)] hover:bg-[var(--brand-black)]
     transition-all duration-200
 }
 
