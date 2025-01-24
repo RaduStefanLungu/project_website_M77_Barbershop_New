@@ -126,7 +126,9 @@ function getAppointmentsOfBarber(barber_id,appointments_list){
     if(element.barber_id == barber_id){
       response.push(element)
     }
-  }  
+  }
+  // console.log(typeof(response));
+  
   return(response)
 } 
 
@@ -421,7 +423,46 @@ export async function getScheduleFooter() {
   return response;
 }
 
+// STATISTICS
 
+export async function getDataForStats(profileEmail,chosenDate){
+  // date format yyyy-mm-dd
+  const profile = await getProfileByEmail(profileEmail);
+  const month = chosenDate.split("-")[1]
+
+  const days_of_chosen_month = getAllDaysOfMonth(month)
+  
+  let all_appointments = [["Date","Rendez-vous"]];
+
+  for(let i = 0; i < days_of_chosen_month.length; i++){
+    const dayDate = days_of_chosen_month[i];
+    await getAppointments(dayDate,profile).then(
+      (response) => {
+        all_appointments.push([dayDate,response.length])
+      }
+    )
+    
+    
+  }
+  return(all_appointments);
+}
+
+function getAllDaysOfMonth(month) {
+  const response = []; // List to store the dates
+  const year = new Date().getFullYear(); // Get the current year
+
+  // Get the total number of days in the given month
+  const daysInMonth = new Date(year, month, 0).getDate(); // month is 1-indexed here
+
+  // Loop through the days of the month
+  for (let day = 2; day <= daysInMonth+1; day++) {
+    const date = new Date(year, month - 1, day); // month is 0-indexed here
+    const formattedDate = date.toISOString().split("T")[0];
+    response.push(formattedDate);
+  }
+
+  return response;
+}
 
 // USER CONFIG
 

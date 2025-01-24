@@ -19,7 +19,7 @@ export default function Appointments() {
 
     const [profileData,setProfileData] = useState({})
 
-    const [view,setView] = useState('my-appointments')
+    const [view,setView] = useState('admin-rapport')
 
     const [popUp,setPopUp] = useState(null)
 
