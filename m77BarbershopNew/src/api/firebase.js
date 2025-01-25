@@ -43,73 +43,6 @@ export async function getImageByPath(path){
   
 }
 
-// DB Structure : 
-
-// appointments -> day(YYYY,MM,DD) -> barber_name_1,locked? ->  appointments -> 
-// profiles -> barber_name_1 -> barber_data
-// admin -> barber_name
-// schedule -> monday -> actual_schedule,new_schedule
-// errors -> yyyy,mm,dd -> data + date & time
-
-const appointments_collection_structure = [
-  {
-    "2024-10-24" : {
-      locked : false,
-      barbers : [
-        {
-          barber_id : 'PerrottaMirco',
-          barber_locked : false,
-          appointments : [
-            {
-              barber_id : "PerrottaMirco",
-              appointment_id : "xyz",
-              appointment_hour : "10:00",
-              appointment_date : "2024-10-24",
-              appointment_service : "modern haircut",
-              appointment_user : {
-                email : "bob_gigi@test.com",
-                name : "Bob Gigi",
-                phone : "0123456789"
-              },
-              registered_time : "yyyy-mm-dd at hh:mm:ss"
-            }
-          ] 
-        }
-      ]
-    }
-  }
-]
-
-const appointments_collection_structure_2 = [
-  {
-    "2024-01-07" : [
-      {
-        "barber_id_1" : [
-          {/* appointment_1 */},
-          {/* appointment_2 */}
-        ]
-      }
-    ]
-  }
-]
-
-const appointment_structure = {
-  appointment : {
-    barber_id : "GigelFrone",
-    appointment_id : "xyz",
-    appointment_hour : "10:00",
-    appointment_date : "2024-10-24",
-    appointment_service : "modern haircut",
-    appointment_user : {
-      email : "bob_gigi@test.com",
-      name : "Bob Gigi",
-      phone : "0123456789"
-    },
-    registered_time : "yyyy-mm-dd at hh:mm:ss"
-  }
-}
-
-
 // APPOINTMENTS CONFIG
 
 /*
@@ -127,7 +60,6 @@ function getAppointmentsOfBarber(barber_id,appointments_list){
       response.push(element)
     }
   }
-  // console.log(typeof(response));
   
   return(response)
 } 
@@ -233,8 +165,6 @@ export async function addAppointment2(data){
   }
 
 }
-
-export async function removeAppointment2(){}
 
 /*
   Input : day and profile
@@ -542,15 +472,8 @@ export async function updateImage(profileData,newImageFile){
   // image id : profileData.image
   // image url : profileData.image_url
 
-  //TODO:
-  // #1 upload new image
-  // #2 delete old image
-  // #3 update profileData.image_url
-  // #4 update profileData.image   
-
   const randomImageName = uuidv4();
   const uploadImageResponse = await uploadImage(newImageFile, randomImageName);
-  
   
 
   const oldImageId = profileData.image
@@ -784,42 +707,6 @@ async function removeDocumentByID(docID) {
   }
 }
 
-
-export async function removeAppointment(appointment_date,appointment_number){
-  console.log(`Removing ${appointment_date},${appointment_number}`);
-  try {
-    // Get a reference to the appointments document
-    const appointmentsRef = doc(firestore_db, 'appointments', appointment_date);
-
-    // Get the current data of the appointments document
-    const docSnap = await getDoc(appointmentsRef);
-    if (docSnap.exists()) {
-        const appointmentsData = docSnap.data();
-
-        // Find the appointment to remove
-        const updatedAppointments = appointmentsData.all_appointments.filter(appointment => {
-            return appointment.data.appointment_number !== appointment_number 
-                || appointment.data.rdv_date !== appointment_date;
-        });
-
-        // Update the appointments document with the updated appointments data
-        await updateDoc(appointmentsRef, { all_appointments: updatedAppointments });
-        console.log('Appointment removed successfully.');
-
-        // check if the updated version has an empty array
-        const db_appointments = await getDocumentById('appointments',appointment_date)
-        if(db_appointments.all_appointments.length === 0 && db_appointments.locked === false){
-          removeDocumentByID(appointment_date)
-        }
-
-
-    } else {
-        console.log('Document does not exist.');
-    }
-} catch (error) {
-    console.error('Error removing appointment: ', error);
-}
-}
 
 
 export async function lockDays(days_list){

@@ -16,7 +16,6 @@ export default function UserDashboard() {
     async function fetchProfile() {
           await getProfileByEmail(currentUser.email).then((response) => {
             setProfileData(response);
-            console.log(response);
           });
         }
 

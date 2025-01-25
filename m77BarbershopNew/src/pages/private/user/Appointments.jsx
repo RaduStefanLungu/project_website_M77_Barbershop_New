@@ -44,30 +44,32 @@ export default function Appointments() {
   }
 
   return (
-    <div className='font-custom_1 min-h-screen relative flex flex-col max-w-[750px] mx-auto pb-10'>
+    <div className='font-custom_1 relative'>
 
-      <div className={`${popUp!==null? "grid" : "hidden"} absolute top-0 left-0 bg-black/90 h-full w-screen`}>
+      <div className={`${popUp!==null? "grid" : "hidden"} absolute top-0 left-0 bg-black/90 h-full w-full`}>
         {popUp}
       </div>
 
-      <div className='grid grid-flow-col py-5'>
-        <button onClick={()=>{setView('my-appointments')}} className={`${view==='my-appointments'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
-          <FaCalendarAlt/>
-        </button>
-        {
-          profileData.admin ? <button onClick={()=>{setView('lock-days')}} className={`${view==='lock-days'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
-          <FaTableCellsRowLock/>
-        </button> : <></>
-        }
-        {
-          profileData.admin ? <button onClick={()=>{setView('admin-rapport')}} className={`${view==='admin-rapport'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}><IoStatsChartSharp/></button> : <></>
-        }
-      </div>
-      <div className='grid px-5'>
-        {dico[view]}
-      </div>
-      <div className='grid ml-auto px-5'>
-        <Link to={'/user/dashboard'} className='button-2'>Retour</Link>
+      <div className='min-h-screen flex flex-col max-w-[750px] mx-auto pb-10'>
+        <div className='grid grid-flow-col py-5'>
+          <button onClick={()=>{setView('my-appointments')}} className={`${view==='my-appointments'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
+            <FaCalendarAlt/>
+          </button>
+          {
+            profileData.admin ? <button onClick={()=>{setView('lock-days')}} className={`${view==='lock-days'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
+            <FaTableCellsRowLock/>
+          </button> : <></>
+          }
+          {
+            profileData.admin ? <button onClick={()=>{setView('admin-rapport')}} className={`${view==='admin-rapport'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}><IoStatsChartSharp/></button> : <></>
+          }
+        </div>
+        <div className='grid px-5'>
+          {dico[view]}
+        </div>
+        <div className='grid ml-auto px-5'>
+          <Link to={'/user/dashboard'} className='button-2'>Retour</Link>
+        </div>
       </div>
     </div>
   )
@@ -97,12 +99,36 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     'UNCONFIRMED' : ["bg-gray-500","border-gray-500"]
   }
 
+  function orderByTime(listOfAppointments) {
+    if (!Array.isArray(listOfAppointments)) {
+      console.error("Invalid input: Expected an array of appointments.");
+      return [];
+    }
+  
+    // Sort the appointments by appointment_hour
+    return listOfAppointments.sort((a, b) => {
+      const timeA = a.appointment_hour;
+      const timeB = b.appointment_hour;
+  
+      if (!timeA || !timeB) {
+        console.error("Missing 'appointment_hour' in some appointments.");
+        return 0;
+      }
+  
+      // Convert time strings (e.g., "14:30") to Date objects for accurate comparison
+      const timeADate = new Date(`1970-01-01T${timeA}:00`);
+      const timeBDate = new Date(`1970-01-01T${timeB}:00`);
+  
+      return timeADate - timeBDate;
+    });
+  }
+  
 
   // Function to fetch appointments
   async function fetchAppointments (day){
     try {
       const response = await getAppointments(day, profile);
-      setAppointments(response);
+      setAppointments(orderByTime(response));
       console.log(`Appointments for ${day}:`, response);
     } catch (error) {
       console.error("Failed to fetch appointments:", error);
