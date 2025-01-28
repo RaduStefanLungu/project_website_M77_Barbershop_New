@@ -6,14 +6,6 @@ import { getAppointments, getDataForChart, getProfileByEmail, getProfiles } from
 export default function RapportRDVs() {
 
   const [allProfiles,setAllProfiles] = useState([])
-
-  // TODO 
-  /*
-
-    * Create for each profile a pie-chart to compare the chosen month's ratio of appointments : unconfirmed,confirmed,absent,cancelled
-    * Get $ made for the chosen month by profile, then total (+ % of total amount made by each profile)
-    * Pie-chart to compare the chosen month's ratio of appointment's type (what type of appointment)
-  */
   
   async function fetchProfiles() {
     try {

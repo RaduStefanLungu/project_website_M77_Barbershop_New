@@ -22,7 +22,6 @@ Planning :
             TODO : this
 
     Admin Dash (/admin/management):
-        - add posibility to turn employees into admins ?                                            - TODO
         - lock full days (e.g. fermeture vacance etc...)                                            - TODO
         - change schedule                                                                           - TODO
         - remove user && remove user from Auth                                                      - Admin (IT)
@@ -39,7 +38,6 @@ Planning :
         - hub to go to other parts of the user system
     User RDVs : 
         - list of appointments for the day (or all appointments)                                    - DONE
-        - Link 'rappel email'                                                                       - TODO
         - lock days                                                                                 - DONE
         - add possibility to lock days for each person                                              - DONE
                 - admin(owner) can lock days for anyone                                             - DONE
@@ -53,42 +51,44 @@ Planning :
             - create a 'thank you for your appointment' view for after clicking 'rezerver'          - DONE
                 -- bug : when you reserved and it hasn't refreshed, if you change the hour it will automatically call 'addAppointment2' 
 
-    About us Page :
-        - Add IMAGE         - TODO
-
     (Gallery Page) :
                             - TODO
 
-    Create and complete sitemap.xml             -TODO
-
-Appointment System : 
-    - fix the fact that 1 hour = 1 user , 2 users can't have the same hour (but they should cuz 2 different persons)    - DONE
-
 Project : Inventory System
     
-    - Add & save new product to inventory                   OK
-    - Modify # of products (selled/used/bought)             OK
-    - Remove products from inventory                        OK
-    - Upload photo of product ? ()                          OK
+    - Add & save new product to inventory                   
+    - Modify # of products (selled/used/bought)             
+    - Remove products from inventory                        
+    - Upload photo of product ? ()                          
 
     Inventory :
         * On Selling, send the ticket to db and use it after for a monthly analysis.    - DONE
             ** update ticket.meta.created_by by using the connected user.               - DONE
-            
         * Save to a history whenever the user adds more to inventory !                  - DONE
-
         * Create view of TicketHistory and show                                         - DONE
 
-        * add financial rapport based on db tickets, monthly analysis (admin only)      - TODO
-            --> use https://apexcharts.com/docs/chart-types/column-chart/ 
-
         * (maybe) real-time checking for items added in cart to not be over the available quantity          - TODO
-
-        ** (maybe) Update visuals                                                               - TODO
 
     Admin : 
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
 
+
+TODOs : 
+    * Create for each profile a pie-chart to compare the chosen month's ratio of appointments : unconfirmed,confirmed,absent,cancelled
+    * Get $ made for the chosen month by profile, then total (+ % of total amount made by each profile)
+    * Pie-chart to compare the chosen month's ratio of appointment's type (what type of appointment)
+
+    * SAME FOR INVENTORY TICKETS
+
+    * Fix user change when admin creates a new user(check : https://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/38013551#38013551 )
+    * Add a list of existing users to admin page (and let admin to make a profile visible)
+
+    * Create and complete sitemap.xml
+    * Add image to AboutUs page
+
+    * Link EmailJS to the ContactForm + Appointment Confirmation + Rappel Email from Dashboard
+
+    * -LAST-  IMPORT FULL DB from actual website and use it in the new website.
 
 NOTES : 
     1. Lors de la creation d'un nouveau barber par l'admin, le mot de pass par defaut sera 'm77barber'.
