@@ -1,0 +1,7 @@
+{
+    "states" : ["UNCONFIRMED","CONFIRMED","ABSENT","CANCELED"],
+    "neutral_state" : "UNCONFIRMED",
+    "affirmative_state" : "CONFIRMED",
+    "medium_state" : "ABSENT",
+    "negative_state" : "CANCELED"
+}

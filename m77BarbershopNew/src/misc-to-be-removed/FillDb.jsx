@@ -1,7 +1,7 @@
 import React from 'react'
 import { v4 } from 'uuid';
 import { addAppointment2, getProfileByEmail, getSchedule } from '../api/firebase';
-
+import APPOINTMENT_STATES from '../data/appointmentStates.json'
 export default function FillDb() {
 
     function generateRandomUser(){
@@ -21,7 +21,7 @@ export default function FillDb() {
                     appointment_date : date,
                     appointment_service : serviceName,
                     appointment_user : generateRandomUser(),
-                    confirmed : 'UNCONFIRMED',
+                    confirmed : APPOINTMENT_STATES.neutral_state,
                     registered_time : new Date().toLocaleString()
                   }
         return(appointment);
@@ -122,7 +122,7 @@ export default function FillDb() {
         e.preventDefault();
         console.log(`Please Wait, filling appointments...`);
 
-        const WANTED_MONTH = 2 // change this to change the wanted month;
+        const WANTED_MONTH = 6 // change this to change the wanted month;
 
         const barberProfile = await getProfileByEmail("maitregims@test.com")
         const january_data_mg = await getAvailableHoursPerMonthFor(WANTED_MONTH,barberProfile)

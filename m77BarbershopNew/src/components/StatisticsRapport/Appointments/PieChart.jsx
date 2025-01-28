@@ -1,6 +1,6 @@
 import { Chart } from 'react-google-charts';
 
-export default function AppointmentsByDayChart({data}) {
+export default function PieChart({data}) {
   // const [data,setData] = useState(null);
 
   const options = {

@@ -10,7 +10,7 @@ import { CiCircleChevDown,CiCircleChevUp,CiUnlock } from "react-icons/ci";
 import { Link } from 'react-router-dom';
 import RapportRDVs from '../admin/RapportRDVs';
 
-
+import APPOINTMENT_STATES from '../../../data/appointmentStates.json'
 
 
 export default function Appointments() {
@@ -50,7 +50,7 @@ export default function Appointments() {
         {popUp}
       </div>
 
-      <div className='min-h-screen flex flex-col max-w-[750px] mx-auto pb-10'>
+      <div className='min-h-screen flex flex-col max-w-[1000px] mx-auto pb-10'>
         <div className='grid grid-flow-col py-5'>
           <button onClick={()=>{setView('my-appointments')}} className={`${view==='my-appointments'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}>
             <FaCalendarAlt/>
@@ -93,10 +93,10 @@ const MyAppointments = ({ profile,popUpSetter }) => {
   const [showColorCode,setShowColorCode] = useState(false)
   const colorCode = {
     // used for visual representation of the appointment status
-    'CONFIRMED' : ["bg-green-500","border-green-500"],
-    'ABSENT' : ["bg-orange-500","border-orange-500"],
-    'CANCELED' : ["bg-red-500","border-red-500"],
-    'UNCONFIRMED' : ["bg-gray-500","border-gray-500"]
+    [APPOINTMENT_STATES.affirmative_state] : ["bg-green-500","border-green-500"],
+    [APPOINTMENT_STATES.medium_state] : ["bg-orange-500","border-orange-500"],
+    [APPOINTMENT_STATES.negative_state] : ["bg-red-500","border-red-500"],
+    [APPOINTMENT_STATES.neutral_state] : ["bg-gray-500","border-gray-500"]
   }
 
   function orderByTime(listOfAppointments) {
@@ -195,7 +195,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     }
 
     return(
-      <div className={`${data.confirmed === 'UNCONFIRMED' ? colorCode[data.confirmed][1] : colorCode[data.confirmed][0]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
+      <div className={`${data.confirmed === APPOINTMENT_STATES.neutral_state ? colorCode[data.confirmed][1] : colorCode[data.confirmed][0]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
         <h1 className='text-xl'>{data.appointment_hour}</h1>
         
         <div className='grid'>
@@ -258,19 +258,19 @@ const MyAppointments = ({ profile,popUpSetter }) => {
           </div>
           <div className={`${showColorCode? "grid" : "hidden"} px-5 py-1 grid-cols-2 gap-5 border-x-[0.15rem] border-b-[0.15rem] border-[var(--brand-black)]`}>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["CONFIRMED"][0]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode[APPOINTMENT_STATES.affirmative_state][0]}`} />
               <span>présent</span>
             </div>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["ABSENT"][0]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode[APPOINTMENT_STATES.medium_state][0]}`} />
               <span>absent</span>
             </div>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["CANCELED"][0]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode[APPOINTMENT_STATES.negative_state][0]}`} />
               <span>annulé</span>
             </div>
             <div className='flex gap-1'>
-              <div className={`w-[25px] h-[25px] rounded-full ${colorCode["UNCONFIRMED"][0]}`} />
+              <div className={`w-[25px] h-[25px] rounded-full ${colorCode[APPOINTMENT_STATES.neutral_state][0]}`} />
               <span>non confirmé</span>
             </div>
           </div>

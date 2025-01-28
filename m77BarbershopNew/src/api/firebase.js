@@ -1,4 +1,3 @@
-import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from 'firebase/app'
 import { getAuth,createUserWithEmailAndPassword, updatePassword } from "firebase/auth"
 
@@ -7,6 +6,7 @@ import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, dele
 import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes, deleteObject } from 'firebase/storage'
 import { v4 as uuidv4, v4 } from 'uuid';
 
+import APPOINTMENT_STATES from '../data/appointmentStates.json'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
@@ -72,7 +72,7 @@ function getAppointmentsOfBarber(barber_id,appointments_list){
 function isHourTaken(hour,appointments_list){
   for (let index = 0; index < appointments_list.length; index++) {
     const element = appointments_list[index];
-    if(element.appointment_hour === hour && element.confirmed !== "CANCELED"){
+    if(element.appointment_hour === hour && element.confirmed !== APPOINTMENT_STATES.negative_state){
       return(true);
     }
   }
@@ -181,7 +181,7 @@ export async function getAppointments(day,profile){
 }
 
 export async function updateAppointment(day,appointment_id,confirmation_state){
-  if(!["CONFIRMED","ABSENT","CANCELED",'UNCONFIRMED'].includes(confirmation_state)){
+  if(!APPOINTMENT_STATES.states.includes(confirmation_state)){
     return(false)
   }
 
@@ -355,14 +355,14 @@ export async function getScheduleFooter() {
 
 // STATISTICS
 
-export async function getDataForStats(profileEmail,chosenDate){
+export async function getDataForChart(profile,chosenDate){
   // date format yyyy-mm-dd
-  const profile = await getProfileByEmail(profileEmail);
+  // const profile = await getProfileByEmail(profileEmail);
   const month = chosenDate.split("-")[1]
 
   const days_of_chosen_month = getAllDaysOfMonth(month)
   
-  let all_appointments = [["Date","Rendez-vous"]];
+  let all_appointments = [["Date","nbr rdvs"]];
 
   for(let i = 0; i < days_of_chosen_month.length; i++){
     const dayDate = days_of_chosen_month[i];
@@ -371,11 +371,10 @@ export async function getDataForStats(profileEmail,chosenDate){
         all_appointments.push([dayDate,response.length])
       }
     )
-    
-    
   }
-  return(all_appointments);
+  return([profile.profile_id,all_appointments]);
 }
+
 
 function getAllDaysOfMonth(month) {
   const response = []; // List to store the dates

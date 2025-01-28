@@ -6,6 +6,7 @@ import SERVICES from '../data/services.json'
 import { Link } from 'react-router-dom'
 
 import INFO_DATA from '../data/data.json'
+import APPOINTMENT_STATES from '../data/appointmentStates.json'
 
 export default function AppointmentForm(){
 
@@ -62,6 +63,7 @@ const ProfileCard = ({ profile,setter, clickable=false }) => {
         e.preventDefault();         
         if(clickable){
             setter(profile)
+            scrollToTop();
         }
         
     }
@@ -87,6 +89,7 @@ const ProfileCard = ({ profile,setter, clickable=false }) => {
 };
 
 const ProfileSelection = ({existingProfiles,profileSetter}) => {
+
     return(
         <div className='grid'>
             <h2 className='font-custom_1 text-3xl py-3'> Choisisez le barber</h2>
@@ -140,7 +143,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
               name : `${clientLastName} ${clientFirstName}`,
               phone : clientPhone
             },
-            confirmed : 'UNCONFIRMED',
+            confirmed : APPOINTMENT_STATES.neutral_state,
             registered_time : new Date().toLocaleString()
           }
         
@@ -298,7 +301,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                             </ul>
                             <div className='grid grid-flow-col gap-5 py-5'>
                                 <button type='button' className='button-1' onClick={handleBack}>Retour</button>
-                                <button type='submit' disabled={clickedSubmit} className='button-2 disabled:bg-gray-300'>Rezerver</button>
+                                <button type='submit' disabled={clickedSubmit} className='button-2 disabled:bg-gray-300'>Réserver</button>
                             </div>
                             
                         </div>
