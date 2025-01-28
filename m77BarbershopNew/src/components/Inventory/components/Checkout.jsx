@@ -174,7 +174,7 @@ const Checkout = ({connectedUser}) => {
     const CheckoutItem = ({itemData}) => {
         return(
             <div className={`${itemData.data.item_quantity<=0? "bg-gray-300" : "bg-white"} shadow-md shadow-black/25 flex flex-col p-3`}>
-                <div className='w-[75px] h-[75px] grid m-auto md:w-[100px] md:h-[100px] xl:w-[150px] xl:h-[150px]'>
+                <div className='w-[75px] h-[75px] grid m-auto md:w-[100px] md:h-[100px] xl:w-[150px] xl:h-[150px] overflow-hidden'>
                     <img src={itemData.data.item_image_url} className='w-fit' />
                 </div>
                 <div className='grid py-2 h-[150px]'>
