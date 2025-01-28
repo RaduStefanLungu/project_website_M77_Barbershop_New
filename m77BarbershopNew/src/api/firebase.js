@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth,createUserWithEmailAndPassword, updatePassword } from "firebase/auth"
+import { getAuth,createUserWithEmailAndPassword, updatePassword, signOut } from "firebase/auth"
 
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
@@ -449,14 +449,36 @@ async function addProfile(profileData){
   }
 }
 
+// export async function addProfileAndUploadImage(profileData,imageFile){
+//   const uploadImageResponse = await uploadImage(imageFile,profileData.image)
+
+//   if(uploadImageResponse){
+//     const imageUrl = await getImageByPath(profileData.image)
+//     profileData.image_url = imageUrl
+//     const addProfileRespose = await addProfile(profileData);
+//     const createdNewAuth =  await createUserWithEmailAndPassword(auth,profileData.email,"m77barber")
+//     if(addProfileRespose !== null && createdNewAuth !== null){
+//       return(true)
+//     }
+//     else{
+//       return(false)
+//     }
+//   }
+// }
+
+
 export async function addProfileAndUploadImage(profileData,imageFile){
+  const app2 = initializeApp(firebaseConfig,"Secondary");
+  const auth2 = getAuth(app2)
+
   const uploadImageResponse = await uploadImage(imageFile,profileData.image)
 
   if(uploadImageResponse){
     const imageUrl = await getImageByPath(profileData.image)
     profileData.image_url = imageUrl
     const addProfileRespose = await addProfile(profileData);
-    const createdNewAuth =  await createUserWithEmailAndPassword(auth,profileData.email,"m77barber")
+    const createdNewAuth =  await createUserWithEmailAndPassword(auth2,profileData.email,"m77barber")
+    signOut(auth2)
     if(addProfileRespose !== null && createdNewAuth !== null){
       return(true)
     }

@@ -80,8 +80,8 @@ TODOs :
 
     * SAME FOR INVENTORY TICKETS
 
-    * Fix user change when admin creates a new user(check : https://stackoverflow.com/questions/37517208/firebase-kicks-out-current-user/38013551#38013551 )
-    * Add a list of existing users to admin page (and let admin to make a profile visible)
+    * Fix visuals for Utilisateurs in /admin/management/ (especially for the .visible attribute)
+    * Add possibility for the admin to change the .visible attribute
 
     * Create and complete sitemap.xml
     * Add image to AboutUs page
