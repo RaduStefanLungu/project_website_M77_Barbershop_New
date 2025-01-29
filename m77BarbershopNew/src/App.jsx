@@ -1,5 +1,4 @@
 import {Route, BrowserRouter, Routes} from 'react-router-dom'
-import Dev from './pages/Dev'
 
 import './index.css'
 import Inventory from './components/Inventory/Inventory'
@@ -56,7 +55,6 @@ function App() {
               <Route path='/admin/rapport' exact element={<PrivateRoute><Rapport/></PrivateRoute>} />
 
               {/* V REMOVE THIS AFTER V */}
-              <Route path='/dev' exact element={<Dev/>} />
               <Route path='/dev/fill-db' exact element={<FillDb/>}/>
             </Route>            
 
