@@ -80,9 +80,6 @@ TODOs :
 
     * SAME FOR INVENTORY TICKETS
 
-    * Fix visuals for Utilisateurs in /admin/management/ (especially for the .visible attribute)
-    * Add possibility for the admin to change the .visible attribute
-
     * Create and complete sitemap.xml
     * Add image to AboutUs page
 

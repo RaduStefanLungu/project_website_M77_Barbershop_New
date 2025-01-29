@@ -2,7 +2,7 @@ import { useState } from "react"
 import { v4 } from "uuid"
 import { addProfileAndUploadImage } from "../api/firebase"
 
-export default function AddBarberForm() {
+const AddBarberForm = ({fetcher}) => {
     const [message,setMessage] = useState(null)
 
     const [firstName,setFirstName] = useState('')
@@ -55,6 +55,7 @@ export default function AddBarberForm() {
                 (response) =>{
                     if(response){
                         setMessage({message: "Nouveau barbier introduit avec success !",isError: false});
+                        fetcher();
                         // TODO: refresh form here 
                         setFirstName('')
                         setLastName('')
@@ -115,3 +116,5 @@ export default function AddBarberForm() {
         </form>
     )
 }
+
+export default AddBarberForm;
