@@ -21,6 +21,7 @@ export default function Profile() {
   }
 
   useEffect(()=>{
+    scrollToTop()
     fetchData();
   },[])
 
@@ -241,3 +242,10 @@ const ChangePasswordView = ({currentUser,backButton}) => {
     </div>
   )
 }
+
+const scrollToTop = () => {
+  window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: "smooth" for animated scroll or "auto" for instant scroll
+  });
+};

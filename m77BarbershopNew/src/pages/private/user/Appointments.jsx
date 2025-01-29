@@ -34,6 +34,7 @@ export default function Appointments() {
     }
     
     useEffect(()=>{
+        scrollToTop();
         fetchProfile();
     },[])
 
@@ -598,3 +599,10 @@ const LockDays = ({profile}) => {
 
   
 }
+
+const scrollToTop = () => {
+  window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Optional: "smooth" for animated scroll or "auto" for instant scroll
+  });
+};

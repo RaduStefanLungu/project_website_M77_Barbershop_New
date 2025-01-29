@@ -21,10 +21,10 @@ export default function UserDashboard() {
 
     useEffect(
         ()=>{
+            scrollToTop()
             fetchProfile();
         },[]
     )
-    
   return (
     <div className='container min-h-screen mx-auto py-20'>
         
@@ -60,3 +60,10 @@ export default function UserDashboard() {
     </div>
   )
 }
+
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Optional: "smooth" for animated scroll or "auto" for instant scroll
+    });
+};

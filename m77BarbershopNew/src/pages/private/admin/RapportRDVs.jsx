@@ -6,6 +6,9 @@ import { getAppointments, getDataForChart, getProfileByEmail, getProfiles } from
 export default function RapportRDVs() {
 
   const [allProfiles,setAllProfiles] = useState([])
+
+  const [chosenMonth,setChosenMonth] = useState("01")
+  const [chosenYear,setChosenYear] = useState(2025)
   
   async function fetchProfiles() {
     try {
@@ -16,6 +19,12 @@ export default function RapportRDVs() {
       console.error("Error fetching profiles:", e);
       return []; // Return an empty array in case of an error
     }
+  }
+
+  function handleOnSelectYear(year){
+    setChosenYear(year)
+    console.log(`Changed Year to : ${year}`);
+    
   }
 
   useEffect(()=>{
@@ -32,9 +41,33 @@ export default function RapportRDVs() {
   else{
     return (
       <div className='grid'>
+
+        <div className='grid gap-5'>
+          <div className='grid'>
+            <YearSelector minYear={2024} onSelectYear={handleOnSelectYear} title={"Choisisez l'année"} />  
+          </div>
+
+          <div className='grid grid-cols-6 gap-3'>
+            <MonthButton text={"Janv"} value={"01"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Fèvr"} value={"02"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Mars"} value={"03"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Avrl"} value={"04"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Mai"} value={"05"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Juin"} value={"06"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Juil"} value={"07"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Aôut"} value={"08"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Sept"} value={"09"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Oct"} value={"10"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Nov"} value={"11"} setters={[chosenMonth,setChosenMonth]} />
+            <MonthButton text={"Dec"} value={"12"} setters={[chosenMonth,setChosenMonth]} />
+          </div>
+
+          {/* <button onClick={()=>{fetchAllProfilesDataForChart(db_profiles)}} className='button-1'>Voir</button> */}
+
+        </div>
         
         <div className='grid'>
-            <QuantityChartsByMonth db_profiles={allProfiles} ></QuantityChartsByMonth>
+            <QuantityChartsByMonth db_profiles={allProfiles} year={chosenYear} month={chosenMonth} ></QuantityChartsByMonth>
         </div>
 
         <div>
@@ -93,22 +126,13 @@ function YearSelector({ minYear = 2024, onSelectYear,title = 'Select A Year'}) {
   );
 }
 
-function QuantityChartsByMonth({db_profiles}){
-  const [allProfiles,setAllProfiles] = useState([])
+function QuantityChartsByMonth({db_profiles,year,month}){
   const [allDataForCharts,setAllDataForCharts] = useState([])
-  
-  const [chosenMonth,setChosenMonth] = useState("01")
-  const [chosenYear,setChosenYear] = useState(2025)
-
-  function handleOnSelectYear(year){
-    setChosenYear(year)
-  }
 
   async function fetchAllProfilesDataForChart(profiles) {
     if (!profiles || profiles.length === 0) return; // Skip if no profiles
   
-    const DATE = `${chosenYear}-${chosenMonth}-01`;
-  
+    const DATE = `${year}-${month}-01`;
     try {
       const chartDataPromises = profiles.map((profile) =>
         getDataForChart(profile, DATE)
@@ -126,37 +150,12 @@ function QuantityChartsByMonth({db_profiles}){
     if(db_profiles.length > 0){
       fetchAllProfilesDataForChart(db_profiles)
     }
-  },[])
+  },[year,month])
 
   return(
     <div>
       <div className='grid'>
         <h2 className='text-design-h2'>Rapport quantitatif par mois</h2>
-
-        <div className='grid gap-5'>
-          <div className='grid'>
-            <YearSelector minYear={2024} onSelectYear={handleOnSelectYear} title={"Choisisez l'année"} />  
-          </div>
-
-          <div className='grid grid-cols-6 gap-3'>
-            <MonthButton text={"Janv"} value={"01"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Fèvr"} value={"02"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Mars"} value={"03"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Avrl"} value={"04"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Mai"} value={"05"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Juin"} value={"06"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Juil"} value={"07"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Aôut"} value={"08"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Sept"} value={"09"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Oct"} value={"10"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Nov"} value={"11"} setters={[chosenMonth,setChosenMonth]} />
-            <MonthButton text={"Dec"} value={"12"} setters={[chosenMonth,setChosenMonth]} />
-          </div>
-
-          <button onClick={()=>{fetchAllProfilesDataForChart(db_profiles)}} className='button-1'>Voir</button>
-
-        </div>
-
         <div className='py-10 grid gap-5'>
           {
             allDataForCharts.map((tuple,key) => {

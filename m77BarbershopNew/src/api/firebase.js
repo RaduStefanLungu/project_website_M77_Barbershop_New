@@ -358,9 +358,11 @@ export async function getScheduleFooter() {
 export async function getDataForChart(profile,chosenDate){
   // date format yyyy-mm-dd
   // const profile = await getProfileByEmail(profileEmail);
+  console.log(`getDataForChart: ${profile}, ${chosenDate}`);
+  
   const month = chosenDate.split("-")[1]
 
-  const days_of_chosen_month = getAllDaysOfMonth(month)
+  const days_of_chosen_month = getAllDaysOfMonth(month,chosenDate.split("-")[0])
   
   let all_appointments = [["Date","nbr rdvs"]];
 
@@ -375,10 +377,29 @@ export async function getDataForChart(profile,chosenDate){
   return([profile.profile_id,all_appointments]);
 }
 
+export async function getMonthAppointments(profile,chosenDate){
+  const month = chosenDate.split("-")[1]
+  const days_of_chosen_month = getAllDaysOfMonth(month,chosenDate.split("-")[0])
 
-function getAllDaysOfMonth(month) {
+  let appointments = []
+
+  for(let i = 0; i < days_of_chosen_month.length;i++){
+    const dayDate = days_of_chosen_month[i]
+    await getAppointments(dayDate,profile).then(
+      (response) => {
+        appointments.push([dayDate,response])
+      }
+    )
+  }
+
+  return([chosenDate,appointments])
+
+}
+
+
+function getAllDaysOfMonth(month,year) {
   const response = []; // List to store the dates
-  const year = new Date().getFullYear(); // Get the current year
+  // const year = new Date().getFullYear(); // Get the current year
 
   // Get the total number of days in the given month
   const daysInMonth = new Date(year, month, 0).getDate(); // month is 1-indexed here

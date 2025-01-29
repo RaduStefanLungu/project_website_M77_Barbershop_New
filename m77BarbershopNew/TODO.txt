@@ -73,12 +73,17 @@ Project : Inventory System
         * change new_schedule to actual_schedule on completion ++ empty new_schedule    - TODO
 
 
-TODOs : 
+TODOs :
+
     * Create for each profile a pie-chart to compare the chosen month's ratio of appointments : unconfirmed,confirmed,absent,cancelled
     * Get $ made for the chosen month by profile, then total (+ % of total amount made by each profile)
     * Pie-chart to compare the chosen month's ratio of appointment's type (what type of appointment)
 
     * SAME FOR INVENTORY TICKETS
+
+    * Supprimer Boquers des jours -> rajout historique / profile choisi + jours a venir (pour pouvoir debloquer aussi !)
+        ** /user/rdvs
+    * Supprimer le dernier rdv generé (si ouvert jusqu'a 21h, dernier rdv à 20:30)
 
     * Create and complete sitemap.xml
     * Add image to AboutUs page
