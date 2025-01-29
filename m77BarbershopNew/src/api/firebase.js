@@ -358,8 +358,6 @@ export async function getScheduleFooter() {
 export async function getDataForChart(profile,chosenDate){
   // date format yyyy-mm-dd
   // const profile = await getProfileByEmail(profileEmail);
-  console.log(`getDataForChart: ${profile}, ${chosenDate}`);
-  
   const month = chosenDate.split("-")[1]
 
   const days_of_chosen_month = getAllDaysOfMonth(month,chosenDate.split("-")[0])
@@ -387,12 +385,12 @@ export async function getMonthAppointments(profile,chosenDate){
     const dayDate = days_of_chosen_month[i]
     await getAppointments(dayDate,profile).then(
       (response) => {
-        appointments.push([dayDate,response])
+        appointments.push(response)
       }
     )
   }
 
-  return([chosenDate,appointments])
+  return([profile.profile_id,appointments])
 
 }
 

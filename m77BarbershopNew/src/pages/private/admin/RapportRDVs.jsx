@@ -1,25 +1,60 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import AppointmentsByDayChart from '../../../components/StatisticsRapport/Appointments/AppointmentsByDayChart'
-import { getAppointments, getDataForChart, getProfileByEmail, getProfiles } from '../../../api/firebase'
+import { getAppointments, getDataForChart, getMonthAppointments, getProfileByEmail, getProfiles } from '../../../api/firebase'
+import PieChart from '../../../components/StatisticsRapport/Appointments/PieChart'
 
 
 export default function RapportRDVs() {
+  const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
+    timeZone: 'Europe/Brussels', 
+    year: 'numeric', 
+    month: '2-digit', 
+    day: '2-digit'
+  }).split('/').reverse().join('-'))
 
   const [allProfiles,setAllProfiles] = useState([])
+  const [monthAppointments,setMonthAppointments] = useState([])
 
-  const [chosenMonth,setChosenMonth] = useState("01")
-  const [chosenYear,setChosenYear] = useState(2025)
-  
-  async function fetchProfiles() {
+  const [chosenMonth,setChosenMonth] = useState(today.split('-')[1])
+  const [chosenYear,setChosenYear] = useState(today.split('-')[0])
+
+
+  // Fetch profiles
+  const fetchProfiles = useCallback(async () => {
     try {
       const profiles = await getProfiles();
       setAllProfiles(profiles);
-      return profiles; // Return profiles for chaining
     } catch (e) {
       console.error("Error fetching profiles:", e);
-      return []; // Return an empty array in case of an error
     }
-  }
+  }, []);
+
+  // Fetch appointments when profiles are available
+  const fetchMonthAppointments = useCallback(async () => {
+    if (allProfiles.length === 0) return; // Avoid fetching if no profiles
+
+    try {
+      const date = `${chosenYear}-${chosenMonth}-01`;
+      const appointmentsPromises = allProfiles.map((profile) =>
+        getMonthAppointments(profile, date)
+      );
+
+      const appointmentsResults = await Promise.all(appointmentsPromises);
+      setMonthAppointments(appointmentsResults);
+    } catch (e) {
+      console.error(`Error fetching ${today} appointments`, e);
+    }
+  }, [allProfiles, chosenYear, chosenMonth, today]);
+
+  // Fetch profiles when component mounts
+  useEffect(() => {
+    fetchProfiles();
+  }, [fetchProfiles]);
+
+  // Fetch appointments when profiles are updated
+  useEffect(() => {
+    fetchMonthAppointments();
+  }, [fetchMonthAppointments]);
 
   function handleOnSelectYear(year){
     setChosenYear(year)
@@ -27,10 +62,7 @@ export default function RapportRDVs() {
     
   }
 
-  useEffect(()=>{
-    fetchProfiles();
-    
-  },[])
+
 
   if(allProfiles.length <= 0){
     return(
@@ -64,6 +96,20 @@ export default function RapportRDVs() {
 
           {/* <button onClick={()=>{fetchAllProfilesDataForChart(db_profiles)}} className='button-1'>Voir</button> */}
 
+        </div>
+
+        <div className='grid'>
+        {
+            monthAppointments.map((tuple,key) => {
+              const flatted_list = tuple[1]?.flat() || [];
+              return(
+                <div key={key} className='grid'>
+                  <label className='text-xl font-bold'>{tuple[0]}</label>
+                  <PieChart appointments={flatted_list} />
+                </div>
+              )
+            })
+          }
         </div>
         
         <div className='grid'>
