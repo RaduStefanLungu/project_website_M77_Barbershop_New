@@ -68,5 +68,37 @@
                 }
             ]
         }
+    ],
+    "all_services_flat" : [
+        {
+            "name" : "Coupe Classique",
+            "price" : 22,
+            "description" : "Ciseaux"
+        },
+        {
+            "name" : "Coupe Moderne",
+            "price" : 25,
+            "description" : "Fade,Taper,..."
+        },
+        {
+            "name" : "Coupe Etudiant",
+            "price" : 22,
+            "description" : "-18 ans"
+        },
+        {
+            "name" : "Coupe Enfant",
+            "price" : 20,
+            "description" : "-12 ans"
+        },
+        {
+            "name" : "Taille de barbe",
+            "price" : 20,
+            "description" : "Avec serviette chaude"
+        },
+        {
+            "name" : "Cheveux + Barbe",
+            "price" : 35,
+            "description" : ""
+        }
     ] 
 }

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import AppointmentsByDayChart from '../../../components/StatisticsRapport/Appointments/AppointmentsByDayChart'
 import { getAppointments, getDataForChart, getMonthAppointments, getProfileByEmail, getProfiles } from '../../../api/firebase'
 import PieChart from '../../../components/StatisticsRapport/Appointments/PieChart'
+import RevenueChart from '../../../components/StatisticsRapport/Appointments/RevenueChart'
 
 
 export default function RapportRDVs() {
@@ -98,22 +99,20 @@ export default function RapportRDVs() {
 
         </div>
 
-        <div className='grid'>
-        {
-            monthAppointments.map((tuple,key) => {
-              const flatted_list = tuple[1]?.flat() || [];
-              return(
-                <div key={key} className='grid'>
-                  <label className='text-xl font-bold'>{tuple[0]}</label>
-                  <PieChart appointments={flatted_list} />
-                </div>
-              )
-            })
-          }
+        <div className='grid pt-5'>
+          <PieChartsComparison monthlyAppointments={monthAppointments} title={'Comparatif états des rendez-vous'} groupBy={'confirmed'} />
         </div>
         
         <div className='grid'>
             <QuantityChartsByMonth db_profiles={allProfiles} year={chosenYear} month={chosenMonth} ></QuantityChartsByMonth>
+        </div>
+
+        <div className='grid pt-5'>
+          <PieChartsComparison monthlyAppointments={monthAppointments} title={'Comparatif états des rendez-vous'} groupBy={'appointment_service'} />
+        </div>
+
+        <div>
+          <RevenueChartsComparison monthlyAppointments={monthAppointments} title={'Comparatif revenus mensuels'}/>
         </div>
 
         <div>
@@ -209,6 +208,52 @@ function QuantityChartsByMonth({db_profiles,year,month}){
                 <div key={key} className='grid'>
                   <label className='text-xl font-bold'>{tuple[0]}</label>
                   <AppointmentsByDayChart data={tuple[1]} />
+                </div>
+              )
+            })
+          }
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PieChartsComparison({monthlyAppointments,title,groupBy}){
+  return(
+    <div>
+      <div className='grid'>
+        <h2 className='text-design-h2'>{title}</h2>
+        <div className='py-10 grid md:grid-cols-2 gap-5'>
+          {
+            monthlyAppointments.map((tuple,key) => {
+              const flatted_list = tuple[1]?.flat() || [];
+              return(
+                <div key={key} className='grid'>
+                  <label className='text-xl font-bold'>{tuple[0]}</label>
+                  <PieChart appointments={flatted_list} groupBy={groupBy} />
+                </div>
+              )
+            })
+          }
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function RevenueChartsComparison({monthlyAppointments,title}){
+  return(
+    <div>
+      <div className='grid'>
+        <h2 className='text-design-h2'>{title}</h2>
+        <div className='py-10 grid md:grid-cols-2 gap-5'>
+          {
+            monthlyAppointments.map((tuple,key) => {
+              const flatted_list = tuple[1]?.flat() || [];
+              return(
+                <div key={key} className='grid'>
+                  <label className='text-xl font-bold'>{tuple[0]}</label>
+                  <RevenueChart appointments={flatted_list} />
                 </div>
               )
             })
