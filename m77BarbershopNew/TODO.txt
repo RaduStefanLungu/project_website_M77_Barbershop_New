@@ -75,11 +75,6 @@ Project : Inventory System
 
 TODOs :
 
-    
-
-    * SAME FOR INVENTORY TICKETS   
-        ** do pie chart of chosen month's rapport of total balance by user
-
     * Supprimer Boquers des jours -> rajout historique / profile choisi + jours a venir (pour pouvoir debloquer aussi !)
         ** /user/rdvs
     * Supprimer le dernier rdv generé (si ouvert jusqu'a 21h, dernier rdv à 20:30)

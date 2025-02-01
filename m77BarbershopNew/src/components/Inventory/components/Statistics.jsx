@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getItems, getTickets } from "../inventoryAPI"
+import { getTickets } from "../inventoryAPI"
 import TicketsChart from "./charts/TicketsCharts";
 import DailySalesAndBenefitsChart from "./charts/DailyBenefitsChart";
 import MonthlySalesAndBenefitsChart from "./charts/MonthlySalesAndBenefitsChart";
