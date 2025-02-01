@@ -77,7 +77,8 @@ TODOs :
 
     
 
-    * SAME FOR INVENTORY TICKETS
+    * SAME FOR INVENTORY TICKETS   
+        ** do pie chart of chosen month's rapport of total balance by user
 
     * Supprimer Boquers des jours -> rajout historique / profile choisi + jours a venir (pour pouvoir debloquer aussi !)
         ** /user/rdvs

@@ -15,7 +15,7 @@ import Statistics from './components/Statistics';
 export default function Inventory() {
     const {currentUser} = useAuth();
 
-    const [selection,setSelection] = useState('checkout')
+    const [selection,setSelection] = useState('statistics')
 
     const dico = {
         "stock" : <Stock connectedUser={currentUser.email}/>,

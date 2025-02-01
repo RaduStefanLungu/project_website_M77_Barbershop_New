@@ -2,6 +2,8 @@ import React from 'react'
 import { v4 } from 'uuid';
 import { addAppointment2, getProfileByEmail, getSchedule } from '../api/firebase';
 import APPOINTMENT_STATES from '../data/appointmentStates.json'
+import { getItems, uploadTicket } from '../components/Inventory/inventoryAPI';
+
 export default function FillDb() {
 
     function generateRandomUser(){
@@ -159,10 +161,80 @@ export default function FillDb() {
   return (
     <div className='bg-[var(--brand-black)] min-h-screen flex flex-col'>
         
-        <div id='holder' className='max-w-[750px] bg-[var(--brand-white)] grid mx-auto p-10'>
+        <div id='holder' className='max-w-[750px] bg-[var(--brand-white)] grid mx-auto p-10 gap-5'>
             <button type='button' onClick={handleFillAppointmentsMG} className='button-1 '>Fill Appointments of MaitreGims</button>
+            <button type='button' onClick={()=>{generateAndUploadTickets('admin@test.com',20,'01','2025')}} className='button-1 '>Fill Tickets of Admin</button>
         </div>
 
     </div>
   )
+}
+
+async function generateAndUploadTickets(userEmail, ticketCount, month, year) {
+  try {
+    // Fetch available items
+    const items = await getItems();
+
+    if (!items || items.length === 0) {
+      console.error("❌ No items available in the database.");
+      return;
+    }
+
+    for (let i = 0; i < ticketCount; i++) {
+      const ticketItems = [];
+      let totalAmount = 0;
+
+      // Generate 1 to 5 random items per ticket
+      const numItems = Math.floor(Math.random() * 5) + 1;
+
+      for (let j = 0; j < numItems; j++) {
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        const quantity = Math.floor(Math.random() * 3) + 1; // Random quantity between 1-3
+
+        ticketItems.push({
+          item: {
+            item_id: randomItem.data.item_id,
+            item_buy_price: randomItem.data.item_buy_price,
+            item_sell_price: randomItem.data.item_sell_price,
+            item_name: randomItem.data.item_name,
+          },
+          quantity: quantity,
+        });
+
+        // Calculate total price
+        totalAmount += parseFloat(randomItem.data.item_sell_price) * quantity;
+      }
+
+      // Generate a random day in the given month & year
+      const lastDayOfMonth = new Date(year, month, 0).getDate();
+      const randomDay = Math.floor(Math.random() * lastDayOfMonth) + 1;
+
+      // Format day & month correctly (ensure 2-digit format)
+      const formattedDay = String(randomDay).padStart(2, "0");
+      const formattedMonth = String(month).padStart(2, "0");
+
+      // Generate random timestamp (random hour, min, sec)
+      const randomHour = String(Math.floor(Math.random() * 24)).padStart(2, "0");
+      const randomMinute = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+      const randomSecond = String(Math.floor(Math.random() * 60)).padStart(2, "0");
+
+      const timestamp = `${formattedDay}/${formattedMonth}/${year} ${randomHour}:${randomMinute}:${randomSecond}`;
+
+      // Ticket structure
+      const ticketData = {
+        total_amount: totalAmount.toFixed(2),
+        meta: {
+          timestamp: timestamp,
+          created_by: userEmail,
+        },
+        items: ticketItems,
+      };
+
+      // Upload ticket
+      await uploadTicket(ticketData);
+      console.log(`✅ Ticket ${i + 1} uploaded successfully for ${timestamp}`);
+    }
+  } catch (error) {
+    console.error("❌ Error generating tickets:", error);
+  }
 }
