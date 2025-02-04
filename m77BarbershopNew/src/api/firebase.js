@@ -809,7 +809,7 @@ async function unlockDay(documentID) {
           await updateDoc(appointmentsRef, {
               locked: false
           });
-          console.log(`Day ${documentID} locked successfully.`);
+          console.log(`Day ${documentID} unlocked successfully.`);
       }
 
       // if document empty, remove it 

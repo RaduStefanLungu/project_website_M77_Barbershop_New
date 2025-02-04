@@ -16,7 +16,7 @@ import { getProfileByEmail } from '../../api/firebase';
 export default function Inventory() {
     const {currentUser} = useAuth();
 
-    const [selection,setSelection] = useState('stock')
+    const [selection,setSelection] = useState('checkout')
     const [profileData,setProfileData] = useState({})
 
     const dico = {

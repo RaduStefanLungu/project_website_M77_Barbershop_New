@@ -108,15 +108,11 @@ export default function RapportRDVs() {
         </div>
 
         <div className='grid pt-5'>
-          <PieChartsComparison monthlyAppointments={monthAppointments} title={'Comparatif états des rendez-vous'} groupBy={'appointment_service'} />
+          <PieChartsComparison monthlyAppointments={monthAppointments} title={'Comparatif types des rendez-vous'} groupBy={'appointment_service'} />
         </div>
 
         <div>
           <RevenueChartsComparison monthlyAppointments={monthAppointments} title={'Comparatif revenus mensuels'}/>
-        </div>
-
-        <div>
-          WORKING IN PROGRESS
         </div>
       </div>
     )

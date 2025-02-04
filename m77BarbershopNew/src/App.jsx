@@ -6,7 +6,6 @@ import Home from './pages/Home'
 import RendezVous from './pages/RendezVous'
 import About from './pages/About'
 import Gallery from './pages/Gallery'
-import Header from './components/Header'
 import Admin from './pages/private/admin/Admin.jsx'
 import MainLayout from './layouts/MainLayout'
 import { AuthProvider } from './context/AuthContext.jsx'
@@ -15,8 +14,6 @@ import Login from './pages/Login.jsx'
 import UserDashboard from './pages/private/user/UserDashboard.jsx'
 import Profile from './pages/private/user/Profile.jsx'
 import Appointments from './pages/private/user/Appointments.jsx'
-import Statistics from './components/Inventory/components/Statistics.jsx'
-import Rapport from './pages/private/admin/Rapport.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 import RapportRDVs from './pages/private/admin/RapportRDVs.jsx'
 import FillDb from './misc-to-be-removed/FillDb.jsx'
@@ -52,7 +49,6 @@ function App() {
               
               <Route path='/admin/management' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
               <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
-              <Route path='/admin/rapport' exact element={<PrivateRoute><Rapport/></PrivateRoute>} />
 
               {/* V REMOVE THIS AFTER V */}
               <Route path='/dev/fill-db' exact element={<FillDb/>}/>

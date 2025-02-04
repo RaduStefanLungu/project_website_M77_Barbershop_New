@@ -77,6 +77,7 @@ TODOs :
 
     * Supprimer Boquers des jours -> rajout historique / profile choisi + jours a venir (pour pouvoir debloquer aussi !)
         ** /user/rdvs
+        REFAIRE TOUTE LA PAGE !!!!!
     * Supprimer le dernier rdv generé (si ouvert jusqu'a 21h, dernier rdv à 20:30)
 
     * Create and complete sitemap.xml
@@ -85,6 +86,9 @@ TODOs :
     * Link EmailJS to the ContactForm + Appointment Confirmation + Rappel Email from Dashboard
 
     * -LAST-  IMPORT FULL DB from actual website and use it in the new website.
+
+    * AFTER :   
+        add to the appointment (full) partial data of the chosen barber (to avoid problems when pulling data from the db of a removed barber profile)
 
 NOTES : 
     1. Lors de la creation d'un nouveau barber par l'admin, le mot de pass par defaut sera 'm77barber'.

@@ -42,11 +42,6 @@ export default function UserDashboard() {
             <Link to={'/admin/inventory'} className='button-1'>
                 Inventaire
             </Link>
-            {
-                profileData !== null && profileData.admin? <Link to={'/admin/rapport'} className='button-1'>
-                Rapport
-            </Link> : <></>
-            }
 
             {
                 profileData !== null && profileData.admin? <Link to={'/admin/management'} className='button-1'>Admin</Link> : <></>
