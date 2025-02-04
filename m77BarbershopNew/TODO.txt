@@ -75,14 +75,10 @@ Project : Inventory System
 
 TODOs :
 
-    * Supprimer le dernier rdv generé (si ouvert jusqu'a 21h, dernier rdv à 20:30)
-
     * Create and complete sitemap.xml
     * Add image to AboutUs page
 
     * Link EmailJS to the ContactForm + Appointment Confirmation + Rappel Email from Dashboard
-
-    * -LAST-  IMPORT FULL DB from actual website and use it in the new website.
 
     * AFTER :   
         add to the appointment (full) partial data of the chosen barber (to avoid problems when pulling data from the db of a removed barber profile)

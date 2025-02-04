@@ -3,6 +3,7 @@ import { v4 } from 'uuid';
 import { addAppointment2, getAllAppointments, getAppointments, getProfileByEmail, getSchedule } from '../api/firebase';
 import APPOINTMENT_STATES from '../data/appointmentStates.json'
 import { getItems, uploadTicket } from '../components/Inventory/inventoryAPI';
+import { migrateData } from './migration';
 
 export default function FillDb() {
 
@@ -165,8 +166,8 @@ export default function FillDb() {
             <button type='button' onClick={handleFillAppointmentsMG} className='button-1 '>Fill Appointments of ADMIN</button>
             <button type='button' onClick={()=>{generateAndUploadTickets('admin@test.com',20,'01','2025')}} className='button-1 '>Fill Tickets of Admin</button>
             <button type='button' onClick={()=>{getProfilesWithRdvs()}} className='button-1 '>Print Profiles With Appointments</button>
+            {/* <button type='button' onClick={()=>{migrateData()}} className='button-1' >Migrate Data</button> */}
         </div>
-
     </div>
   )
 }

@@ -58,7 +58,7 @@ export default function Home() {
 
 const HERO = () => {
   return(
-    <div className='grid relative h-[500px] md:h-[700px] hero-image'>
+    <div className='grid relative h-[500px] md:h-[700px] bg-[var(--brand-black)]'>
 
 
 
@@ -74,7 +74,7 @@ const HERO = () => {
           </h1>
 
           <div className='grid py-2 lg:py-5 justify-center items-center'>
-            <Link to={'/rendez-vous'} className='button-1'>Réserver Maintenant</Link>
+            <Link to={'/rendez-vous'} className='button-2'>Réserver Maintenant</Link>
           </div>
         </div>
       
@@ -88,9 +88,9 @@ const TextBelt = () => {
   return(
     <div className='grid justify-center font-custom_1 text-center pt-5 pb-10'>
 
-      <h4 className='text-design-h4'>Expérience prémium</h4>
+      <h4 className='text-design-h4'>Expérience premium</h4>
 
-      <h2 className='text-design-h2'>Dévoument au style</h2>
+      <h2 className='text-design-h2'>Dévouement au style</h2>
 
       <p className='text-design-p'>
       Nous croyons que chaque coupe est une œuvre d’art et chaque client mérite une attention personnalisée.
@@ -155,7 +155,7 @@ const GallerySection = ({imageList}) => {
     <div className='grid px-10 pb-20 bg-[var(--brand-black)] text-[var(--brand-white)]'>
 
       <h3 className='section-title'>
-        Gallérie
+        Galerie
       </h3>
 {/* 
       <div className='grid grid-cols-2 gap-5'>
@@ -223,7 +223,7 @@ const ContactSection = () => {
     <div className='font-custom_1 grid pb-20 px-10'>
 
       <h3 className='section-title'>
-        Contactez Nous
+        Contactez-nous
       </h3>
 
       <p className='pb-5 text-size-normal xl:w-[1000px]'>
