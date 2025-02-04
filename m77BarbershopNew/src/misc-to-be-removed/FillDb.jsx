@@ -1,6 +1,6 @@
 import React from 'react'
 import { v4 } from 'uuid';
-import { addAppointment2, getProfileByEmail, getSchedule } from '../api/firebase';
+import { addAppointment2, getAllAppointments, getAppointments, getProfileByEmail, getSchedule } from '../api/firebase';
 import APPOINTMENT_STATES from '../data/appointmentStates.json'
 import { getItems, uploadTicket } from '../components/Inventory/inventoryAPI';
 
@@ -126,7 +126,7 @@ export default function FillDb() {
 
         const WANTED_MONTH = 6 // change this to change the wanted month;
 
-        const barberProfile = await getProfileByEmail("maitregims@test.com")
+        const barberProfile = await getProfileByEmail("admin@test.com")
         const january_data_mg = await getAvailableHoursPerMonthFor(WANTED_MONTH,barberProfile)
         
         const generated_appointments = randomGenerateAppointments(barberProfile,january_data_mg);
@@ -162,8 +162,9 @@ export default function FillDb() {
     <div className='bg-[var(--brand-black)] min-h-screen flex flex-col'>
         
         <div id='holder' className='max-w-[750px] bg-[var(--brand-white)] grid mx-auto p-10 gap-5'>
-            <button type='button' onClick={handleFillAppointmentsMG} className='button-1 '>Fill Appointments of MaitreGims</button>
+            <button type='button' onClick={handleFillAppointmentsMG} className='button-1 '>Fill Appointments of ADMIN</button>
             <button type='button' onClick={()=>{generateAndUploadTickets('admin@test.com',20,'01','2025')}} className='button-1 '>Fill Tickets of Admin</button>
+            <button type='button' onClick={()=>{getProfilesWithRdvs()}} className='button-1 '>Print Profiles With Appointments</button>
         </div>
 
     </div>
@@ -237,4 +238,21 @@ async function generateAndUploadTickets(userEmail, ticketCount, month, year) {
   } catch (error) {
     console.error("❌ Error generating tickets:", error);
   }
+}
+
+async function getProfilesWithRdvs(){
+  const all_appointments = await getAllAppointments();
+
+  const profiles_with_appointments = []
+
+  all_appointments.forEach(list_of_the_day => {
+    list_of_the_day.forEach((appointment => {
+      if(!profiles_with_appointments.includes(appointment.barber_id)){
+        profiles_with_appointments.push(appointment.barber_id)
+      }
+    }))
+  })
+
+  console.log(profiles_with_appointments);
+  
 }

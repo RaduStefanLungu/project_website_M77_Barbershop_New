@@ -75,9 +75,6 @@ Project : Inventory System
 
 TODOs :
 
-    * Supprimer Boquers des jours -> rajout historique / profile choisi + jours a venir (pour pouvoir debloquer aussi !)
-        ** /user/rdvs
-        REFAIRE TOUTE LA PAGE !!!!!
     * Supprimer le dernier rdv generé (si ouvert jusqu'a 21h, dernier rdv à 20:30)
 
     * Create and complete sitemap.xml

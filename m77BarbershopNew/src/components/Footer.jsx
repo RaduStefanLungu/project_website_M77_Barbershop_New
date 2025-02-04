@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { getScheduleFooter, removeUser } from '../api/firebase'
+import { getScheduleFooter } from '../api/firebase'
 
 import { FaInstagram,FaFacebook } from "react-icons/fa6";
-import { Link } from 'react-router-dom';
-
-import LOGO from '../assets/logo/logo.jpg'
 
 export default function Footer() {
 

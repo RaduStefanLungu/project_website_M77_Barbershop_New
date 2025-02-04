@@ -3,7 +3,7 @@ import { getAuth,createUserWithEmailAndPassword, updatePassword, signOut } from 
 
 import { addDoc, collection, getFirestore, doc, getDoc, getDocs, updateDoc, deleteDoc, Timestamp, setDoc, arrayUnion, onSnapshot } from "firebase/firestore"; 
 
-import { ref,list,listAll, getDownloadURL, getStorage, uploadBytes, deleteObject } from 'firebase/storage'
+import { ref, getDownloadURL, getStorage, uploadBytes, deleteObject } from 'firebase/storage'
 import { v4 as uuidv4, v4 } from 'uuid';
 
 import APPOINTMENT_STATES from '../data/appointmentStates.json'
@@ -428,10 +428,6 @@ export async function registerUser(data){
 
 }
 
-export async function removeUser(){
-  return(false)
-}
-
 /*
   Checks if profile already exists,
     if not : it adds it to db and returns the given profile data,
@@ -693,11 +689,6 @@ async function removeImage(imageID) {
   }
 }
 
-function uploadVideo(){}
-
-function removeVideo(){}
-
-
 export async function getUserDocument(userEmail){
   const myCollection = await collection(firestore_db,"user_data")
   const querySnapshot = await getDocs(myCollection)
@@ -744,7 +735,6 @@ async function removeDocumentByID(docID) {
       console.error('Error removing document: ', error);
   }
 }
-
 
 
 export async function lockDays(days_list){
@@ -875,20 +865,39 @@ export async function addError(data){
 
 function generateTimeIntervals(hour1, hour2, step) {
   const times = [];
-  const [hour1H, hour1M] = hour1.split(':').map(Number);
-  const [hour2H, hour2M] = hour2.split(':').map(Number);
+  const [hour1H, hour1M] = hour1.split(":").map(Number);
+  const [hour2H, hour2M] = hour2.split(":").map(Number);
 
   // Convert start and end time to minutes
   let startTime = hour1H * 60 + hour1M;
-  const endTime = hour2H * 60 + hour2M;
+  const endTime = hour2H * 60 + hour2M - step; // Adjust end time to stop at hour2 - step
 
   while (startTime <= endTime) {
-      const hours = Math.floor(startTime / 60);
-      const minutes = startTime % 60;
-      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-      times.push(formattedTime);
-      startTime += step;
+    const hours = Math.floor(startTime / 60);
+    const minutes = startTime % 60;
+    const formattedTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    times.push(formattedTime);
+    startTime += step;
   }
 
   return times;
+}
+
+
+
+
+
+export async function getAllAppointments(){
+  const myCollection = await collection(firestore_db,"appointments");
+  const querySnapshot = await getDocs(myCollection)
+
+  let response = [] 
+  querySnapshot.forEach((doc) => {
+    if(doc.data()){
+      response.push(doc.data().appointments)
+    }
+  })
+
+  return(response);
+
 }
