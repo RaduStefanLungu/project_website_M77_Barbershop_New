@@ -116,23 +116,14 @@ const MyAppointments = ({ profile,popUpSetter }) => {
       return [];
     }
   
-    // Sort the appointments by appointment_hour
     return listOfAppointments.sort((a, b) => {
-      const timeA = a.appointment_hour;
-      const timeB = b.appointment_hour;
+      const [hourA, minuteA] = a.appointment_hour.split(":").map(Number);
+      const [hourB, minuteB] = b.appointment_hour.split(":").map(Number);
   
-      if (!timeA || !timeB) {
-        console.error("Missing 'appointment_hour' in some appointments.");
-        return 0;
-      }
-  
-      // Convert time strings (e.g., "14:30") to Date objects for accurate comparison
-      const timeADate = new Date(`1970-01-01T${timeA}:00`);
-      const timeBDate = new Date(`1970-01-01T${timeB}:00`);
-  
-      return timeADate - timeBDate;
+      return hourA * 60 + minuteA - (hourB * 60 + minuteB);
     });
   }
+  
   
 
   // Function to fetch appointments
@@ -362,23 +353,14 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
       return [];
     }
   
-    // Sort the appointments by appointment_hour
     return listOfAppointments.sort((a, b) => {
-      const timeA = a.appointment_hour;
-      const timeB = b.appointment_hour;
+      const [hourA, minuteA] = a.appointment_hour.split(":").map(Number);
+      const [hourB, minuteB] = b.appointment_hour.split(":").map(Number);
   
-      if (!timeA || !timeB) {
-        console.error("Missing 'appointment_hour' in some appointments.");
-        return 0;
-      }
-  
-      // Convert time strings (e.g., "14:30") to Date objects for accurate comparison
-      const timeADate = new Date(`1970-01-01T${timeA}:00`);
-      const timeBDate = new Date(`1970-01-01T${timeB}:00`);
-  
-      return timeADate - timeBDate;
+      return hourA * 60 + minuteA - (hourB * 60 + minuteB);
     });
   }
+  
   
 
   // Function to fetch appointments
@@ -386,6 +368,10 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
     try {
       const response = await getAppointments(day, profile);
       setAppointments(orderByTime(response));
+
+      console.log(orderByTime(response));
+      
+
       console.log(`Appointments for ${day}:`, response);
     } catch (error) {
       console.error("Failed to fetch appointments:", error);

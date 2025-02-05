@@ -5,7 +5,7 @@ import { FaInstagram,FaFacebook } from "react-icons/fa6";
 
 export default function Footer() {
 
-  const ADDRESS = "Rue des Hauchies 64, 6010 Couillet"
+  const ADDRESS = "Avenue Eugène Mascaux 657 , 6001 Marcinelle"
 
   return (
     <footer className='bg-[var(--brand-black)] text-[var(--brand-white)] grid pt-20'>
@@ -20,7 +20,7 @@ export default function Footer() {
 
         <div className='grid px-5 mb-auto'>
           <h3 className='font-bold py-1'>Adresse</h3>
-          <a target='_blank' className="text-blue-500 underline px-5" href={'https://www.google.com/maps/dir//Rue+des+Hauchies+64,+6010+Charleroi/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x47c22660e2283655:0x36de5e52a32eb5e4?sa=X&ved=1t:707&ictx=111'}>{ADDRESS}</a>
+          <a target='_blank' className="text-blue-500 underline px-5" href={'https://maps.app.goo.gl/G5rHu41etaLL17XU9'}>{ADDRESS}</a>
         </div>
 
         <Schedule/>
@@ -40,7 +40,7 @@ export default function Footer() {
 
 const SocialMedia = () => {
 
-  const LINK_FB = "/";
+  const LINK_FB = "https://www.facebook.com/profile.php?id=61571996394439&mibextid=wwXIfr&rdid=OyX2Kxn9sZFNocu8&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F15ZRVrHNAH%2F%3Fmibextid%3DwwXIfr";
   const LINK_INSTA = "https://www.instagram.com/m77_barber/?igsh=MTgwMGo4YzE2ODZ6YQ%3D%3D&utm_source=qr&fbclid=IwAR2RvqvmOxylku8yBSVg_5gKjkGnK-PZbiOW929NFX70AQoeSlje9oA9Z10"
 
   return(
@@ -48,9 +48,9 @@ const SocialMedia = () => {
       <label className='text-center text-xl py-3'>Suivez nous :</label>
       <div className='grid grid-flow-col justify-center gap-20 text-5xl'>
 
-        <a href={LINK_INSTA} className=''><FaInstagram/></a>
+        <a href={LINK_INSTA} target='_blank' className=''><FaInstagram/></a>
 
-        <a href={LINK_FB} className=''><FaFacebook/></a>
+        <a href={LINK_FB} target='_blank' className=''><FaFacebook/></a>
 
       </div>
     </div>

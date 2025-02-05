@@ -1,0 +1,21 @@
+{
+  "name": "M77 Barber",
+  "short_name": "M77 Barber",
+  "description": "Découvrez M77 Barber, votre salon de coiffure situé à Charleroi, en Belgique, offrant des services de coiffure pour hommes et garçons. Profitez d'une expérience unique avec une équipe de professionnels passionnés. Prenez rendez-vous dès aujourd'hui pour des coupes de cheveux élégantes et un service attentionné.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#2E2C2D",
+  "icons": [
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

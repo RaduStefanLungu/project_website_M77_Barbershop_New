@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/static/css/main.951ea029.css",
+    "main.js": "/static/js/main.cb444800.js",
+    "static/media/hairdresser-cutting-man-s-hair-barber-shop.jpg": "/static/media/hairdresser-cutting-man-s-hair-barber-shop.d12e087dc94285d96b37.jpg",
+    "static/media/35-gray-filter-vintage-frame-salon-tools-wooden-table-jobs-career-concept-3500x2330.png": "/static/media/35-gray-filter-vintage-frame-salon-tools-wooden-table-jobs-career-concept-3500x2330.e050522351f00ccbc29e.png",
+    "static/media/man-haircut-modified.png": "/static/media/man-haircut-modified.176068639f4f85308f45.png",
+    "static/media/handsome-man-barbershop-shaving-beard.jpg": "/static/media/handsome-man-barbershop-shaving-beard.bb091d386a39514fad58.jpg",
+    "static/media/35-gray-filter-vintage-frame-salon-tools-wooden-table-jobs-career-concept-1750x1165.png": "/static/media/35-gray-filter-vintage-frame-salon-tools-wooden-table-jobs-career-concept-1750x1165.bd915593129166c2bebb.png",
+    "static/media/image_3.jpg": "/static/media/image_3.adcb51f40fd864b7685d.jpg",
+    "static/media/warning-maintenance.png": "/static/media/warning-maintenance.24421b0d842fff09592f.png",
+    "static/media/image_2.jpg": "/static/media/image_2.65e8b238ec5886dbcdf1.jpg",
+    "static/media/image00008.jpeg": "/static/media/image00008.da28b1b1c609c415ccf5.jpeg",
+    "static/media/image00007.jpeg": "/static/media/image00007.3a5104fcb9e5fad031fa.jpeg",
+    "static/media/image00006.jpeg": "/static/media/image00006.081014816ef921d82a6e.jpeg",
+    "static/media/image00001.jpeg": "/static/media/image00001.a61ebdbc79d64beb5bf7.jpeg",
+    "static/media/image00005.jpeg": "/static/media/image00005.a20afd66cb6e5524fa61.jpeg",
+    "static/media/image00002.jpeg": "/static/media/image00002.e7df7b4c591c20e86ca6.jpeg",
+    "static/media/image00004.jpeg": "/static/media/image00004.2db3d9d94483a0686393.jpeg",
+    "static/media/image00003.jpeg": "/static/media/image00003.b44b23bbb26ac4b2a474.jpeg",
+    "static/media/image_1.JPG": "/static/media/image_1.1e936b4f7a12f19b2e75.JPG",
+    "static/media/LOGO-BARBER.jpg": "/static/media/LOGO-BARBER.c8c9c54233bba45f4691.jpg",
+    "index.html": "/index.html",
+    "main.951ea029.css.map": "/static/css/main.951ea029.css.map",
+    "main.cb444800.js.map": "/static/js/main.cb444800.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.951ea029.css",
+    "static/js/main.cb444800.js"
+  ]
+}

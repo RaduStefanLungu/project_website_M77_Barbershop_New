@@ -75,7 +75,6 @@ Project : Inventory System
 
 TODOs :
 
-    * Create and complete sitemap.xml
     * Add image to AboutUs page
 
     * AFTER :   
