@@ -166,7 +166,7 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList,ConnectedUser})
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                         <div className="bg-white p-8 w-[400px] md:w-[700px] shadow-lg z-50 flex flex-col">
                             <span className='text-center py-5 text-3xl font-bold'>Etez-vous sûr de supprimer l'objet?</span>
-                            <div className='flex justify-center items-center gap-5'>
+                            <div className='grid md:flex justify-center items-center gap-5'>
                                 <button onClick={handleUserDeleteConfirmation} className='button-1 bg-red-500 border-red-500 hover:text-red-500 hover:border-red-500'>Supprimer</button>
                                 <button onClick={()=>{setDeleteConfirmation(false)}} className='button-2'>Annuler</button>
                             </div>
@@ -242,7 +242,7 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList,ConnectedUser})
                     
                     <p className={`${message[1]? "text-green-500" : "text-red-500"} px-2 text-center`}>{message}</p>
 
-                    <div className='flex justify-center py-2 gap-5'>
+                    <div className='grid md:flex justify-center py-2 gap-5'>
                         <button onClick={handleSave} className='button-1'>Sauvegarder</button>
                         <button onClick={()=>{setDeleteConfirmation(true)}} className='button-2 border-red-500 text-red-500 hover:bg-red-500'>Supprimer</button>
                     </div>

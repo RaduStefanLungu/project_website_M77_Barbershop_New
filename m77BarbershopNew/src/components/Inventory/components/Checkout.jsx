@@ -189,9 +189,9 @@ const Checkout = ({connectedUser}) => {
         <div>
             <div className='flex flex-col bg-[var(--brand-black)] px-2 py-3 '>
                 <h1 className='text-start my-auto pb-5 text-4xl font-bold text-white'>Vente</h1>
-                <div className='flex flex-col md:flex-row'>
+                <div className='grid md:grid-flow-col'>
 
-                    <div id='item_grid' className=' special-vente-shadow-1 bg-[var(--brand-white)] py-5 px-5 gap-2 h-[750px] overflow-y-auto grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
+                    <div id='item_grid' className='md:ml-auto md:min-w-[350px] md:w-fit special-vente-shadow-1 bg-[var(--brand-white)] py-5 px-5 gap-2 h-[750px] overflow-y-auto grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
                         {
                             itemsFromDB.map(
                                 (value,key) => {
@@ -205,7 +205,7 @@ const Checkout = ({connectedUser}) => {
                         }
                     </div>
 
-                    <div id='ticket + confirm button' className='flex flex-col special-vente-shadow-1 mb-auto'>
+                    <div id='ticket + confirm button' className='md:mr-auto flex flex-col special-vente-shadow-1 mb-auto'>
                         <div id='tiket' className='bg-gray-100 py-5 grid '>
                                 <label className=' text-2xl font-bold pb-2 px-2 '>Ticket</label>
                                 
