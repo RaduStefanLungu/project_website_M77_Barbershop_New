@@ -882,22 +882,3 @@ function generateTimeIntervals(hour1, hour2, step) {
 
   return times;
 }
-
-
-
-// TODO REMOVE THIS | V |
-
-export async function getAllAppointments(){
-  const myCollection = await collection(firestore_db,"appointments");
-  const querySnapshot = await getDocs(myCollection)
-
-  let response = [] 
-  querySnapshot.forEach((doc) => {
-    if(doc.data()){
-      response.push(doc.data().appointments)
-    }
-  })
-  
-  return(response);
-
-}

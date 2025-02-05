@@ -43,8 +43,6 @@ export default function Header() {
           <HeaderButton Text={"Rendez-vous"} Path={"/rendez-vous"} />
         </div>
 
-        {/* TODO : create burger */}
-
       </div>
 
 

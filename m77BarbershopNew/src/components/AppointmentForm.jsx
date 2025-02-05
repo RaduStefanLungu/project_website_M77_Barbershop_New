@@ -156,7 +156,6 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                     let message = null
                     if(response){
                         message = <span>Votre rendez-vous a été sauvegardé !<br/> Un email de confirmation a été envoyé.<br/>Pour tout changement, contactez : {INFO_DATA.mirco.contact_phone} </span>
-                        // TODO emailjs
                         emailjs.sendForm(import.meta.env.VITE_REACT_APP_EMAILJS_SERVICE_ID, "template_9xg2a7c", confirmationEmailFormRef.current , import.meta.env.VITE_REACT_APP_EMAILJS_USER_ID)
                             .then((result) => {
                                 console.log(`Email envoyé : ${result.text} !` )
@@ -177,7 +176,6 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
 
                 }
             )
-            // TODO : send to message view 'thank you for your appointment ...'
 
         }
 

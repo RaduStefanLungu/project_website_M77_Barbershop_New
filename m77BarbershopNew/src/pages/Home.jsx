@@ -202,7 +202,6 @@ const ContactSection = () => {
   function handleSubmit(e){
     e.preventDefault();
     
-    //TODO : call email API 
     emailjs.sendForm(import.meta.env.VITE_REACT_APP_EMAILJS_SERVICE_ID, "template_hivji9c", e.target,import.meta.env.VITE_REACT_APP_EMAILJS_USER_ID)
     .then((result) => {
       setRequestMessage("Votre email a bien été envoyé !")

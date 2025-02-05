@@ -78,8 +78,6 @@ TODOs :
     * Create and complete sitemap.xml
     * Add image to AboutUs page
 
-    * Link EmailJS to the ContactForm + Appointment Confirmation + Rappel Email from Dashboard
-
     * AFTER :   
         add to the appointment (full) partial data of the chosen barber (to avoid problems when pulling data from the db of a removed barber profile)
 

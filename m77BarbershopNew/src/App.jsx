@@ -16,7 +16,6 @@ import Profile from './pages/private/user/Profile.jsx'
 import Appointments from './pages/private/user/Appointments.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 import RapportRDVs from './pages/private/admin/RapportRDVs.jsx'
-import FillDb from './misc-to-be-removed/FillDb.jsx'
 
 
 function App() {
@@ -40,7 +39,6 @@ function App() {
 
             <Route element={<AdminLayout/>}>
               <Route path='/admin/login' exact element={<Login/>} />
-              <Route path='/admin' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
 
               <Route path='/user/dashboard' exact element={<PrivateRoute><UserDashboard/></PrivateRoute>} />
               <Route path='/user/profile' exact element={<PrivateRoute><Profile/></PrivateRoute>} />
@@ -50,8 +48,6 @@ function App() {
               <Route path='/admin/management' exact element={<PrivateRoute><Admin/></PrivateRoute>} />
               <Route path='/admin/inventory' exact element={<PrivateRoute><Inventory/></PrivateRoute>} />
 
-              {/* V REMOVE THIS AFTER V */}
-              <Route path='/dev/fill-db' exact element={<FillDb/>}/>
             </Route>            
 
           </Routes>
