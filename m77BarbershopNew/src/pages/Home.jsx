@@ -195,26 +195,22 @@ const ContactSection = () => {
   const [email,setEmail] = useState('')
   const [phone,setPhone] = useState('')
   const [message,setMessage] = useState('')
+  const [requestMessage,setRequestMessage] = useState('')
 
   const contactFormRef = useRef()
 
   function handleSubmit(e){
     e.preventDefault();
-
-    console.log(import.meta.env.REACT_APP_EMAILJS_SERVICE_ID);
-    console.log(import.meta.env.REACT_APP_EMAILJS_USER_ID);
     
-
     //TODO : call email API 
-    emailjs.sendForm(import.meta.env.REACT_APP_EMAILJS_SERVICE_ID, "template_hivji9c", contactFormRef.current,import.meta.env.REACT_APP_EMAILJS_USER_ID)
+    emailjs.sendForm(import.meta.env.VITE_REACT_APP_EMAILJS_SERVICE_ID, "template_hivji9c", e.target,import.meta.env.VITE_REACT_APP_EMAILJS_USER_ID)
     .then((result) => {
-      setMessage("Votre email a bien été envoyé !")
+      setRequestMessage("Votre email a bien été envoyé !")
       // Add any success message or logic here
   }, (error) => {
-      console.error('Email sending failed:', error.text);
-      console.log(contactFormRef.current);
+      console.error('Email sending failed:', error);
       
-      setMessage("Erreur lors de l'envoye de votre email")
+      setRequestMessage("Erreur lors de l'envois de votre email")
       // Add any error handling logic here
   });
 
@@ -259,18 +255,17 @@ const ContactSection = () => {
 
         <form ref={contactFormRef} onSubmit={handleSubmit} className='grid gap-3 w-[350px] md:w-[450x] lg:w-[550px] xl:text-xl'>
 
-          <input id='user_name' onChange={(e)=>{setFullName(e.target.value)}} type='text' placeholder='Nom et Prénom' className='input-designed-1 '/>
-          <input id='user_email' onChange={(e)=>{setEmail(e.target.value)}} type='email' placeholder='example@email.com' className='input-designed-1 ' />
-          <input id='user_phone' onChange={(e)=>{setPhone(e.target.value)}} type='tel' placeholder='Numéro Téléphone' className='input-designed-1' />
-          <textarea id='user_message' onChange={(e)=>{setMessage(e.target.value)}} type='text' placeholder='Votre message ici...' className='input-designed-1 lg:h-[100px]' />
-
-          <label className='font-custom_1 text-lg text-center'>{message}</label>
+          <input id='user_name' name='user_name' onChange={(e)=>{setFullName(e.target.value)}} type='text' placeholder='Nom et Prénom' className='input-designed-1 '/>
+          <input id='user_email' name='user_email' onChange={(e)=>{setEmail(e.target.value)}} type='email' placeholder='example@email.com' className='input-designed-1 ' />
+          <input id='user_phone' name='user_phone' onChange={(e)=>{setPhone(e.target.value)}} type='tel' placeholder='Numéro Téléphone' className='input-designed-1' />
+          <textarea id='user_message' name='user_message' onChange={(e)=>{setMessage(e.target.value)}} type='text' placeholder='Votre message ici...' className='input-designed-1 lg:h-[100px]' />
 
           <div className='grid'>
             <button type='submit' className='button-1'>Envoyer</button>
           </div>
 
         </form>
+        <label className='font-custom_1 text-lg text-center'>{requestMessage}</label>
       </div>
 
     </div>

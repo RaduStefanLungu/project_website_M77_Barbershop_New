@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import emailjs from '@emailjs/browser';
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaTableCellsRowLock } from "react-icons/fa6";
 import { IoStatsChartSharp } from "react-icons/io5";
@@ -191,6 +192,9 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     const [showDetails,setShowDetails] = useState(false)
     const [showMoreDetails,setShowMoreDetails] = useState(false)
 
+    const [emailSentMessage,setEmailSentMessage] = useState("")
+    const rappelFormRef = useRef()
+
     function handleConfirmed(e){
       e.preventDefault();
       popUpSetter[1](<PopUpSecurity appointment_id={data.appointment_id} confirmation_state={'CONFIRMED'} text={"Etez vous certain de confirmer la 'présence' ?"}/>)
@@ -202,6 +206,21 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     function handleCanceled(e){
       e.preventDefault();
       popUpSetter[1](<PopUpSecurity appointment_id={data.appointment_id} confirmation_state={'CANCELED'} text={"Etez vous certain de confirmer l' 'annulation' ?"}/>)
+    }
+
+    function handleRappel(e){
+      e.preventDefault();
+
+      emailjs.sendForm(import.meta.env.VITE_REACT_APP_EMAILJS_SERVICE_ID, "template_yy6hcmb", rappelFormRef.current , import.meta.env.VITE_REACT_APP_EMAILJS_USER_ID)
+            .then((result) => {
+                console.log(`Email envoyé : ${result.text} !` )
+                setEmailSentMessage("Email envoyé avec success!")
+                // Add any success message or logic here
+            }, (error) => {
+                console.error('Email sending failed:', error.text);
+                setEmailSentMessage("Problème lors de l'envoie de l'email!")
+                // Add any error handling logic here
+            });
     }
 
     return(
@@ -216,7 +235,14 @@ const MyAppointments = ({ profile,popUpSetter }) => {
             }
           </div>
           <div className={`${showDetails? "grid" : "hidden"} gap-5 `}>
-            <button className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
+            <button type='button' onClick={handleRappel} className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
+            <label className='text-center text-lg'>{emailSentMessage}</label>
+            <form ref={rappelFormRef} className='hidden'>
+              <input name="user_email" value={data.appointment_user.email}></input>
+              <input name="user_name" value={data.appointment_user.name}></input>
+              <input name="appointment_date" value={data.appointment_date}></input>
+              <input name="appointment_time" value={data.appointment_hour}></input>
+            </form>
             <div className='grid'>
               <span>Nom : {data.appointment_user.name}</span>
               <span>GSM : {data.appointment_user.phone}</span>
@@ -422,6 +448,9 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
     const [showDetails,setShowDetails] = useState(false)
     const [showMoreDetails,setShowMoreDetails] = useState(false)
 
+    const [emailSentMessage,setEmailSentMessage] = useState("")
+    const rappelFormRef = useRef()
+
     function handleConfirmed(e){
       e.preventDefault();
       popUpSetter[1](<PopUpSecurity appointment_id={data.appointment_id} confirmation_state={'CONFIRMED'} text={"Etez vous certain de confirmer la 'présence' ?"}/>)
@@ -433,6 +462,21 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
     function handleCanceled(e){
       e.preventDefault();
       popUpSetter[1](<PopUpSecurity appointment_id={data.appointment_id} confirmation_state={'CANCELED'} text={"Etez vous certain de confirmer l' 'annulation' ?"}/>)
+    }
+
+    function handleRappel(e){
+      e.preventDefault();
+
+      emailjs.sendForm(import.meta.env.VITE_REACT_APP_EMAILJS_SERVICE_ID, "template_yy6hcmb", rappelFormRef.current , import.meta.env.VITE_REACT_APP_EMAILJS_USER_ID)
+            .then((result) => {
+                console.log(`Email envoyé : ${result.text} !` )
+                setEmailSentMessage("Email envoyé avec success!")
+                // Add any success message or logic here
+            }, (error) => {
+                console.error('Email sending failed:', error.text);
+                setEmailSentMessage("Problème lors de l'envoie de l'email!")
+                // Add any error handling logic here
+            });
     }
 
     return(
@@ -447,7 +491,14 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
             }
           </div>
           <div className={`${showDetails? "grid" : "hidden"} gap-5 `}>
-            <button className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
+            <button type='button' onClick={handleRappel} className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
+            <label className='text-center text-lg'>{emailSentMessage}</label>
+            <form ref={rappelFormRef} className='hidden'>
+              <input name="user_email" value={data.appointment_user.email}></input>
+              <input name="user_name" value={data.appointment_user.name}></input>
+              <input name="appointment_date" value={data.appointment_date}></input>
+              <input name="appointment_time" value={data.appointment_hour}></input>
+            </form>
             <div className='grid'>
               <span>Nom : {data.appointment_user.name}</span>
               <span>GSM : {data.appointment_user.phone}</span>
