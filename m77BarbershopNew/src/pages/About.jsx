@@ -43,11 +43,12 @@ const About = () => {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-6 md:px-12">
         {/* Image */}
         <div className="w-full">
-          <img
+          {/* TODO REPLACE THIS */}
+          {/* <img
             src="https://via.placeholder.com/600x400"
-            alt="Barbier en action chez M77 Barber"
+            alt="image"
             className="rounded-lg shadow-lg"
-          />
+          /> */}
 
 
 
