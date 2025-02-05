@@ -59,7 +59,7 @@ export default function Home() {
 
 const HERO = () => {
   return(
-    <div className='grid relative h-[500px] md:h-[700px] bg-[var(--brand-black)]'>
+    <div className='grid relative w-screen h-[500px] md:h-[700px] bg-[var(--brand-black)]'>
 
 
 
@@ -233,7 +233,7 @@ const ContactSection = () => {
   }
 
   return(
-    <div className='font-custom_1 grid pb-20 px-10'>
+    <div className='font-custom_1 grid pb-20 mx-5 lg:mx-0'>
 
       <h3 className='section-title'>
         Contactez-nous
@@ -246,7 +246,7 @@ const ContactSection = () => {
       M77
       </p>
 
-      <div className='flex flex-col items-start gap-5 lg:flex-row'>
+      <div className='flex flex-col items-center gap-5 lg:flex-row lg:items-start'>
         <div className='grid gap-5'>
           <ContactCard Icon={<FaPhoneAlt/>} Text_1={'Contactez-nous par téléphone'} Text_2={INFO_DATA.mirco.contact_phone} />
           <ContactCard Icon={<TfiEmail/>} Text_1={'Envoyez-nous un email'} Text_2={INFO_DATA.mirco.contact_email} />
