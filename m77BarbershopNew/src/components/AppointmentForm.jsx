@@ -1,6 +1,7 @@
-import { useState,useEffect } from 'react'
+import { useState,useEffect, useRef } from 'react'
 import { addAppointment2, getSchedule, getVisibleProfiles } from '../api/firebase'
 import { v4 } from 'uuid'
+import emailjs from '@emailjs/browser';
 
 import SERVICES from '../data/services.json'
 import { Link } from 'react-router-dom'
@@ -127,6 +128,8 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
 
     const [clickedSubmit,setClickedSubmit] = useState(false);
 
+    const confirmationEmailFormRef = useRef()
+
     async function handleSubmit(e){
         e.preventDefault();
 
@@ -153,6 +156,16 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                     let message = null
                     if(response){
                         message = <span>Votre rendez-vous a été sauvegardé !<br/> Un email de confirmation a été envoyé.<br/>Pour tout changement, contactez : {INFO_DATA.mirco.contact_phone} </span>
+                        // TODO emailjs
+                        emailjs.sendForm(import.meta.env.VITE_REACT_APP_EMAILJS_SERVICE_ID, "template_9xg2a7c", confirmationEmailFormRef.current , import.meta.env.VITE_REACT_APP_EMAILJS_USER_ID)
+                            .then((result) => {
+                                console.log(`Email envoyé : ${result.text} !` )
+                                // Add any success message or logic here
+                            }, (error) => {
+                                console.error('Email sending failed:', error.text);
+                                message = <span>Erreur lors de l'envoie de l'email de confirmation !<br/> Veuillez nous contacter pour confirmer la prise de votre rendez-vous.</span>
+                                // Add any error handling logic here
+                            });
                     }
                     else{
                         message = <span>Erreur lors de la sauvegarde de votre rendez-vous !<br/> Veuillez réessayer.</span>
@@ -200,112 +213,121 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
     }
 
     return(
-        <form onSubmit={handleSubmit} className='flex flex-col justify-center md:flex-row gap-5'>
+        <div className='grid'>
+            <form onSubmit={handleSubmit} className='flex flex-col justify-center md:flex-row gap-5'>
 
-                        <div className='flex flex-col justify-center items-center'>
-                            <div className='mb-auto'>
-                                <ProfileCard profile={barberProfile} setter={null} clickable={false}></ProfileCard>
+                <div className='flex flex-col justify-center items-center'>
+                    <div className='mb-auto'>
+                        <ProfileCard profile={barberProfile} setter={null} clickable={false}></ProfileCard>
+                    </div>
+                    {/* <div className='grid pt-0'>
+                        <button className='button-1' onClick={handleBack}>Retour</button>
+                    </div> */}
+                </div>
+
+                <div className='flex flex-col px-5'>
+                    <div>
+                        <h4 className='font-custom_1 text-3xl font-bold pb-5'>Completez le formulaire</h4>
+                    </div>
+                    <div className='grid gap-2'>
+                        <div className='grid grid-cols-2 gap-2'>
+                            <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='input-designed-1' />
+                            <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='input-designed-1' />
+                        </div>
+                        <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='Email' className='input-designed-1' />
+                        <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='GSM' className='input-designed-1' />
+
+                        <div className='flex flex-col gap-5'>
+                            <div className='flex justify-between'>
+                                <label className='text-xl my-auto'>Séléctionez la date : </label>
+                                <input type='date' min={today} onChange={handleDateChosen} className='input-designed-1 w-[200px]' ></input>
                             </div>
-                            {/* <div className='grid pt-0'>
-                                <button className='button-1' onClick={handleBack}>Retour</button>
-                            </div> */}
+                            <div id='list of taken (or not) hours of that day'>
+                                <HoursGrid hours={hoursOfDay} chosenHourSetter={[chosenHour,setChosenHour]} />
+                            </div>
                         </div>
 
-                        <div className='flex flex-col px-5'>
-                            <div>
-                                <h4 className='font-custom_1 text-3xl font-bold pb-5'>Completez le formulaire</h4>
-                            </div>
-                            <div className='grid gap-2'>
-                                <div className='grid grid-cols-2 gap-2'>
-                                    <input onChange={(e)=>{setClientFirstName(e.target.value)}} required type='text' placeholder='Prénom' className='input-designed-1' />
-                                    <input onChange={(e)=>{setClientLastName(e.target.value)}} required type='text' placeholder='Nom de famille' className='input-designed-1' />
-                                </div>
-                                <input onChange={(e)=>{setClientEmail(e.target.value)}} required type='email' placeholder='Email' className='input-designed-1' />
-                                <input onChange={(e)=>{setClientPhone(e.target.value)}} required type='tel' placeholder='GSM' className='input-designed-1' />
-
-                                <div className='flex flex-col gap-5'>
-                                    <div className='flex justify-between'>
-                                        <label className='text-xl my-auto'>Séléctionez la date : </label>
-                                        <input type='date' min={today} onChange={handleDateChosen} className='input-designed-1 w-[200px]' ></input>
-                                    </div>
-                                    <div id='list of taken (or not) hours of that day'>
-                                        <HoursGrid hours={hoursOfDay} chosenHourSetter={[chosenHour,setChosenHour]} />
-                                    </div>
-                                </div>
-
-                                <div id='services' className='grid font-custom_1 gap-5'>
-                                    {
-                                        SERVICES.services_by_group.map(
-                                            (value,key) =>{
-                                                return(
-                                                    <div key={key}>
-                                                        <label className='text-3xl'>{value.group}</label>
-                                                        <div className='grid pt-5 gap-2'>
-                                                            {
-                                                                value.services.map(
-                                                                    (service,key2)=>{
-                                                                        return(
-                                                                            <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] border-[var(--brand-black)] ${clientAppointmentService===service.name ? "bg-[var(--brand-black)] text-white" : ""}`}>
-                                                                                <div className='grid grid-cols-2'>
-                                                                                    <label className='text-xl'>{service.name}</label>
-                                                                                    <label className='text-xl'>{service.price}€</label>
-                                                                                </div>
-                                                                                <label>{service.description}</label>
-                                                                            </div>
-                                                                        )
-                                                                    }
+                        <div id='services' className='grid font-custom_1 gap-5'>
+                            {
+                                SERVICES.services_by_group.map(
+                                    (value,key) =>{
+                                        return(
+                                            <div key={key}>
+                                                <label className='text-3xl'>{value.group}</label>
+                                                <div className='grid pt-5 gap-2'>
+                                                    {
+                                                        value.services.map(
+                                                            (service,key2)=>{
+                                                                return(
+                                                                    <div key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] border-[var(--brand-black)] ${clientAppointmentService===service.name ? "bg-[var(--brand-black)] text-white" : ""}`}>
+                                                                        <div className='grid grid-cols-2'>
+                                                                            <label className='text-xl'>{service.name}</label>
+                                                                            <label className='text-xl'>{service.price}€</label>
+                                                                        </div>
+                                                                        <label>{service.description}</label>
+                                                                    </div>
                                                                 )
                                                             }
-                                                        </div>
+                                                        )
+                                                    }
+                                                </div>
 
-                                                    </div>
-                                                )
-                                            }
+                                            </div>
                                         )
                                     }
-                                    {
-                                        SERVICES.packages.map(
-                                            (value,key) =>{
-                                                return(
-                                                    <div key={key}>
-                                                        <label className='text-3xl'>{value.group}</label>
-                                                        <div className='grid pt-5 gap-2'>
-                                                            {
-                                                                value.services.map(
-                                                                    (service,key2)=>{
-                                                                        return(
-                                                                            <button type='button' key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] border-[var(--brand-black)] ${clientAppointmentService===service.name ? "bg-[var(--brand-black)] text-white" : ""}`}>
-                                                                                <div className='grid grid-cols-2'>
-                                                                                    <label className='text-xl'>{service.name}</label>
-                                                                                    <label className='text-xl'>{service.price}€</label>
-                                                                                </div>
-                                                                                <label>{service.description}</label>
-                                                                            </button>
-                                                                        )
-                                                                    }
+                                )
+                            }
+                            {
+                                SERVICES.packages.map(
+                                    (value,key) =>{
+                                        return(
+                                            <div key={key}>
+                                                <label className='text-3xl'>{value.group}</label>
+                                                <div className='grid pt-5 gap-2'>
+                                                    {
+                                                        value.services.map(
+                                                            (service,key2)=>{
+                                                                return(
+                                                                    <button type='button' key={key2} id={service.name} onClick={(e)=>{handleServiceSelect(e,service.name)}} className={`grid p-1 border-[0.15rem] border-[var(--brand-black)] ${clientAppointmentService===service.name ? "bg-[var(--brand-black)] text-white" : ""}`}>
+                                                                        <div className='grid grid-cols-2'>
+                                                                            <label className='text-xl'>{service.name}</label>
+                                                                            <label className='text-xl'>{service.price}€</label>
+                                                                        </div>
+                                                                        <label>{service.description}</label>
+                                                                    </button>
                                                                 )
                                                             }
-                                                        </div>
+                                                        )
+                                                    }
+                                                </div>
 
-                                                    </div>
-                                                )
-                                            }
+                                            </div>
                                         )
                                     }
-                                </div>
-                            
-                            </div>
-                            <ul className='py-3 list-disc grid gap-3'>
-                                <li className='text-start'><span className='font-bold'>A partir de 18h30</span> il y aura un <span className='font-bold'>supplément de 10€</span></li>
-                                <li className='text-start'>Au dela de <span className='font-bold'>10 minutes de retard</span>, le rendez-vous sera <span className='font-bold'>annulé</span> !</li>
-                            </ul>
-                            <div className='grid grid-flow-col gap-5 py-5'>
-                                <button type='button' className='button-1' onClick={handleBack}>Retour</button>
-                                <button type='submit' disabled={clickedSubmit} className='button-2 disabled:bg-gray-300'>Réserver</button>
-                            </div>
-                            
+                                )
+                            }
                         </div>
-                    </form>
+                    
+                    </div>
+                    <ul className='py-3 list-disc grid gap-3'>
+                        <li className='text-start'><span className='font-bold'>A partir de 18h30</span> il y aura un <span className='font-bold'>supplément de 10€</span></li>
+                        <li className='text-start'>Au dela de <span className='font-bold'>10 minutes de retard</span>, le rendez-vous sera <span className='font-bold'>annulé</span> !</li>
+                    </ul>
+                    <div className='grid grid-flow-col gap-5 py-5'>
+                        <button type='button' className='button-1' onClick={handleBack}>Retour</button>
+                        <button type='submit' disabled={clickedSubmit} className='button-2 disabled:bg-gray-300'>Réserver</button>
+                    </div>
+                    
+                </div>
+                </form>
+            <form ref={confirmationEmailFormRef} className='hidden'>
+              <input name="user_email" value={clientEmail}></input>
+              <input name="user_name" value={`${clientLastName} ${clientFirstName}`}></input>
+              <input name="appointment_date" value={clientAppointmentDate}></input>
+              <input name="appointment_time" value={chosenHour}></input>
+              <input name="selected_service" value={clientAppointmentService}></input>
+            </form>
+        </div>
     )
 }
 
