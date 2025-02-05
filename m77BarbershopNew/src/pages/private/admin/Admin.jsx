@@ -49,7 +49,6 @@ export default function Admin() {
 const CreatedProfilesList = ({profiles,fetcher, popupSetters,popupShowSetters}) => {
 
     const ProfileTab = ({data,fetcher}) => {
-        // TODO : you should remove the deletion button if not accessed by admin
 
         const [today,setToday] = useState(new Date().toLocaleString('en-GB', { 
             timeZone: 'Europe/Brussels', 

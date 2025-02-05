@@ -12,8 +12,6 @@ import { CiCirclePlus,CiCircleMinus  } from "react-icons/ci";
 
 import { v4 } from 'uuid';
 
-// TODO : add 'buying price / item  && selling price / item ==> make a sales rapport?'
-
 
 const Stock = ({connectedUser}) => {
 

@@ -148,7 +148,7 @@ const MyAppointments = ({ profile,popUpSetter }) => {
   // Fetch appointments on component mount and when `chosenDay` changes
   useEffect(() => {
     fetchAppointments(chosenDay);
-  }, [chosenDay,profile]); // TODO add profile here
+  }, [chosenDay,profile]);
 
   // Handle day selection
   const handleNewDay = (e) => {
@@ -379,7 +379,7 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
   // Fetch appointments on component mount and when `chosenDay` changes
   useEffect(() => {
     fetchAppointments(chosenProfile,chosenDay);
-  }, [chosenDay,chosenProfile]); // TODO add profile here
+  }, [chosenDay,chosenProfile]);
 
   // Handle day selection
   const handleNewDay = (e) => {

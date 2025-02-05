@@ -56,7 +56,7 @@ const AddBarberForm = ({fetcher}) => {
                     if(response){
                         setMessage({message: "Nouveau barbier introduit avec success !",isError: false});
                         fetcher();
-                        // TODO: refresh form here 
+                        // refresh form here 
                         setFirstName('')
                         setLastName('')
                         setEmail('')

@@ -135,7 +135,7 @@ export async function addAppointment2(data){
       return(false)
     }
     else{
-      // TODO : check if there are any active locked days in profiles.barber_name.locked_days
+      // check if there are any active locked days in profiles.barber_name.locked_days
       const profile_doc = await getDocumentById('profiles',data.barber_id)
       
       if(profile_doc.locked_days.includes(data.appointment_date)){

@@ -20,7 +20,6 @@ export default function Login() {
 
         try {
             const result = await login(emailRef.current.value, passwordRef.current.value)
-            console.log(result);
             
             redirect('/user/dashboard')
             
