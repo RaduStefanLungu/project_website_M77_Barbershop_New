@@ -246,13 +246,17 @@ async function getProfilesWithRdvs(){
 
   const profiles_with_appointments = []
 
-  all_appointments.forEach(list_of_the_day => {
-    list_of_the_day.forEach((appointment => {
+  for(let i = 0; i < all_appointments.length; i++){
+    const list_of_the_day = all_appointments[i];
+    
+    for(let j = 0; j < list_of_the_day.length;j++){
+      const appointment = list_of_the_day[j];
+
       if(!profiles_with_appointments.includes(appointment.barber_id)){
         profiles_with_appointments.push(appointment.barber_id)
       }
-    }))
-  })
+    } 
+  }
 
   console.log(profiles_with_appointments);
   

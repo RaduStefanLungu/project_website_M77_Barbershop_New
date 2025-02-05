@@ -238,6 +238,7 @@ function PieChartsComparison({monthlyAppointments,title,groupBy}){
 }
 
 function RevenueChartsComparison({monthlyAppointments,title}){
+
   return(
     <div>
       <div className='grid'>

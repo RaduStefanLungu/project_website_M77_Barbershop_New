@@ -99,6 +99,11 @@
             "name" : "Cheveux + Barbe",
             "price" : 35,
             "description" : ""
+        },
+        {
+            "name" : "PAUSE-DE-MIDI",
+            "price" : 0,
+            "description" : ""
         }
     ] 
 }

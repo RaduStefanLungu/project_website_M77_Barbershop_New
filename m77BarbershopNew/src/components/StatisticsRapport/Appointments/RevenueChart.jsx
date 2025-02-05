@@ -16,7 +16,7 @@ export default function RevenueChart({appointments}) {
                 console.error(e)
             }
         }
-    },[])
+    },[appointments])
 
     function generateVisuals(data){
         const elements = [];
@@ -36,7 +36,6 @@ export default function RevenueChart({appointments}) {
             }
             
             if(key !== 'total'){
-                console.log(pourcentage_of_one_dollar*data[key].value,data[key].color);
                 
                 elements.push(
                     <div className="grid grid-cols-2 gap-3">
