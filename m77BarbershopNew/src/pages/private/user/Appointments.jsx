@@ -789,9 +789,9 @@ const LockDaysForAll = ({ profile }) => {
   async function handleGlobalBlockDay(e) {
     e.preventDefault();
     const response = await lockDays([chosenDay]);
-    setMessage(response);
+    setMessage([response,'La journée a été bloquée !']);
 
-    if (response[0]) {
+    if (response) {
       setGlobalLockedDays((prev) => [...prev, chosenDay].sort());
     }
 
@@ -802,9 +802,9 @@ const LockDaysForAll = ({ profile }) => {
   async function handleGlobalUnlockDay(e, day) {
     e.preventDefault();
     const response = await unlockDays([day]);
-    setMessage(response);
+    setMessage([response,'La journée a été débloquée !']);
 
-    if (response[0]) {
+    if (response) {
       setGlobalLockedDays((prev) => prev.filter((lockedDay) => lockedDay !== day));
     }
 
