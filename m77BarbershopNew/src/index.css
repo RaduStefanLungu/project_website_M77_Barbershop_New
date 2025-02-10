@@ -82,15 +82,18 @@
 }
 
 .hero-image {
-    background-image: url('../src/assets/unlicensed/barber-salon-white-1-unlicensed.jpg');
+    background-image: url('../src/assets/photos/DSC00245-8.jpg');
     background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
     /* filter: saturate(0%) brightness(50%) contrast(100%) */
 }
 
 .belt-image {
-    background-image: url('../src/assets/unlicensed/barber-tools-1-unlicensed.jpg');
+    background-image: url('../src/assets/photos/DSC00250-11.jpg');
     background-size: cover;
+    background-position-x: center;
+    background-position-y: 10%;
     background-repeat: no-repeat;
     /* background-position: center; */
 }

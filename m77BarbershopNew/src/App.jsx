@@ -16,6 +16,7 @@ import Profile from './pages/private/user/Profile.jsx'
 import Appointments from './pages/private/user/Appointments.jsx'
 import AdminLayout from './layouts/AdminLayout.jsx'
 import RapportRDVs from './pages/private/admin/RapportRDVs.jsx'
+import TaC from './pages/TaC.jsx'
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
               <Route path='/a-propos' exact element={<About/>} />
               <Route path='/gallerie' exact element={<Gallery/>} />
               <Route path='/rendez-vous' exact element={<RendezVous/>} />
+              <Route path='/termes-et-conditions' exact element={<TaC/>} />
             </Route>
 
 

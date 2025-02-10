@@ -6,6 +6,8 @@ import { LuHeartHandshake } from "react-icons/lu";
 import { SlLocationPin } from "react-icons/sl";
 import { Link } from 'react-router-dom';
 
+import IMAGE from '../assets/photos/DSC00280-18.jpg'
+
 
 
 
@@ -44,11 +46,11 @@ const About = () => {
         {/* Image */}
         <div className="w-full">
           {/* TODO REPLACE THIS */}
-          {/* <img
-            src="https://via.placeholder.com/600x400"
+          <img
+            src={IMAGE}
             alt="image"
             className="rounded-lg shadow-lg"
-          /> */}
+          />
 
 
 

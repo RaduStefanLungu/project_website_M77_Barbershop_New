@@ -21,35 +21,49 @@ import INFO_DATA from '../data/data.json'
 export default function Home() {
   return (
     <div className='grid bg-white'>
-
-      <HERO/>
       
-      <div id='body' className='container mx-auto'>
-        <TextBelt/>
-      </div>
+      <HERO/>
 
-      <ImageBelt/>
-
-      <div className='bg-slate-950'>
+      <div className=''>
+        
         <div className='container mx-auto'>
+          <TextBelt/>
+          <ImageBelt/>
           <ServicesSection/>
+          <PourcentageBelt />
+          <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
+          <ContactSection/>
+        </div>
+
+      </div>
+      
+      
+      {/* <div id='body' className='container mx-auto'>
+        
+      </div>
+
+      
+
+      <div className='bg-slate-950'>
+        <div className='container mx-auto'>
+          
         </div>
       </div>
 
       <div className='container mx-auto'>
-        <PourcentageBelt />
+        
       </div>
 
       <div className='bg-slate-950'>
         <div className='container mx-auto'>
-          <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
+          
         </div>
       </div>
 
 
       <div className='container mx-auto'>
-        <ContactSection/>
-      </div>
+        
+      </div> */}
 
       
 
@@ -61,13 +75,11 @@ const HERO = () => {
   return(
     <div className='grid relative w-screen h-[500px] md:h-[700px] bg-[var(--brand-black)]'>
 
-
-
-      {/* <div id='image + filter' className='absolute top-0 z-10 grid w-screen h-full'>
+      <div id='image + filter' className='absolute top-0 z-10 grid w-screen h-full'>
         <div className='hero-image w-full h-full'/>
-      </div> */}
+      </div>
 
-      <div id='text + cta' className='flex justify-center items-center bg-black/40'>
+      <div id='text + cta' className='flex justify-center z-20 items-center bg-black/40'>
 
         <div className='flex flex-col'>
           <h1 className=' font-custom_1 text-size-hero text-[var(--brand-white)] tracking-wide uppercase text-center  md:mx-auto md:w-[450px] lg:w-[750px]'>

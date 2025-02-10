@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getScheduleFooter } from '../api/firebase'
 
 import { FaInstagram,FaFacebook } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
 
@@ -29,6 +30,9 @@ export default function Footer() {
 
       </div>
 
+      <div className='py-5 text-center'>
+        <Link to={'/termes-et-conditions'} className='text-blue-500 underline'>Termes et Conditions</Link>
+      </div>
 
       <div className='py-5 text-center'>
         Website Created by <a href="https://www.prowebsolutions.online/#/fr/home" target='_blank' className="text-blue-500 underline">Pro Web Solutions</a>
