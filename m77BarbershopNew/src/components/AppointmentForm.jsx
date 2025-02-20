@@ -42,7 +42,7 @@ export default function AppointmentForm(){
     }
     
     return(
-        <div className=''>
+        <div className='grid'>
             {/* <h2 className='font-bold text-3xl py-3'> Choisisez le barber</h2> */}
             <div className={`${!showAppointView? "block" : "hidden"}`}>
 
@@ -223,7 +223,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                     </div> */}
                 </div>
 
-                <div className='flex flex-col px-5'>
+                <div className='flex flex-col xs:px-5'>
                     <div>
                         <h4 className='font-custom_1 text-3xl font-bold pb-5'>Completez le formulaire</h4>
                     </div>
@@ -307,7 +307,7 @@ const TakingAppointment = ({barberProfile, backButtonFunction,appointViewSetter,
                         </div>
                     
                     </div>
-                    <ul className='py-3 list-disc grid gap-3'>
+                    <ul className='py-3 px-5 list-disc grid gap-3'>
                         <li className='text-start'><span className='font-bold'>A partir de 18h30</span> il y aura un <span className='font-bold'>supplément de 10€</span></li>
                         <li className='text-start'>Au dela de <span className='font-bold'>10 minutes de retard</span>, le rendez-vous sera <span className='font-bold'>annulé</span> !</li>
                     </ul>

@@ -12,8 +12,4 @@
         <loc>http://m77barber.be/a-propos</loc>
         <priority>0.6</priority>
     </url>
-    <url>
-        <loc>http://m77barber.be/gallerie</loc>
-        <priority>0.4</priority>
-    </url>
 </urlset>

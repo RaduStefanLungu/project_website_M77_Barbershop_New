@@ -24,48 +24,22 @@ export default function Home() {
       
       <HERO/>
 
-      <div className=''>
-        
-        <div className='container mx-auto'>
-          <TextBelt/>
-          <ImageBelt/>
-          <ServicesSection/>
-          <PourcentageBelt />
-          <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
-          <ContactSection/>
-        </div>
-
-      </div>
-      
-      
-      {/* <div id='body' className='container mx-auto'>
-        
+      <div className='container mx-auto'>
+        <TextBelt/>
       </div>
 
-      
+      <ImageBelt/>
 
-      <div className='bg-slate-950'>
-        <div className='container mx-auto'>
-          
-        </div>
+      <div className='bg-[var(--brand-black)] md:px-32'>
+        <ServicesSection/>
       </div>
 
       <div className='container mx-auto'>
         
+        <PourcentageBelt />
+        <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
+        <ContactSection/>
       </div>
-
-      <div className='bg-slate-950'>
-        <div className='container mx-auto'>
-          
-        </div>
-      </div>
-
-
-      <div className='container mx-auto'>
-        
-      </div> */}
-
-      
 
     </div>
   )
@@ -245,13 +219,13 @@ const ContactSection = () => {
   }
 
   return(
-    <div className='font-custom_1 grid pb-20 mx-5 lg:mx-0'>
+    <div className='font-custom_1 grid pb-20'>
 
       <h3 className='section-title'>
         Contactez-nous
       </h3>
 
-      <p className='pb-5 text-size-normal xl:w-[1000px]'>
+      <p className='pb-5 px-3 md:px-5 text-size-normal xl:w-[1000px]'>
       Nous sommes là pour répondre à toutes vos questions dans le but de vous offrir la meilleure expérience.
       Vous pouvez remplir le formulaire, nous appeler ou nous envoyer un e-mail.
       <br/><br/>À très bientôt,<br/>

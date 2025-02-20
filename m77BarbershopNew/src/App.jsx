@@ -22,7 +22,7 @@ import TaC from './pages/TaC.jsx'
 function App() {
 
   return (
-    <div>
+    <div className='w-screen overflow-hidden'>
       
       <BrowserRouter>
 
@@ -33,7 +33,7 @@ function App() {
             <Route element={<MainLayout/>} >
               <Route path='/' exact element={<Home/>} />
               <Route path='/a-propos' exact element={<About/>} />
-              <Route path='/gallerie' exact element={<Gallery/>} />
+              {/* <Route path='/gallerie' exact element={<Gallery/>} /> */}
               <Route path='/rendez-vous' exact element={<RendezVous/>} />
               <Route path='/termes-et-conditions' exact element={<TaC/>} />
             </Route>
