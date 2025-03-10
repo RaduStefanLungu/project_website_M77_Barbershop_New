@@ -35,9 +35,14 @@ export default function Home() {
       </div>
 
       <div className='container mx-auto'>
-        
         <PourcentageBelt />
+      </div>
+
+      <div className='bg-[var(--brand-black)] md:px-32'>
         <GallerySection imageList={[IMAGE_1,IMAGE_5,IMAGE_6,IMAGE_8]} />
+      </div>
+      
+      <div className='container mx-auto'>
         <ContactSection/>
       </div>
 

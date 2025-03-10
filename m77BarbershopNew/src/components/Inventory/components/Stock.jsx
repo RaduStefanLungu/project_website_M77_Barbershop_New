@@ -273,92 +273,98 @@ const Item = ({itemData,PopupSetters,PopupHolder,UpdateItemsList,ConnectedUser})
     )
 }
 
+const AddItemInterface = ({ UpdateItemsList, PopupSetters, PopupHolder, ClickedAddItemSetters }) => {
+    const [uploadedItemImage, setUploadedItemImage] = useState(null);
 
-const AddItemInterface = ({UpdateItemsList,PopupSetters,PopupHolder,ClickedAddItemSetters}) => {
-    const [uploadedItemImage,setUploadedItemImage] = useState(null)
+    const [itemName, setItemName] = useState("");
+    const [itemQuantity, setItemQuantity] = useState(0);
+    const [itemBuyPrice, setItemBuyPrice] = useState("");
+    const [itemSellPrice, setItemSellPrice] = useState("");
 
-    const [itemName,setItemName] = useState("")
-    const [itemQuantity,setItemQuantity] = useState(0)
-    const [itemBuyPrice,setItemBuyPrice] = useState(0)
-    const [itemSellPrice,setItemSellPrice] = useState(0)
+    const [message, setMessage] = useState([]);
 
-    const [message,setMessage] = useState([])
-
-    async function handleSubmit(e){
-        e.preventDefault()
+    async function handleSubmit(e) {
+        e.preventDefault();
 
         const itemData = {
-            item_id : itemName.split(" ").join("_"),
-            item_name : itemName,
-            item_quantity : itemQuantity,
-            item_buy_price : itemBuyPrice,
-            item_sell_price : itemSellPrice,
-            item_image_url : '',
-            item_added_time : new Date().toLocaleString('en-GB',{timeZone:'UTC'})
-        }
-        
-        // add item to db with image and image ref
+            item_id: itemName.split(" ").join("_"),
+            item_name: itemName,
+            item_quantity: parseInt(itemQuantity, 10),
+            item_buy_price: parseFloat(itemBuyPrice.replace(",", ".")) || 0,
+            item_sell_price: parseFloat(itemSellPrice.replace(",", ".")) || 0,
+            item_image_url: '',
+            item_added_time: new Date().toLocaleString('en-GB', { timeZone: 'UTC' }),
+        };
 
-        if(uploadedItemImage!== null){
+        if (uploadedItemImage !== null) {
             try {
-                const resp = await addItem(itemData,uploadedItemImage)
+                const resp = await addItem(itemData, uploadedItemImage);
                 console.log(resp);
-                UpdateItemsList[1](true)
-                ClickedAddItemSetters[1](false)
-                PopupSetters[1](false)
-                PopupHolder[1](null)
+                UpdateItemsList[1](true);
+                ClickedAddItemSetters[1](false);
+                PopupSetters[1](false);
+                PopupHolder[1](null);
             } catch (error) {
-                setMessage([`Une erreur est parvenue, esseyez encore !\n\n${error}`,false])
+                setMessage([`Une erreur est survenue, essayez encore !\n\n${error}`, false]);
             }
-        }
-        else{
-            setMessage([`Selectionnez une image !`,false])    
+        } else {
+            setMessage([`Sélectionnez une image !`, false]);
         }
     }
 
-    return(
-        <div className=''>
+    return (
+        <div>
             <div id='holder' className='flex flex-col'>
-
                 <h3 className='font-bold text-3xl pb-3'>Nouveau Objet</h3>
 
                 <form id='input holder' className='py-5 px-2 grid gap-2' onSubmit={handleSubmit}>
-
                     <div className='grid grid-cols-2 text-end'>
                         <label className='px-2'>Nom Objet : </label>
-                        <input type='text' required placeholder={itemName} onChange={(e)=>{setItemName(e.target.value)}} className='border-[var(--brand-black)] border-[0.15rem] px-1'></input>
+                        <input type='text' required value={itemName} onChange={(e) => setItemName(e.target.value)} className='border-[var(--brand-black)] border-[0.15rem] px-1' />
                     </div>
-                    
+
                     <div className='grid grid-cols-2 text-end'>
                         <label className='px-2'>Quantité de départ : </label>
-                        <input type='number' placeholder={itemQuantity} onChange={(e)=>{setItemQuantity(e.target.value)}} className='border-[var(--brand-black)] border-[0.15rem] px-1'></input>
+                        <input type='number' value={itemQuantity} onChange={(e) => setItemQuantity(e.target.value)} className='border-[var(--brand-black)] border-[0.15rem] px-1' />
                     </div>
 
                     <div className='grid grid-cols-2 text-end'>
                         <label className='px-2'>Prix d'<span className='font-bold'>achat</span> par unité (€) : </label>
-                        <input type='decimal' placeholder={`${itemBuyPrice}€`} onChange={(e)=>{setItemBuyPrice(e.target.value)}} className='border-[var(--brand-black)] border-[0.15rem] px-1'></input>
+                        <input 
+                            type='text'
+                            value={itemBuyPrice}
+                            onChange={(e) => setItemBuyPrice(e.target.value)}
+                            pattern="^\d+([.,]\d{1,2})?$"
+                            title="Entrez un nombre valide (ex: 9.50 ou 9,50)"
+                            className='border-[var(--brand-black)] border-[0.15rem] px-1'
+                        />
                     </div>
 
                     <div className='grid grid-cols-2 text-end'>
                         <label className='px-2'>Prix de <span className="font-bold">vente</span> par unité (€) : </label>
-                        <input type='decimal' placeholder={`${itemSellPrice}€`} onChange={(e)=>{setItemSellPrice(e.target.value)}} className='border-[var(--brand-black)] border-[0.15rem] px-1'></input>
+                        <input 
+                            type='text'
+                            value={itemSellPrice}
+                            onChange={(e) => setItemSellPrice(e.target.value)}
+                            pattern="^\d+([.,]\d{1,2})?$"
+                            title="Entrez un nombre valide (ex: 9.50 ou 9,50)"
+                            className='border-[var(--brand-black)] border-[0.15rem] px-1'
+                        />
                     </div>
 
                     <div className='grid grid-cols-2 text-end'>
                         <label className='px-2'>Photo (500x500) : </label>
-                        <input type='file' onChange={(e)=>{setUploadedItemImage(e.target.files[0])}} ></input>
+                        <input type='file' onChange={(e) => setUploadedItemImage(e.target.files[0])} />
                     </div>
-                    
-                    <p className={`${message[1]? "text-green-500" : "text-red-500 font-bold"} px-2 text-center`}>{message}</p>
+
+                    <p className={`${message[1] ? "text-green-500" : "text-red-500 font-bold"} px-2 text-center`}>{message}</p>
 
                     <button type='submit' className='button-1'>Sauvegarder</button>
-
                 </form>
-
-                
             </div>
         </div>
-    )
-}
+    );
+};
+
 
 export default Stock;
