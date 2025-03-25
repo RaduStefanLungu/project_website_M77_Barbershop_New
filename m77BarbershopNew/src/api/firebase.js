@@ -204,6 +204,37 @@ export async function updateAppointment(day,appointment_id,confirmation_state){
   }
 }
 
+export async function updateAppointmentService(day, appointment_id, new_service) {
+  try {
+    const appointmentDocRef = doc(firestore_db, "appointments", day); // Reference to the document
+
+    // 🔍 Fetch the document
+    const appointmentDocSnap = await getDoc(appointmentDocRef);
+
+    if (!appointmentDocSnap.exists()) {
+      return false;
+    }
+
+    // Get the current appointments list
+    const appointments = appointmentDocSnap.data().appointments;
+
+    // 🔍 Find the specific appointment by `appointment_id`
+    const updatedAppointments = appointments.map((appt) =>
+      appt.appointment_id === appointment_id
+        ? { ...appt, appointment_service: new_service.name } // Update service
+        : appt
+    );
+
+    // 🔄 Update Firestore
+    await updateDoc(appointmentDocRef, { appointments: updatedAppointments });
+
+    return true;
+  } catch (error) {
+    console.error("🚨 Error updating appointment service:", error);
+    return { success: false, message: "Failed to update appointment service." };
+  }
+}
+
 /*
   Input : day (yyyy-mm-dd)
   Output : list of available hours for the given day with a distance of HOURS_DISTANCE

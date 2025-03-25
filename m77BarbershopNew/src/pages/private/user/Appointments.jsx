@@ -4,7 +4,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { FaTableCellsRowLock } from "react-icons/fa6";
 import { IoStatsChartSharp } from "react-icons/io5";
 import { useAuth } from '../../../context/AuthContext';
-import { getAllGeneralLockedDays, getAppointments, getProfileByEmail, getProfiles, lockDays, lockProfileDay, unlockDays, unlockProfileDay, updateAppointment } from '../../../api/firebase';
+import { getAllGeneralLockedDays, getAppointments, getProfileByEmail, getProfiles, lockDays, lockProfileDay, unlockDays, unlockProfileDay, updateAppointment, updateAppointmentService } from '../../../api/firebase';
 
 import { MdEmail, MdMarkEmailRead } from "react-icons/md";
 import { CiCircleChevDown,CiCircleChevUp,CiUnlock } from "react-icons/ci";
@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import RapportRDVs from '../admin/RapportRDVs';
 
 import APPOINTMENT_STATES from '../../../data/appointmentStates.json'
+import SERVICES from '../../../data/services.json'
 
 
 export default function Appointments() {
@@ -66,7 +67,7 @@ export default function Appointments() {
             profileData.admin ? <button onClick={()=>{setView('admin-rapport')}} className={`${view==='admin-rapport'? "button-2" : "button-1"} text-3xl text-center mx-auto my-auto`}><IoStatsChartSharp/></button> : <></>
           }
         </div>
-        <div className='grid px-5'>
+        <div className='grid px-0'>
           {dico[view]}
         </div>
         <div className='grid ml-auto px-5'>
@@ -131,7 +132,6 @@ const MyAppointments = ({ profile,popUpSetter }) => {
     try {
       const response = await getAppointments(day, profile);
       setAppointments(orderByTime(response));
-      console.log(`Appointments for ${day}:`, response);
     } catch (error) {
       console.error("Failed to fetch appointments:", error);
     }
@@ -368,11 +368,6 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
     try {
       const response = await getAppointments(day, profile);
       setAppointments(orderByTime(response));
-
-      console.log(orderByTime(response));
-      
-
-      console.log(`Appointments for ${day}:`, response);
     } catch (error) {
       console.error("Failed to fetch appointments:", error);
     }
@@ -429,6 +424,90 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
     )
   }
 
+  const PopUpServiceChange = ({selected_appointment}) => {
+
+    const [newService,setNewService] = useState(null);
+
+    const ServiceDropdown = ({ onSelect }) => {
+      const [isOpen, setIsOpen] = useState(false);
+      const [selectedService, setSelectedService] = useState(null);
+    
+      // 🔥 Ensure `all_services_flat` exists
+      const serviceList = SERVICES?.all_services_flat || [];
+    
+      const handleSelect = (service) => {
+        setSelectedService(service);
+        setIsOpen(false);
+        if (onSelect) onSelect(service);
+      };
+    
+      return (
+        <div className="relative w-64">
+          {/* Button to Open Dropdown */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-full bg-gray-800 text-white px-4 py-2 rounded flex justify-between items-center"
+          >
+            {selectedService ? `${selectedService.name} - ${selectedService.price}€` : "Sélectionnez un service"}
+            <span>{isOpen ? "▲" : "▼"}</span>
+          </button>
+    
+          {/* Dropdown List */}
+          {isOpen && (
+            <div className="absolute z-10 mt-2 w-full bg-white shadow-lg rounded max-h-60 overflow-y-auto">
+              {serviceList.map((service, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleSelect(service)}
+                  className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                >
+                  <span className="font-bold">{service.name}</span> - {service.price}€
+                  <p className="text-sm text-gray-600">{service.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    function handleClose(e){
+      e.preventDefault();
+      popUpSetter[1](null);
+      
+    }
+
+    async function handleSave(e){
+      e.preventDefault();
+      const resp = await updateAppointmentService(selected_appointment.appointment_date,selected_appointment.appointment_id,newService)
+      if(resp){
+        fetchAppointments(chosenProfile,chosenDay)
+        popUpSetter[1](null) // close the popup
+        
+      }
+    }
+
+    function handleOnSelect(service){
+      setNewService(service)
+    }
+
+    return(
+      <div className='flex flex-col px-0 pt-32 '>
+        <h1 className='text-design-h2 text-white text-center'>Choisisez le nouveau service</h1>
+        <div className='flex justify-center gap-5'>
+          <ServiceDropdown onSelect={handleOnSelect}></ServiceDropdown>
+        </div>
+        <div className='grid'>
+          <label className='text-design-h4 text-white text-center pt-5'>Service séléctionné : {newService!==null ? newService.name : ""}</label>
+        </div>
+        <div className='flex pt-5 gap-3 mx-auto'>
+          <button onClick={handleClose} className='button-1' >Annulation</button>
+          <button onClick={handleSave} className='button-2' >Sauvegarder</button>
+        </div>
+      </div>
+    )
+  }
+
   const AppointmentTab = ({data,colorCode}) => {
 
     const [showDetails,setShowDetails] = useState(false)
@@ -465,6 +544,12 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
             });
     }
 
+    function handleServiceChange(e){
+      e.preventDefault();
+
+      popUpSetter[1](<PopUpServiceChange selected_appointment={data}></PopUpServiceChange>)
+    }
+
     return(
       <div className={`${data.confirmed === APPOINTMENT_STATES.neutral_state ? colorCode[data.confirmed][1] : colorCode[data.confirmed][0]} border-x-[0.15rem] border-y-[0.15rem] p-2`}>
         <h1 className='text-xl'>{data.appointment_hour}</h1>
@@ -477,7 +562,10 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
             }
           </div>
           <div className={`${showDetails? "grid" : "hidden"} gap-5 `}>
-            <button type='button' onClick={handleRappel} className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
+            <div className='flex gap-3 justify-center'>
+              <button type='button' onClick={handleRappel} className='button-1 disabled:bg-gray-500' disabled={today>chosenDay}>Rappel Email</button>
+              <button type='button' onClick={handleServiceChange} className='button-2 ' >Changer Service</button>
+            </div>
             <label className='text-center text-lg'>{emailSentMessage}</label>
             <form ref={rappelFormRef} className='hidden'>
               <input name="user_email" value={data.appointment_user.email}></input>
@@ -501,7 +589,7 @@ const MyAppointmentsAdmin = ({ profile,popUpSetter }) => {
               </div>
 
             </div>
-            <div className='flex justify-center gap-5'>
+            <div className='flex justify-center gap-1 md:gap-5'>
               <button onClick={handleConfirmed} className='button-2 px-3'>Présent</button>
               <button onClick={handleAbsent} className='button-2 px-3'>Absent</button>
               <button onClick={handleCanceled} className='button-2 px-3'>Annulation</button>
